@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true,
+      "jsx": "react",
+      "outDir": "build"
+    },
+    "include": ["/**/*.ts"],
+    "exclude": ["node_modules"]
+}
