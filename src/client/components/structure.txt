@@ -1,0 +1,8 @@
+App
+  Container
+    Header (logo)
+    Left
+      Status
+      Navigation (router)
+    Main
+      TBD (lots of stuff)
