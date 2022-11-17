@@ -14,6 +14,7 @@ export const typeDefs = `#graphql
     type Topic {
       name: String!
       partitions: [Partition]!
+      hello: String
     }
     type Partition {
       hello: String

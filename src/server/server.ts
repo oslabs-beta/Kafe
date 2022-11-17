@@ -1,13 +1,14 @@
 import express from 'express';
 import path from 'path';
-import { ApolloServer } from '@apollo/server';
-import { typeDefs } from './graphQL/typeDefs';
-import resolvers from './graphQL/resolvers';
-import { expressMiddleware } from '@apollo/server/express4';
 import http from 'http';
 import cors from 'cors';
-import PrometheusAPI from './graphQL/dataSources/prometheusAPI';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 
+import PrometheusAPI from './graphQL/dataSources/prometheusAPI';
+import { typeDefs } from './graphQL/typeDefs';
+import resolvers from './graphQL/resolvers';
 
 
 const PORT: number | string = process.env.PORT || 3000;
@@ -18,9 +19,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/', express.static(path.resolve(__dirname, '../../build')));
 
 const ApolloServerStart = async() => {
+    //create httpServer to handle requests to Express app
     const httpServer = http.createServer(app);
+    
     //create apolo server by passing in schema and resolver
-    const server = new ApolloServer({ typeDefs, resolvers });
+    const server = new ApolloServer({ 
+        typeDefs, 
+        resolvers,
+        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })] 
+    });
+
     await server.start();
 
     app.use(
@@ -36,9 +44,10 @@ const ApolloServerStart = async() => {
                 }
             }
         })
-    )
+    );
 
-    await new Promise<void>((resolve => httpServer.listen({ port: process.env.PORT || 3000}, resolve)));
+    await new Promise<void>((resolve => httpServer.listen({port: PORT}, resolve)));
+    console.log(`Server running at port: ${PORT}`)
     return server;
 }
 
