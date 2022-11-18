@@ -6,7 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --open --hot --progress --color\" \"nodemon ./src/server/server.ts\""
-
   },
   "author": "",
   "license": "MIT",
@@ -27,6 +26,11 @@
   "dependencies": {
     "@apollo/client": "^3.7.1",
     "@apollo/server": "^4.1.1",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.10.14",
+    "@mui/material": "^5.10.14",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "dotenv": "^16.0.3",
