@@ -1,8 +1,8 @@
 App
-  Container
+  Dashboard
     Header (logo)
-    Left
+    Sidebar
       Status
-      Navigation (router)
     Main
-      TBD (lots of stuff)
+      Visuals
+    Footer
