@@ -1,10 +1,10 @@
 
 const resolvers = {
     Broker: {
-        hello: (): String => 'hello'
+
     },
     Topic: {
-        hello: (): String => 'topic1'
+
     }
 };
 

@@ -22,7 +22,7 @@ const sendMessages = async () => {
             {key: 'key1', value: 'hello world4'},
             {key: 'key2', value: 'hello world5'},
             {key: 'key3', value: 'hello world6'},
-            {key: 'key3', value: 'partition1', partition: 1}
+            {key: 'key3', value: 'partition1'}
         ]
     })
 };

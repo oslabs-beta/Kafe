@@ -19,6 +19,14 @@ rules:
   name: kafka_coordinator_$1_$2_$3
   type: GAUGE
 
+#test for consumer metrics
+- pattern: "kafka.(.*)<type=(.*)-metrics, client-id=(.*), node-id=(.*)><>(.+):\\s+[\\d+|.]+"
+  name: kafka_$2_$5-metrics
+  labels:
+    client_id: "$3"
+    node_id: "$4"
+    attr_name: "$5"
+
 # Generic per-second counters with 0-2 key/value pairs
 - pattern: kafka.(\w+)<type=(.+), name=(.+)PerSec\w*, (.+)=(.+), (.+)=(.+)><>Count
   name: kafka_$1_$2_$3_total
