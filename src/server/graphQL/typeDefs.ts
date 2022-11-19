@@ -13,7 +13,7 @@ export const typeDefs = `#graphql
     port: Int
     host: String
     underReplicatedPartitionsCount: Int
-    networkRequestRate: Datapoint
+    networkRequestRate: DataPoint
     CPUUsageOverTime: [DataPoint]
     JVMMemoryUsedOverTime: [DataPoint]
     produceTotalTimeMs: DataPoint

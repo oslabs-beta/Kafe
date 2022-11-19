@@ -93,6 +93,6 @@ export const INSYNC_REPLICAS_COUNT: PromQuery = {
 
 export const TOPIC_LOG_SIZE: PromQuery = {
     name: 'Topic Log Size',
-    query: 'sum(kafka_log_log_size{topic=~filter})by(topic)',
+    query: 'sum(kafka_log_log_size{topic=~"filter"})by(topic)',
     type: 'topic'
 };
