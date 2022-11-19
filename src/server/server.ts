@@ -9,7 +9,7 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import PrometheusAPI from './graphQL/dataSources/prometheusAPI';
 import { typeDefs } from './graphQL/typeDefs';
 import resolvers from './graphQL/resolvers';
-import { admin } from './kafkaAdmin/admin'
+import { admin } from './kafkaAdmin/admin';
 
 const PORT: number | string = process.env.PORT || 3000;
 

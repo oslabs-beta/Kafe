@@ -80,6 +80,10 @@ rules:
       "$4": "$5"
       "$6": "$7"
       quantile: "0.$8"
+  - pattern: kafka.network<type=RequestMetrics, name=Requests><>Count
+    name: kafka_network_requestmetrics_requests_total
+    type: COUNTER
+  
   # "kafka.rest:type=*, topic=*, partition=*, client-id=*"
   # "kafka.rest:type=*, cipher=*, protocol=*, client-id=*"
   - pattern: kafka.(\w+)<type=(.+), (.+)=(.+), (.+)=(.+), (.+)=(.+)><>Value
