@@ -9,14 +9,14 @@ export const typeDefs = `#graphql
   }
 
   type Broker {
-    brokerId: Int!
-    brokerPort: Int
-    brokerHost: String
+    id: Int!
+    port: Int
+    host: String
     underReplicatedPartitionsCount: Int
     networkRequestRate: Datapoint
     CPUUsageOverTime: [DataPoint]
     JVMMemoryUsedOverTime: [DataPoint]
-    producerTotalTimeMs: DataPoint
+    produceTotalTimeMs: DataPoint
     consumerTotalTimeMs: DataPoint
     followerTotalTimeMs: DataPoint
     bytesInPerSecOverTime: [DataPoint]
@@ -30,13 +30,15 @@ export const typeDefs = `#graphql
     partitionsCount: Int
     replicasCount: Int
     ISRCount: Int
+    logSize: DataPoint
   }
 
   type Partition {
     partitionId: Int!
     underReplicatedPartitions: Int
     leader: Broker
-    isrs: [Broker]!
+    replicas: [Broker]!
+    isrList: [Broker]!
   }
 
   type DataPoint {
