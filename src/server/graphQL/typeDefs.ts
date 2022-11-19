@@ -2,52 +2,64 @@
 export const typeDefs = `#graphql
   type Cluster {
     brokers: [Broker]!
-    numOfController: Int
-    numOfunderReplicatedPartitions: Int
-    numOfOfflinePartitions: Int
-    underMinISR: Int
+    controllersCount: Int
+    underReplicatedPartitionsCount: Int
+    offlinePartitionsCount: Int
+    underMinISRCount: Int
   }
 
   type Broker {
     brokerId: Int!
     brokerPort: Int
     brokerHost: String
-    numOfunderReplicatedPartitions: Int
-    numOfOfflinePartitions: Int
-    networkRequestRate: Int
-    producerTotalTimeMs: Data
-    consumerTotalTimeMs: Data
-    followerTotalTimeMs: Data
-    bytesInPerSecOverTime: [Data]
-    bytesOutPerSecOverTime: [Data]
+    underReplicatedPartitionsCount: Int
+    networkRequestRate: Datapoint
+    CPUUsageOverTime: [DataPoint]
+    JVMMemoryUsedOverTime: [DataPoint]
+    producerTotalTimeMs: DataPoint
+    consumerTotalTimeMs: DataPoint
+    followerTotalTimeMs: DataPoint
+    bytesInPerSecOverTime: [DataPoint]
+    bytesOutPerSecOverTime: [DataPoint]
+    messagesInPerSec: [DataPoint]
   }
 
   type Topic {
     name: String!
     partitions: [Partition]!
-    numOfPartitions: Int
-    totalReplicas: Int
-    totalIsrs: Int
+    partitionsCount: Int
+    replicasCount: Int
+    ISRCount: Int
   }
 
   type Partition {
     partitionId: Int!
     underReplicatedPartitions: Int
     leader: Broker
+    isrs: [Broker]!
   }
 
-  type Data {
+  type DataPoint {
     time: String
-    metric: Float
+    value: Float
   }
 
   type Query {
-    hello: String
+    brokers(
+      start: String, 
+      end: String, 
+      step: String, 
+      ids: [Int]): [Broker]!
+    broker(
+      start: String
+      end: String, 
+      step: String, 
+      ids: [Int]): Broker
   }
 
   type Mutation {
-      createTopic: Topic
-      deleteTopic: Topic
-      reassignPartition: Partition
+    createTopic: Topic
+    deleteTopic: Topic
+    reassignPartition: Partition
   }
 `;

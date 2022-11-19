@@ -1,3 +1,4 @@
+import prometheusAPI from './dataSources/prometheusAPI';
 
 const resolvers = {
     Broker: {

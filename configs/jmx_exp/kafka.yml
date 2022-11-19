@@ -1,7 +1,46 @@
 lowercaseOutputName: true
 
+whitelistObjectNames:
+  - java.lang:*
+  - kafka.cluster:*
+  - kafka.controller:*
+  - kafka.log:*
+  - kafka.server:type=app-info,id=*
+  - kafka.server:type=KafkaServer,name=BrokerState
+  - kafka.server:type=KafkaRequestHandlerPool,*
+  - kafka.server:type=BrokerTopicMetrics,*
+  - kafka.server:type=DelayedFetchMetrics,*
+  - kafka.server:type=DelayedOperationPurgatory,*
+  - kafka.server:type=FetcherLagMetrics,*
+  - kafka.server:type=FetcherStats,*
+  - kafka.server:type=Request,*
+  - kafka.server:type=Fetch,*
+  - kafka.server:type=Produce,*
+  - kafka.server:type=ReplicaManager,*
+  - kafka.server:type=ReplicaFetcherManager,*
+  - kafka.server:type=SessionExpireListener,*
+  - kafka.server:type=controller-channel-metrics,*
+  - kafka.server:type=socket-server-metrics,*
+  - kafka.network:type=RequestChannel,*
+  - kafka.network:type=Processor,*
+  - kafka.network:type=SocketServer,*
+  - kafka.network:type=RequestMetrics,*
+  - kafka.network:type=RequestMetrics,name=*,request=OffsetCommit,version=*
+  - kafka.network:type=RequestMetrics,name=*,request=FetchConsumer,version=*
+  - kafka.network:type=RequestMetrics,name=*,request=FetchFollower,version=*
+  - kafka.network:type=RequestMetrics,name=*,request=Produce,version=*
+  - kafka.network:type=RequestMetrics,name=*,request=Metadata,version=*
+  - kafka.coordinator.group:*
+
 rules:
 # Special cases and very specific rules
+- pattern: kafka.(\w+)<type=(.+), name=(.+), topic=(.+), partition=(.+)><>Value
+  name: kafka_$1_$2_$3
+  type: GAUGE
+  labels:
+    topic: "$4"
+    partition: "$5"
+
 - pattern : kafka.server<type=(.+), name=(.+), clientId=(.+), topic=(.+), partition=(.*)><>Value
   name: kafka_server_$1_$2
   type: GAUGE
@@ -19,14 +58,14 @@ rules:
   name: kafka_coordinator_$1_$2_$3
   type: GAUGE
 
-#test for consumer metrics
-- pattern: "kafka.(.*)<type=(.*)-metrics, client-id=(.*), node-id=(.*)><>(.+):\\s+[\\d+|.]+"
-  name: kafka_$2_$5-metrics
+#kafka cluster min isr
+- pattern: kafka.cluster<type=(.+), name=(.+), topic=(.+), partition=(.+)><>Value
+  name: kafka_cluster_$1_$2
+  type: GAUGE
   labels:
-    client_id: "$3"
-    node_id: "$4"
-    attr_name: "$5"
-
+    topic: "$2"
+    partition: "$4"
+  
 # Generic per-second counters with 0-2 key/value pairs
 - pattern: kafka.(\w+)<type=(.+), name=(.+)PerSec\w*, (.+)=(.+), (.+)=(.+)><>Count
   name: kafka_$1_$2_$3_total
