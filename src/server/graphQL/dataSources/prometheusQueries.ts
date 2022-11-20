@@ -50,7 +50,7 @@ export const JVM_MEMORY_BYTES_USED: PromQuery = {
 //PrometheusAPI will need to add in {request=~"", quantile=~"0.50"}
 export const TOTAL_TIME_MS: PromQuery = {
     name: 'Total Time MS',
-    query: `kafka_network_requestmetrics_totaltimems{request=~"filter", quantile=~"0.50"}`,
+    query: `kafka_network_requestmetrics_totaltimems{request=~"requestType", quantile=~"0.50", instance=~"filter"}`,
     type: 'broker'
 };
 

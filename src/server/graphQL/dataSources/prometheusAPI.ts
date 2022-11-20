@@ -48,7 +48,7 @@ class PrometheusAPI extends RESTDataSource {
     }
 
     async instanceRangeQuery(baseQuery, start, end, step, filter) {
-        let query = `query?=${baseQuery}`;
+        let query = `query?=${baseQuery.query}`;
         //format start, end to be valid timestamp
         const startTime = this.getUnixTimeStamp(start);
         const endTime = this.getUnixTimeStamp(end);
@@ -56,18 +56,18 @@ class PrometheusAPI extends RESTDataSource {
         if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) throw "Incorrect date inputs" 
         
         if(filter && filter.length) query.replace('filter', filter);
-        else query.replace('filter', '.*');
+        else query.replace(/filter/g, '.*');
 
-        query = `start=${startTime}&end=${endTime}&step=${step}`;
+        query = `&start=${startTime}&end=${endTime}&step=${step}`;
         const result = await this.get(`/api/v1/query_range?${query}`);
-        const formattedResult = await this.formatResponse(result.data.result);
+        const formattedResult = await this.formatRangeResponse(result.data.result);
         return formattedResult;
     }
 
     async topicQuery(baseQuery, filter) {
         let query = `query?=${baseQuery.query}`;
-        if (filter && filter.length) query = query.replace('filter', filter);
-        else query = query.replace('filter', '.*');
+        if (filter && filter.length) query = query.replace(/filter/g, filter);
+        else query = query.replace(/filter/g, '.*');
 
         try {
             const result = await this.get(`/api/v1/query`);

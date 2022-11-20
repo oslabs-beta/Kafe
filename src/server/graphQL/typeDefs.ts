@@ -2,7 +2,8 @@
 export const typeDefs = `#graphql
   type Cluster {
     brokers: [Broker]!
-    controllersCount: Int
+    activeController: Broker
+    brokerCount: Int
     underReplicatedPartitionsCount: Int
     offlinePartitionsCount: Int
     underMinISRCount: Int

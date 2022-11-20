@@ -50,7 +50,8 @@ const ApolloServerStart = async() => {
     console.log(`Server running at port: ${PORT}`);
 
     const info = await admin.describeCluster();
-    console.log('Cluster Info:',info);
+    const activeController = info.brokers.find(broker => broker.nodeId === info.controller)
+    console.log('Cluster Info:', activeController);
     return server;
 }
 
