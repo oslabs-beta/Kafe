@@ -24,10 +24,12 @@ export const getClusterInfo = async () => {
         });
 
         const clusters = {
-            activeController: brokers.find(broker => broker.id === data.controller),
+            activeControllers: brokers.filter(broker => broker.id === data.controller),
             brokerCount: brokers.length,
             brokers
         };
+
+        return clusters;
     } catch(err) {
         console.log(err);
     }
@@ -43,6 +45,15 @@ export const getTopics = async (): Promise<ITopicMetadata[] | undefined> => {
         console.log(err);
     }
 };
+
+export const getTopic = async (topicName: String) => {
+    const topics = await getTopics();
+    const topic = topics.filter(topic => topic.name === topicName);
+    return topic;
+}
+// { name: string
+//   partitions: <array>
+// }
 
 export const createTopics = async (topic: ITopicConfig) => {
     try {

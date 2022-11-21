@@ -2,9 +2,9 @@
 export const typeDefs = `#graphql
   type Cluster {
     brokers: [Broker]!
-    activeController: Broker
+    activeControllers: [Broker]
     brokerCount: Int
-    underReplicatedPartitionsCount: Int
+    underreplicatedPartitionsCount: Int
     offlinePartitionsCount: Int
     underMinISRCount: Int
   }
@@ -13,12 +13,12 @@ export const typeDefs = `#graphql
     id: Int!
     port: Int
     host: String
-    underReplicatedPartitionsCount: Int
+    underreplicatedPartitionsCount: Int
     CPUUsageOverTime: [DataPoint]
     JVMMemoryUsedOverTime: [DataPoint]
     produceTotalTimeMs: DataPoint
-    consumerTotalTimeMs: DataPoint
-    followerTotalTimeMs: DataPoint
+    fetchConsumerTotalTimeMs: DataPoint
+    fetchFollowerTotalTimeMs: DataPoint
     bytesInPerSecOverTime: [DataPoint]
     bytesOutPerSecOverTime: [DataPoint]
     messagesInPerSec: [DataPoint]
@@ -35,7 +35,6 @@ export const typeDefs = `#graphql
 
   type Partition {
     partitionId: Int!
-    underReplicatedPartitions: Int
     leader: Broker
     replicas: [Broker]!
     isrList: [Broker]!

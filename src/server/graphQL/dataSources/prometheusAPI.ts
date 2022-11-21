@@ -31,12 +31,12 @@ class PrometheusAPI extends RESTDataSource {
     };
     
     async instanceQuery(baseQuery, filter: number[]) {
-        let query = `query?=${baseQuery.query}`;
+        let query = `query=${baseQuery.query}`;
         if (filter && filter.length) {
             const filterInstances = await this.mapInstanceFilter(filter);
-            query = query.replace('filter', filterInstances);
+            query = query.replace(/filter/g, filterInstances);
         }
-        else query = query.replace('filter', '.*');
+        else query = query.replace(/filter/g, '.*');
         
         try {
             const result = await this.get(`/api/v1/${query}`);
@@ -45,27 +45,43 @@ class PrometheusAPI extends RESTDataSource {
         } catch (err) {
             console.log(`Error occurred with query: ${query}: ${err}`);
         }
-    }
+    };
 
-    async instanceRangeQuery(baseQuery, start, end, step, filter) {
-        let query = `query?=${baseQuery.query}`;
+    async instanceRangeQuery(baseQuery, start: string, end: string, step: string, filter) {
+        let query = `query=${baseQuery.query}`;
         //format start, end to be valid timestamp
         const startTime = this.getUnixTimeStamp(start);
         const endTime = this.getUnixTimeStamp(end);
 
         if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) throw "Incorrect date inputs" 
         
-        if(filter && filter.length) query.replace('filter', filter);
+        if(filter && filter.length) query.replace(/filter/g, filter);
         else query.replace(/filter/g, '.*');
 
         query = `&start=${startTime}&end=${endTime}&step=${step}`;
         const result = await this.get(`/api/v1/query_range?${query}`);
         const formattedResult = await this.formatRangeResponse(result.data.result);
         return formattedResult;
+    };
+
+    async totalMsQuery(baseQuery, requestType, filter) {
+        let query = `query=${baseQuery.query}`;
+        let queryFilters;
+
+        if (filter && filter.length) queryFilters = `{request=~${requestType}, quantile=~"0.50", instance=~${filter}}`
+        else queryFilters = `{request=~${requestType}, quantile=~"0.50"}`;
+
+        query += queryFilters;
+
+        console.log('TotalMsQuery query: ', query);
+        const result = await this.get(`/api/v1/query?${query}`);
+        const formattedResult = await this.formatResponse(result.data.result);
+
+        return formattedResult;
     }
 
     async topicQuery(baseQuery, filter) {
-        let query = `query?=${baseQuery.query}`;
+        let query = `query=${baseQuery.query}`;
         if (filter && filter.length) query = query.replace(/filter/g, filter);
         else query = query.replace(/filter/g, '.*');
 

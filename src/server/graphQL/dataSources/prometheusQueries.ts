@@ -4,6 +4,11 @@ interface PromQuery {
     type: string,
 };
 //CLUSTER AND BROKER QUERIES//
+export const ACTIVE_CONTROLLER_COUNT: PromQuery = {
+    name: 'Active Controller',
+    query: `sum(kafka_controller_kafkacontroller_activecontrollercount{instance=~"filter"})`,
+    type: 'cluster'
+};
 
 //Number of underreplicated partitions. Use instance filter fo broker
 export const UNDER_REPLICATED_PARTITIONS_COUNT: PromQuery = {
@@ -47,10 +52,10 @@ export const JVM_MEMORY_BYTES_USED: PromQuery = {
     type: 'broker'
 };
 
-//PrometheusAPI will need to add in {request=~"", quantile=~"0.50"}
+//Total Time MS. PrometheusAPI will need to add both request and instance filters
 export const TOTAL_TIME_MS: PromQuery = {
     name: 'Total Time MS',
-    query: `kafka_network_requestmetrics_totaltimems{request=~"requestType", quantile=~"0.50", instance=~"filter"}`,
+    query: `kafka_network_requestmetrics_totaltimems`,
     type: 'broker'
 };
 
