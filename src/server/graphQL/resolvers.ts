@@ -17,10 +17,6 @@ import {
 
 
 const resolvers = {
-    // activeController: Broker
-    // brokerCount: Int
-    // underReplicatedPartitionsCount: Int
-    // offlinePartitionsCount: Int
     // underMinISRCount: Int
     Cluster: {
         underreplicatedPartitionsCount: async(parent, args, {dataSources}): Promise <Number> => {
@@ -31,6 +27,7 @@ const resolvers = {
                 console.log('Error occured during cluster resolver underreplicatedPartitionsCount:', err);
             }
         },
+
         offlinePartitionsCount: async(parent, args, {dataSources}): Promise <Number> => {
             try{
                 const offlinePartitions = await dataSources.prometheusAPI.instanceQuery(OFFLINE_PARTITIONS);
@@ -38,11 +35,12 @@ const resolvers = {
             } catch(err){
                 console.log('Error occured during cluster resolver offlinePartitionsCount:', err);
             }
-        }
-        underMinISRCount: async(parent, args, {dataSources}): 
+        },
 
-     }
-    }
+        underMinISRCount: async(parent, args, {dataSources}): Promise<Number> => {
+            return 3
+        },
+        }
 
     },
 
