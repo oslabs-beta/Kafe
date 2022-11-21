@@ -40,8 +40,6 @@ const resolvers = {
         underMinISRCount: async(parent, args, {dataSources}): Promise<Number> => {
             return 3
         },
-        }
-
     },
 
     // bytesInPerSecOverTime: [DataPoint]
