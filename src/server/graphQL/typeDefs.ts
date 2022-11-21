@@ -2,8 +2,9 @@
 export const typeDefs = `#graphql
   type Cluster {
     brokers: [Broker]!
-    activeControllers: [Broker]
     brokerCount: Int
+    activeControllers: [Broker]
+    activeControllersCount: Int
     underreplicatedPartitionsCount: Int
     offlinePartitionsCount: Int
     underMinISRCount: Int
@@ -37,7 +38,7 @@ export const typeDefs = `#graphql
     partitionId: Int!
     leader: Broker
     replicas: [Broker]!
-    isrList: [Broker]!
+    isr: [Broker]!
   }
 
   type DataPoint {

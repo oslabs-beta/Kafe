@@ -82,12 +82,15 @@ class PrometheusAPI extends RESTDataSource {
 
     async topicQuery(baseQuery, filter) {
         let query = `query=${baseQuery.query}`;
-        if (filter && filter.length) query = query.replace(/filter/g, filter);
+        
+        if (filter) query = query.replace(/filter/g, filter);
         else query = query.replace(/filter/g, '.*');
 
         try {
             const result = await this.get(`/api/v1/query`);
-            return result.data.result;
+
+            const formattedResult = await this.formatResponse(result.data.result);
+            return formattedResult;
         } catch (err) {
             console.log(`Error occurred with query: ${query}: ${err}`);
         }

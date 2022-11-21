@@ -40,6 +40,10 @@ export const getTopics = async (): Promise<ITopicMetadata[] | undefined> => {
     try {
         const topics = await admin.listTopics();
         const topicData = await admin.fetchTopicMetadata({ topics });
+        
+        topicData.topics.forEach(topic => {
+            topic['partitionsCount'] = topic.partitions.length;
+        });
         return topicData.topics;
     } catch(err) {
         console.log(err);
@@ -47,9 +51,18 @@ export const getTopics = async (): Promise<ITopicMetadata[] | undefined> => {
 };
 
 export const getTopic = async (topicName: String) => {
-    const topics = await getTopics();
-    const topic = topics.filter(topic => topic.name === topicName);
-    return topic;
+    try{
+        const topics = await getTopics();
+        const topic = topics.filter(topic => topic.name === topicName)[0];
+
+        if(!topic) throw new Error(`Topic ${topicName} not found`);
+        else{
+            topic['partitionsCount'] = topic.partitions.length;
+            return topic;
+        }
+    } catch(err) {
+        console.log(err);
+    }
 }
 // { name: string
 //   partitions: <array>
