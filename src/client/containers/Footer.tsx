@@ -3,7 +3,7 @@ import React from 'react';
 function Footer(){
 
 return(
-    <div>Team PanadaWhale</div>
+    <p>Team PanadaWhale</p>
     );
 }
 

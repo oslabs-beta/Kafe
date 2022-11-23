@@ -1,17 +1,20 @@
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
 
 function Menu(){
 
 return(
     <>
         <div>Cluster</div>
-        <ul>
-            <li><a href="#">Brokers</a></li>
-            <li><a href="#">Producers</a></li>
-            <li><a href="#">Consumers</a></li>
-            <li><a href="#">Topics</a></li>
-            <li><a href="#">Partitions</a></li>
-        </ul>
+        <nav className="navbar">
+            <ul>
+            <li><Link to="/brokers">Brokers</Link></li>
+            <li><Link to="/producers">Producers</Link></li>
+            <li><Link to="/consumers">Consumers</Link></li>
+            <li><Link to="/topics">Topics</Link></li>
+            <li><Link to="/partitions">Partitions</Link></li>
+            </ul>
+        </nav>
     </>
     );
 }

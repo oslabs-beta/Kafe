@@ -1,13 +1,28 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
 import Dashboard from './containers/Dashboard';
+import Main from './containers/Main';
+import Brokers from './components/Brokers';
+import Producers from './components/Producers';
+import Consumers from './components/Consumers';
+import Topics from './components/Topics';
+import Partitions from './components/Partitions';
 
 
 const App = () => {
     return (
         <BrowserRouter>
-                    <Dashboard />
+        <Routes>
+        <Route path="/" element={<Dashboard />}>
+          <Route index element={<Main />}></Route>
+          <Route path="brokers" element={<Brokers />}></Route>
+          <Route path="producers" element={<Producers />}></Route>
+          <Route path="consumers" element={<Consumers />}></Route>
+          <Route path="Topics" element={<Topics />}></Route>
+          <Route path="Partitions" element={<Partitions />}></Route>
+        </Route>
+      </Routes>
         </BrowserRouter>
     )
 };
