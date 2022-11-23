@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const linkStyle = {
     margin: "1rem",
     textDecoration: "none",
-    color: 'blue'
+    color: 'white'
   };
 
 function Menu(){
