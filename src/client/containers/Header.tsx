@@ -1,9 +1,14 @@
 import React from 'react';
 
+const linkStyle = {
+    textDecoration: "none",
+    color: 'black'
+  };
+
 function Header(){
 
 return(
-    <h1>Kafe</h1>
+        <a href="/" style={linkStyle}><h1>Kafe</h1></a>
     );
 }
 
