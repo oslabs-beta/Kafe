@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 
 const linkStyle = {
     textDecoration: "none",
@@ -8,7 +9,7 @@ const linkStyle = {
 function Header(){
 
 return(
-        <a href="/" style={linkStyle}><h1>Kafe</h1></a>
+        <Link to="/" style={linkStyle}><h1>Kafe</h1></Link>
     );
 }
 

@@ -13,13 +13,11 @@ return(
     <>
         <div>Cluster</div>
         <nav className="navbar">
-            <ul>
-            <li><Link to="/brokers" style={linkStyle}>Brokers</Link></li>
-            <li><Link to="/producers" style={linkStyle}>Producers</Link></li>
-            <li><Link to="/consumers" style={linkStyle}>Consumers</Link></li>
-            <li><Link to="/topics" style={linkStyle}>Topics</Link></li>
-            <li><Link to="/partitions" style={linkStyle}>Partitions</Link></li>
-            </ul>
+            <button><Link to="/brokers" style={linkStyle}>Brokers</Link></button>
+            <button><Link to="/producers" style={linkStyle}>Producers</Link></button>
+            <button><Link to="/consumers" style={linkStyle}>Consumers</Link></button>
+            <button><Link to="/topics" style={linkStyle}>Topics</Link></button>
+            <button><Link to="/partitions" style={linkStyle}>Partitions</Link></button>
         </nav>
     </>
     );
