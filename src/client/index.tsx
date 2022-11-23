@@ -23,16 +23,16 @@ const client = new ApolloClient({
 const theme = createTheme({
     palette: {
       primary: {
-        light: '#8ad297',
-        main: '#5aa069',
-        dark: '#2a713e',
+        light: '#adb5bd',
+        main: '#6c757d',
+        dark: '#495057',
         contrastText: '#fff',
       },
       secondary: {
-        light: '#dbffff',
-        main: '#a7ffeb',
-        dark: '#75ccb9',
-        contrastText: '#000',
+        light: '#adb5bd',
+        main: '#6c757d',
+        dark: '#495057',
+        contrastText: '#fff',
       },
     },
 

@@ -3,7 +3,7 @@ import React from 'react';
 function Header(){
 
 return(
-    <div>kafe logo (header)</div>
+    <h1>Kafe</h1>
     );
 }
 

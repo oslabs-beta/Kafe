@@ -15,7 +15,7 @@ return(
             <Grid item xs={2} sx={{ bgcolor: 'primary.light'}}>
                 <Sidebar />
             </Grid>
-            <Grid item xs={10} sx={{ height: '70%' }}>
+            <Grid item xs={10} sx={{ height: '73%' }}>
                 <Main />
             </Grid>
             <Grid item xs={12} sx={{ bgcolor: 'primary.main', height: '13%'}}>
