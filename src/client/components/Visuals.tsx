@@ -3,7 +3,7 @@ import React from 'react';
 function Visuals(){
 
 return(
-    <div>Visuals</div>
+    <div>Visuals Component</div>
     );
 }
 

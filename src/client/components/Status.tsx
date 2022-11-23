@@ -4,7 +4,7 @@ function Status(){
 
 return(
     <>    
-        <div>Status</div>
+        <div>System Status</div>
         <br />
     </>
 

@@ -52,17 +52,17 @@ const theme = createTheme({
     },
   });
 
-  // client
-  // .query({
-  //   query: gql`
-  //     query Broker {
-  //       id
-  //       port
-  //       host
-  //     }
-  //   `,
-  // })
-  // .then((result) => console.log('The result is...',result));
+  client
+  .query({
+    query: gql`
+      query Broker {
+        id
+        port
+        host
+      }
+    `,
+  })
+  .then((result) => console.log('The result is...',result));
 
 root.render(
     <ThemeProvider theme={theme}>
