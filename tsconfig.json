@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+      "lib": ["dom", "dom.iterable", "esnext", "ES2021.String"],
       "esModuleInterop": true,
       "moduleResolution": "node",
       "allowSyntheticDefaultImports": true,
