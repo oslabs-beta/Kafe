@@ -55,14 +55,23 @@ const theme = createTheme({
   client
   .query({
     query: gql`
-      query Broker {
-        id
-        port
-        host
+      query GetCluster {
+        cluster {
+          brokers {
+            id
+            host
+            port
+          }
+        }
       }
     `,
   })
-  .then((result) => console.log('The result is...',result));
+  .then((result) => console.log('The result is...', result))
+  .catch(err => console.log(err));
+
+
+
+// exampleQuery();
 
 root.render(
     <ThemeProvider theme={theme}>

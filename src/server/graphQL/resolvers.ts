@@ -211,7 +211,9 @@ const resolvers = {
     
     Query: {
         cluster: async(): Promise<any> => {
+            console.log('cluster query')
             const cluster = await adminActions.getClusterInfo();
+            console.log(cluster);
             return cluster;
         },
 
@@ -282,9 +284,9 @@ const resolvers = {
 
         },
 
-        deleteTopicRecords: async () => {
+        // deleteTopicRecords: async () => {
 
-        },
+        // },
 
         reassignPartitions: async() => {
 

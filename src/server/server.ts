@@ -51,7 +51,7 @@ const ApolloServerStart = async() => {
 
     const info = await admin.describeCluster();
     const activeController = info.brokers.find(broker => broker.nodeId === info.controller)
-    console.log('Cluster Info:', activeController);
+    console.log('Server.ts Cluster Info:', activeController);
     return server;
 }
 

@@ -47,6 +47,7 @@ export const typeDefs = `#graphql
   }
 
   type Query {
+    cluster: Cluster
     brokers(
       start: String, 
       end: String, 
@@ -57,11 +58,13 @@ export const typeDefs = `#graphql
       end: String, 
       step: String, 
       ids: [Int]): Broker
+    topics(name: [String]): [Topic]
+    topic(name: String): Topic
   }
 
   type Mutation {
     createTopic: Topic
     deleteTopic: Topic
-    reassignPartition: Partition
+    reassignPartitions: Partition
   }
 `;

@@ -8,9 +8,30 @@ import Producers from './components/Producers';
 import Consumers from './components/Consumers';
 import Topics from './components/Topics';
 import Partitions from './components/Partitions';
+import { useQuery } from "@apollo/client"
+
+
+  const testQuery =   gql`
+      query GetCluster {
+        cluster {
+          brokers {
+            id
+            host
+            port
+          }
+        }
+      }
+    `
+
+
+
 
 
 const App = () => {
+   const { loading, data } = useQuery(testQuery, {
+    pollInterval: 30000,
+   });
+    console.log(loading, data)
     return (
         <BrowserRouter>
         <Routes>
