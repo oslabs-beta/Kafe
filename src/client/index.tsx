@@ -52,27 +52,6 @@ const theme = createTheme({
     },
   });
 
-  client
-  .query({
-    query: gql`
-      query GetCluster {
-        cluster {
-          brokers {
-            id
-            host
-            port
-          }
-        }
-      }
-    `,
-  })
-  .then((result) => console.log('The result is...', result))
-  .catch(err => console.log(err));
-
-
-
-// exampleQuery();
-
 root.render(
     <ThemeProvider theme={theme}>
       {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
