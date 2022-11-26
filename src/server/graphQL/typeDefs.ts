@@ -31,7 +31,8 @@ export const typeDefs = `#graphql
     partitionsCount: Int
     replicasCount: Int
     ISRCount: Int
-    logSize: DataPoint
+    logSize: DataPoint,
+    offsets: [TopicOffset]
   }
 
   type Partition {
@@ -44,6 +45,13 @@ export const typeDefs = `#graphql
   type DataPoint {
     time: String
     value: Float
+  }
+
+  type TopicOffset {
+    partition: Int
+    offset: String
+    high: String
+    low: String
   }
 
   type Query {
@@ -66,5 +74,6 @@ export const typeDefs = `#graphql
     createTopic: Topic
     deleteTopic: Topic
     reassignPartitions: Partition
+    deleteTopicRecords: Boolean
   }
 `;

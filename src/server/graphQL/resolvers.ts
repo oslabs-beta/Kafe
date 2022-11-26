@@ -213,7 +213,6 @@ const resolvers = {
         cluster: async(): Promise<any> => {
             console.log('cluster query')
             const cluster = await adminActions.getClusterInfo();
-            console.log(cluster);
             return cluster;
         },
 
@@ -274,24 +273,57 @@ const resolvers = {
             }
         },
     },
-
     Mutation: {
-        createTopic: async () => {
-
+        createTopic: async (
+            parent, 
+            {
+            topic,
+            numPartitions = -1,
+            replicationFactor = -1,
+            replicaAssignment = [],
+            configEntries = []
+            }
+        ) => {
+            try {
+                const newTopic = await adminActions.createTopics({
+                    topic,
+                    numPartitions,
+                    replicationFactor,
+                    replicaAssignment,
+                    configEntries
+                });
+                return newTopic;
+            } catch(err) {
+                console.log('Create Topic Resolver Error:', err);
+            }
         },
 
-        deleteTopic: async () => {
-
+        deleteTopic: async (parent, { name }) => {
+            try {
+                const deletedTopic = await adminActions.deleteTopics([name]);
+                return deletedTopic;
+            } catch (err) {
+                console.log('Delete Topic Resolver Error:', err);
+            }
         },
 
-        // deleteTopicRecords: async () => {
-
-        // },
-
-        reassignPartitions: async() => {
-
+        deleteTopicRecords: async (parent, {name, partitions}) => {
+            try {
+                const deletedTopicRecords = await adminActions.deleteAllTopicRecords(name, partitions);
+                // return true;   
+            } catch (err) {
+                console.log('Delete Topic Records Resolver Error:', err);
+            }
         },
 
+        reassignPartitions: async(parent , {topics}) => {
+            try {
+                const reassignPartitions = await adminActions.reassignPartitions(topics);
+                return reassignPartitions;
+            } catch (err){
+                console.log('Reassign Partitions Error:', err)
+            }
+        },
     }
 };
 

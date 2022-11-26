@@ -41,9 +41,15 @@ export const getTopics = async (): Promise<ITopicMetadata[] | undefined> => {
         const topics = await admin.listTopics();
         const topicData = await admin.fetchTopicMetadata({ topics });
         
-        topicData.topics.forEach(topic => {
+        console.log('TopicData Before: ', topicData);
+
+        for await (const topic of topicData.topics) {
             topic['partitionsCount'] = topic.partitions.length;
-        });
+            const topicOffsets = await admin.fetchTopicOffsets(topic.name);
+            topic['offsets'] = topicOffsets;
+        };
+
+        console.log('TopicData After: ', topicData);
         return topicData.topics;
     } catch(err) {
         console.log(err);
@@ -58,6 +64,8 @@ export const getTopic = async (topicName: String) => {
         if(!topic) throw new Error(`Topic ${topicName} not found`);
         else{
             topic['partitionsCount'] = topic.partitions.length;
+            const topicOffsets = await admin.fetchTopicOffsets(topic.name);
+            topic['offsets'] = topicOffsets;
             return topic;
         }
     } catch(err) {
@@ -91,6 +99,9 @@ export const deleteAllTopicRecords = async (topic: string, partitions: SeekEntry
         partitions
     });
 };
+
+//add methods for kafka consumers
+
 
 //PARTITION ADMIN ACTIONS
 export const createPartitions = async (topicPartitions: ITopicPartitionConfig[]) => {
