@@ -15,9 +15,14 @@ query GetCluster {
 `
 
 function Brokers(){
+    const { data } = useQuery(brokerQuery, {
+        pollInterval: 30000,
+       });
+        console.log(data)
 
 return(
     <div>Brokers</div>
+    
     );
 }
 
