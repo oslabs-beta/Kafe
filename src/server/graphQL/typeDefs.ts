@@ -65,7 +65,7 @@ export const typeDefs = `#graphql
       start: String
       end: String, 
       step: String, 
-      ids: [Int]): Broker
+      id: Int): Broker
     topics(name: [String]): [Topic]
     topic(name: String): Topic
   }

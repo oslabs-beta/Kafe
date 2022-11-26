@@ -239,7 +239,9 @@ const resolvers = {
         broker: async(parent, { start, end, step, id }): Promise<any> => {
             try {
                 const clusterInfo = await adminActions.getClusterInfo();
-                const broker = clusterInfo.brokers.filter(broker => broker.id === id)[0];
+
+                const broker = await clusterInfo.brokers.filter(broker => broker.id === id)[0];
+                console.log('Broker query: ', broker);
 
                 if (!broker) throw new Error('No broker with that found');
 
