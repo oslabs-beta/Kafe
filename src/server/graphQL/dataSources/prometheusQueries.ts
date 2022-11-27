@@ -6,7 +6,7 @@ interface PromQuery {
 //CLUSTER AND BROKER QUERIES//
 export const ACTIVE_CONTROLLER_COUNT: PromQuery = {
     name: 'Active Controller',
-    query: `sum(kafka_controller_kafkacontroller_activecontrollercount{instance=~"filter"})`,
+    query: `sum(kafka_controller_kafkacontroller_activecontrollercount)`,
     type: 'cluster'
 };
 

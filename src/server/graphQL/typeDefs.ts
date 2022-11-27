@@ -50,6 +50,7 @@ export const typeDefs = `#graphql
   type DataSeries {
     instance: String
     id: Int
+    topic: String
     values: [DataPoint]!
   }
 
@@ -61,7 +62,11 @@ export const typeDefs = `#graphql
   }
 
   type Query {
-    cluster: Cluster
+    cluster(
+      start: String,
+      end: String,
+      step: String
+      ): Cluster
     brokers(
       start: String, 
       end: String, 

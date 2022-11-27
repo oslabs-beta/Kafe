@@ -40,8 +40,12 @@ class PrometheusAPI extends RESTDataSource {
         }
         else query = query.replace(/filter/g, '.*');
         
+        console.log('Instance query: ', query);
+
         try {
-            const result = await this.get(`/api/v1/${query}`);
+            const result = await this.get(`/api/v1/query?${query}`);
+
+            console.log('Instance query result: ', result);
             const formattedResult = await this.formatResponse(result.data.result)
             return formattedResult;
         } catch (err) {
@@ -66,11 +70,10 @@ class PrometheusAPI extends RESTDataSource {
 
         query += `&start=${startTime}&end=${endTime}&step=${step}`;
 
-        console.log('Range query: ', query);
         const result = await this.get(`/api/v1/query_range?${query}`);
-        
         const formattedResult = await this.formatRangeResponse(result.data.result);
-        console.log('Final result: ', formattedResult);
+
+        console.log(`Final result for brokerId ${filter}: `, formattedResult);
         return formattedResult;
     };
 
@@ -78,15 +81,17 @@ class PrometheusAPI extends RESTDataSource {
         let query = `query=${baseQuery.query}`;
         let queryFilters;
 
-        if (filter && filter.length) queryFilters = `{request=~${requestType}, quantile=~"0.50", instance=~${filter}}`
-        else queryFilters = `{request=~${requestType}, quantile=~"0.50"}`;
+        if (filter && filter.length) {
+            const filterInstances = await this.mapInstanceFilter(filter); 
+            queryFilters = `{request=~${JSON.stringify(requestType)}, quantile=~"0.50", instance=~${JSON.stringify(filterInstances)}}`;
+        }
+        else queryFilters = `{request=~${JSON.stringify(requestType)}, quantile=~"0.50"}`;
 
         query += queryFilters;
-
-        console.log('TotalMsQuery query: ', query);
         const result = await this.get(`/api/v1/query?${query}`);
         const formattedResult = await this.formatResponse(result.data.result);
 
+        console.log('TotalMsQuery result: ', formattedResult);
         return formattedResult;
     };
 
@@ -97,7 +102,7 @@ class PrometheusAPI extends RESTDataSource {
         else query = query.replace(/filter/g, '.*');
 
         try {
-            const result = await this.get(`/api/v1/query`);
+            const result = await this.get(`/api/v1/query?${query}`);
 
             const formattedResult = await this.formatResponse(result.data.result);
             return formattedResult;
@@ -110,7 +115,7 @@ class PrometheusAPI extends RESTDataSource {
         if (this.mapped() === false) await this.generateMaps();
 
         let filterString = '';
-        for (const id of brokerIds) {
+        for await (const id of brokerIds) {
             filterString += `${this.brokerIdtoInstance[id]}|`;
         };
 
@@ -125,7 +130,7 @@ class PrometheusAPI extends RESTDataSource {
                 time: new Date(item.value[0] * 1000).toLocaleTimeString(),
                 value: parseFloat(item.value[1]).toFixed(2)
             }
-            if(item.metric.instance) newItem['id'] = this.brokerInstancetoId[item.metric.instance];
+            if(item.metric.instance) newItem['id'] = Number(this.brokerInstancetoId[item.metric.instance]);
             if(item.metric.topic) newItem['topic'] = item.metric.topic;
             formattedResult.push(newItem);
         })

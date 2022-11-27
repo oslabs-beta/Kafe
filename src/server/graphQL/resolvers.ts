@@ -81,6 +81,7 @@ const resolvers = {
 
         CPUUsageOverTime: async(parent, args, { dataSources }): Promise<any> => {
             try {
+                console.log('CPUUsage Over Time: ', parent)
                 const cpuUsage = await dataSources.prometheusAPI.instanceRangeQuery(
                     PROCESS_CPU_SECONDS_TOTAL, 
                     parent.start, 
@@ -114,7 +115,7 @@ const resolvers = {
         produceTotalTimeMs: async(parent, args, { dataSources }): Promise<any> => {
             try {
                 const produceTimeMs = await dataSources.prometheusAPI.totalMsQuery(TOTAL_TIME_MS, 'Produce', [parent.id]);
-                return produceTimeMs;
+                return produceTimeMs[0];
             } catch(err) {
                 console.log('Error occurred in produceTotalTimeMs resolver: ', err);
             }
@@ -123,7 +124,7 @@ const resolvers = {
         fetchConsumerTotalTimeMs: async(parent, args, { dataSources }): Promise<any> => {
             try {
                 const fetchConsumerTimeMs = await dataSources.prometheusAPI.totalMsQuery(TOTAL_TIME_MS, 'FetchConsumer', [parent.id]);
-                return fetchConsumerTimeMs;
+                return fetchConsumerTimeMs[0];
             } catch(err) {
                 console.log('Error occurred in fetchConsumerTotalTimeMs resolver: ', err);
             }
@@ -132,7 +133,7 @@ const resolvers = {
         fetchFollowerTotalTimeMs: async(parent, args, { dataSources }): Promise<any> => {
             try {
                 const fetchFollowerTimeMs = await dataSources.prometheusAPI.totalMsQuery(TOTAL_TIME_MS, 'FetchFollower', [parent.id]);
-                return fetchFollowerTimeMs;
+                return fetchFollowerTimeMs[0];
             } catch(err) {
                 console.log('Error occurred in fetchFollowerTotalTimeMs resolver: ', err);
             }
@@ -143,7 +144,7 @@ const resolvers = {
                 const brokerBytesInOvertime = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_IN, 
                     parent.start, 
-                    parent.stop, 
+                    parent.end, 
                     parent.step, 
                     [parent.id]);
                 return brokerBytesInOvertime;
@@ -157,7 +158,7 @@ const resolvers = {
                 const brokerBytesOutOvertime = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_OUT, 
                     parent.start, 
-                    parent.stop, 
+                    parent.end, 
                     parent.step, 
                     [parent.id]);
                 return brokerBytesOutOvertime;
@@ -212,9 +213,16 @@ const resolvers = {
     },
     
     Query: {
-        cluster: async(): Promise<any> => {
-            console.log('cluster query')
+        cluster: async(parent, { start, end, step }): Promise<any> => {
+            
             const cluster = await adminActions.getClusterInfo();
+
+            if (start) {
+                cluster['start'] = start;
+                cluster['end'] = end;
+                cluster['step'] = step;
+            }
+            console.log('Cluster query: ', cluster)
             return cluster;
         },
 
@@ -223,13 +231,14 @@ const resolvers = {
                 const clusterInfo = await adminActions.getClusterInfo();
                 let { brokers } = clusterInfo;
                 
+                console.log('Brokers query: ', start, end, step)
                 if (start) {
                     brokers.map(broker => {
-                        broker['start'] =start;
+                        broker['start'] = start;
                         broker['end'] = end;
-                        broker['end'] = step;
+                        broker['step'] = step;
                     })
-                };
+                } 
 
                 if (ids) brokers = brokers.filter(broker => ids.includes(broker.id));
                 return brokers;
