@@ -97,12 +97,14 @@ const resolvers = {
 
         JVMMemoryUsedOverTime: async(parent, args, { dataSources }): Promise<any> => {
             try {
+                console.log('JVM resolver: ', parent);
                 const brokerMemoryUsage = await dataSources.prometheusAPI.instanceRangeQuery(
                     JVM_MEMORY_BYTES_USED,
                     parent.start, 
                     parent.end, 
                     parent.step, 
                     [parent.id]);
+                console.log('JVM resolver returned result: ', brokerMemoryUsage);
                 return brokerMemoryUsage;
             } catch(err) {
                 console.log('Error occurred in JVMMemoryUsedOverTime resolver: ', err);
@@ -239,7 +241,7 @@ const resolvers = {
         broker: async(parent, { start, end, step, id }): Promise<any> => {
             try {
                 const clusterInfo = await adminActions.getClusterInfo();
-
+                console.log('Broker resolver: ', start, end);
                 const broker = await clusterInfo.brokers.filter(broker => broker.id === id)[0];
                 console.log('Broker query: ', broker);
 

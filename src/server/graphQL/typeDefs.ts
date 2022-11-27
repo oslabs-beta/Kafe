@@ -15,13 +15,13 @@ export const typeDefs = `#graphql
     port: Int
     host: String
     underreplicatedPartitionsCount: Int
-    CPUUsageOverTime: [DataPoint]
-    JVMMemoryUsedOverTime: [DataPoint]
+    CPUUsageOverTime: [DataSeries]
+    JVMMemoryUsedOverTime: [DataSeries]
     produceTotalTimeMs: DataPoint
     fetchConsumerTotalTimeMs: DataPoint
     fetchFollowerTotalTimeMs: DataPoint
-    bytesInPerSecOverTime: [DataPoint]
-    bytesOutPerSecOverTime: [DataPoint]
+    bytesInPerSecOverTime: [DataSeries]
+    bytesOutPerSecOverTime: [DataSeries]
     messagesInPerSec: [DataPoint]
   }
 
@@ -45,6 +45,12 @@ export const typeDefs = `#graphql
   type DataPoint {
     time: String
     value: Float
+  }
+
+  type DataSeries {
+    instance: String
+    id: Int
+    values: [DataPoint]!
   }
 
   type TopicOffset {

@@ -17,12 +17,14 @@ class PrometheusAPI extends RESTDataSource {
     };
 
     getUnixTimeStamp(date): GLfloat {
-        const dateTime = date.getTime() / 1000;
+        console.log('getUnixTimestamp: ', date);
+
+        const dateTime = parseFloat((new Date(date).getTime() / 1000).toFixed(3));
         return dateTime;
     };
 
     async generateMaps(): Promise<void> {
-        const brokerData = await this.get('/api/v1/query?query={brokerid!=""}');
+        const brokerData = await this.get(`/api/v1/query?query={brokerid!=''}`);
 
         brokerData.data.result.forEach(broker => {
             this.brokerIdtoInstance[broker.metric.brokerid] = broker.metric.instance;
@@ -49,18 +51,26 @@ class PrometheusAPI extends RESTDataSource {
 
     async instanceRangeQuery(baseQuery, start: string, end: string, step: string, filter) {
         let query = `query=${baseQuery.query}`;
+
         //format start, end to be valid timestamp
         const startTime = this.getUnixTimeStamp(start);
         const endTime = this.getUnixTimeStamp(end);
 
-        if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) throw "Incorrect date inputs" 
-        
-        if(filter && filter.length) query.replace(/filter/g, filter);
+        if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) throw "Incorrect date inputs";
+
+        if (filter && filter.length) {
+            const filterInstances = await this.mapInstanceFilter(filter);
+            query = query.replace(/filter/g, filterInstances);
+        }
         else query.replace(/filter/g, '.*');
 
-        query = `&start=${startTime}&end=${endTime}&step=${step}`;
+        query += `&start=${startTime}&end=${endTime}&step=${step}`;
+
+        console.log('Range query: ', query);
         const result = await this.get(`/api/v1/query_range?${query}`);
+        
         const formattedResult = await this.formatRangeResponse(result.data.result);
+        console.log('Final result: ', formattedResult);
         return formattedResult;
     };
 
@@ -78,7 +88,7 @@ class PrometheusAPI extends RESTDataSource {
         const formattedResult = await this.formatResponse(result.data.result);
 
         return formattedResult;
-    }
+    };
 
     async topicQuery(baseQuery, filter) {
         let query = `query=${baseQuery.query}`;
@@ -123,22 +133,29 @@ class PrometheusAPI extends RESTDataSource {
     };
 
     async formatRangeResponse(result: any[]) {
+        console.log('Format range response input: ', result)
         const formattedResult = [];
-        result.forEach(item => {
-            const data = {
-                values: []
+
+        result.forEach(object => {
+            const datum = {
+                values: [],
             };
-            item.values.forEach(value => {
-                const datum = {
-                    time: new Date(value[0] * 1000).toLocaleTimeString(),
-                    value: parseFloat(value[1]).toFixed(2)
-                };
-                data.values.push(datum);
-            })
-            if(item.metric.instance) data['id'] = this.brokerInstancetoId[item.metric.instance];
-            if(item.metric.topic) data['topic'] = item.metric.topic;
-            formattedResult.push(data);
-        })
+
+            object.values.forEach(value => {
+                datum.values.push({
+                    time: new Date(value[0] * 1000).toLocaleString("en-US"),
+                    value: Number(value[1]).toFixed(2)
+                })
+            });
+
+            if (object.metric.instance) {
+                datum['instance'] = object.metric.instance;
+                datum['id'] = Number(this.brokerInstancetoId[object.metric.instance]);
+            };
+            if (object.metric.topic) datum['topic'] = object.metric.topic;
+
+            formattedResult.push(datum);
+        });
         return formattedResult;
     };
 };
