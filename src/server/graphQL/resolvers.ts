@@ -1,4 +1,5 @@
 import { Console } from 'console';
+import Partitions from '../../client/components/Partitions';
 import * as adminActions from '../kafkaAdmin/adminActions';
 import {
     ACTIVE_CONTROLLER_COUNT,
@@ -97,13 +98,14 @@ const resolvers = {
         },
 
         JVMMemoryUsedOverTime: async(parent, args, { dataSources }): Promise<any> => {
+            const now = new Date();
             try {
                 console.log('JVM resolver: ', parent);
                 const brokerMemoryUsage = await dataSources.prometheusAPI.instanceRangeQuery(
                     JVM_MEMORY_BYTES_USED,
-                    parent.start, 
-                    parent.end, 
-                    parent.step, 
+                    parent.start ? parent.start : now, 
+                    parent.end ? parent.end : new Date(+now - 60000), 
+                    parent.step ? parent.step : '60s', 
                     [parent.id]);
                 console.log('JVM resolver returned result: ', brokerMemoryUsage);
                 return brokerMemoryUsage;
@@ -205,10 +207,23 @@ const resolvers = {
                 const logSize = await dataSources.prometheusAPI.topicQuery(TOPIC_LOG_SIZE, parent.name);
 
                 logSize[0].value = Number((logSize[0].value / 1000000000).toFixed(2))
-                return logSize;
+                return logSize[0];
             } catch(err) {
                 console.log(err);
             }
+        },
+    },
+
+    Partition: {
+        replicas: (parent) => {
+          return parent.replicas.map(
+            replica => (replica = { id: replica })
+          );
+        },
+
+        isr: (parent) => {
+          if (parent.isr.length === 0) return [];
+          return parent.isr.map(replica => (replica = { id: replica }));
         },
     },
     
@@ -218,9 +233,11 @@ const resolvers = {
             const cluster = await adminActions.getClusterInfo();
 
             if (start) {
-                cluster['start'] = start;
-                cluster['end'] = end;
-                cluster['step'] = step;
+                cluster.brokers.map(broker => {
+                    broker['start'] = start;
+                    broker['end'] = end;
+                    broker['step'] = step;
+                });
             }
             console.log('Cluster query: ', cluster)
             return cluster;
@@ -271,6 +288,7 @@ const resolvers = {
         topics: async(): Promise<any> => {
             try {
                 const topics = await adminActions.getTopics();
+                
                 return topics;
             } catch(err) {
                 console.log(err);

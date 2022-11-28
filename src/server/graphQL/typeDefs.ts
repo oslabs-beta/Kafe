@@ -11,7 +11,7 @@ export const typeDefs = `#graphql
   }
 
   type Broker {
-    id: Int!
+    id: Int
     port: Int
     host: String
     underreplicatedPartitionsCount: Int
@@ -57,8 +57,8 @@ export const typeDefs = `#graphql
   type TopicOffset {
     partition: Int
     offset: String
-    high: String
     low: String
+    high: String
   }
 
   type Query {
