@@ -6,7 +6,7 @@ interface PromQuery {
 //CLUSTER AND BROKER QUERIES//
 export const ACTIVE_CONTROLLER_COUNT: PromQuery = {
     name: 'Active Controller',
-    query: `sum(kafka_controller_kafkacontroller_activecontrollercount{instance=~"filter"})`,
+    query: `sum(kafka_controller_kafkacontroller_activecontrollercount)`,
     type: 'cluster'
 };
 
@@ -48,7 +48,7 @@ export const PROCESS_CPU_SECONDS_TOTAL: PromQuery = {
 //JVM Memory usage for broker
 export const JVM_MEMORY_BYTES_USED: PromQuery = {
     name: 'JVM Memory Usage Over Time',
-    query: `(sum(avg_over_time(jvm_memory_bytes_used{area="heap", job!="zookeeper", instance=~"filter"}[1m]))/sum(avg_over_time(jvm_memory_bytes_committed{area="heap", job!="zookeeper", instance=~"filter"}[1m])))*100`,
+    query: '(sum(avg_over_time(jvm_memory_bytes_used{area="heap", job!="zookeeper", instance=~"filter"}[1m]))by(application,instance)/sum(avg_over_time(jvm_memory_bytes_committed{area="heap", job!="zookeeper", instance=~"filter"}[1m]))by(application,instance))*100',
     type: 'broker'
 };
 
@@ -77,7 +77,7 @@ export const BROKER_BYTES_OUT: PromQuery = {
 export const MESSAGES_IN_PER_SEC: PromQuery = {
     name: "Message in per Second",
     query:
-      'avg_over_time(kafka_server_brokertopicmetrics_messagesinpersec{topic!="", instance=~"filter"}[60s]))',
+      'avg_over_time(kafka_server_brokertopicmetrics_messagesinpersec{topic!="", instance=~"filter"}[60s])',
     type: "broker",
 };
 
