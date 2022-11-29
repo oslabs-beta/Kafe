@@ -1,7 +1,8 @@
 import React from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
 import { useQuery } from "@apollo/client";
-import { Chart as ChartJS } from 'chart.js/auto';
+import { Chart as ChartJS, CategoryScale } from 'chart.js/auto';
+ChartJS.register(CategoryScale);
 import BarChart from './BarChart';
 
 const brokerQuery =   gql`
@@ -27,7 +28,7 @@ function Brokers(){
 return(
     <>
         <div>Brokers</div>
-        <BarChart data={chartData}/>
+        <BarChart />
     </>
     );
 }
