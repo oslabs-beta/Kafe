@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Bar } from  'react-chartjs-2';
-import { Chart as ChartJS } from 'chart.js/auto';
-import { useState } from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 
 const chartData = [
     {
@@ -39,9 +56,9 @@ const chartData = [
 //pass data as props to this component 
 
 //Remove useState, separate theme/style elements from data
-console.log(chartData);
+console.log(chartData.map(data => data.userGain));
 
-function BarChart(chartData){
+function BarChart(){
     // const [userData, setUserData] = useState({
     //     labels: chartData?.map((data) => data.year),
     //     datasets: [
@@ -62,24 +79,23 @@ function BarChart(chartData){
     //   });
     
 return(
-<Bar data = {{
-  labels: chartData?.map((data) => data.year),
-  datasets: [
-    {
-      label: "Users Gained",
-      data: chartData?.map((data) => data.userGain),
-      backgroundColor: [
-        "rgba(75,192,192,1)",
-        "#ecf0f1",
-        "#50AF95",
-        "#f3ba2f",
-        "#2a71d0",
-      ],
-      borderColor: "black",
-      borderWidth: 2,
-    },
-  ]
-}}/>)
+  <Bar data = {{
+    labels: chartData.map(data => data.year),
+    datasets: [{
+        label: "Users Gained",
+        data: chartData.map(data => data.userGain),
+        backgroundColor: [
+          "rgba(75,192,192,1)",
+          "#ecf0f1",
+          "#50AF95",
+          "#f3ba2f",
+          "#2a71d0",
+        ],
+        borderColor: "black",
+        borderWidth: 2,
+      }]
+    }}/>
+  )
 }
 
 export default BarChart;

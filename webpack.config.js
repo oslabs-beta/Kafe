@@ -10,55 +10,55 @@ module.exports = {
         publicPath: '/'
     },
     mode: process.env.NODE_ENV,
-   module: {
-    rules: [
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-        options:{
-            presets: ['@babel/preset-env', '@babel/preset-react']
-        }
-      },
-      {
-        test:/\.css$/,
-        use: ['style-loader', 'css-loader']
-      },
-      {
-        test: /\.(woff(2)?|ttf|eot|svg|png)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-            outputPath: 'fonts/'
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+          options:{
+              presets: ['@babel/preset-env', '@babel/preset-react']
           }
-        }
-        ]
-      },
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
         },
-    ]
-   },
-   plugins: [
-    new HtmlWebpackPlugin({
-        template: './src/client/index.html'
-    })
-   ],
-   resolve: {
-    extensions: [".tsx", ".ts", ".js", ".jsx"],
-   },
-   devServer: {
-    static:{
-        publicPath: '/build',
-        directory: path.resolve(__dirname, 'build')
+        {
+          test:/\.css$/,
+          use: ['style-loader', 'css-loader']
+        },
+        {
+          test: /\.(woff(2)?|ttf|eot|svg|png)(\?v=\d+\.\d+\.\d+)?$/,
+          use: [{
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'fonts/'
+            }
+          }
+          ]
+        },
+        {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/,
+          },
+      ]
     },
-    historyApiFallback: true,
-    hot: true,
-    proxy: {
-        '/gql':"http://localhost:3000"
+    plugins: [
+     new HtmlWebpackPlugin({
+         template: './src/client/index.html'
+     })
+    ],
+    resolve: {
+     extensions: [".tsx", ".ts", ".js", ".jsx"],
+    },
+    devServer: {
+     static:{
+         publicPath: '/build',
+         directory: path.resolve(__dirname, 'build')
+     },
+     historyApiFallback: true,
+     hot: true,
+     proxy: {
+         '/gql':"http://localhost:3000"
+     }
     }
-   }
 }
