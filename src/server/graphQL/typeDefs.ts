@@ -11,17 +11,17 @@ export const typeDefs = `#graphql
   }
 
   type Broker {
-    id: Int!
+    id: Int
     port: Int
     host: String
     underreplicatedPartitionsCount: Int
-    CPUUsageOverTime: [DataPoint]
-    JVMMemoryUsedOverTime: [DataPoint]
+    CPUUsageOverTime: [DataSeries]
+    JVMMemoryUsedOverTime: [DataSeries]
     produceTotalTimeMs: DataPoint
     fetchConsumerTotalTimeMs: DataPoint
     fetchFollowerTotalTimeMs: DataPoint
-    bytesInPerSecOverTime: [DataPoint]
-    bytesOutPerSecOverTime: [DataPoint]
+    bytesInPerSecOverTime: [DataSeries]
+    bytesOutPerSecOverTime: [DataSeries]
     messagesInPerSec: [DataPoint]
   }
 
@@ -31,7 +31,8 @@ export const typeDefs = `#graphql
     partitionsCount: Int
     replicasCount: Int
     ISRCount: Int
-    logSize: DataPoint
+    logSize: DataPoint,
+    offsets: [TopicOffset]
   }
 
   type Partition {
@@ -46,8 +47,26 @@ export const typeDefs = `#graphql
     value: Float
   }
 
+  type DataSeries {
+    instance: String
+    id: Int
+    topic: String
+    values: [DataPoint]!
+  }
+
+  type TopicOffset {
+    partition: Int
+    offset: String
+    low: String
+    high: String
+  }
+
   type Query {
-    cluster: Cluster
+    cluster(
+      start: String,
+      end: String,
+      step: String
+      ): Cluster
     brokers(
       start: String, 
       end: String, 
@@ -57,7 +76,7 @@ export const typeDefs = `#graphql
       start: String
       end: String, 
       step: String, 
-      ids: [Int]): Broker
+      id: Int): Broker
     topics(name: [String]): [Topic]
     topic(name: String): Topic
   }
@@ -66,5 +85,6 @@ export const typeDefs = `#graphql
     createTopic: Topic
     deleteTopic: Topic
     reassignPartitions: Partition
+    deleteTopicRecords: Boolean
   }
 `;

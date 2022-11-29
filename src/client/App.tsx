@@ -23,15 +23,11 @@ import { useQuery } from "@apollo/client"
       }
     `
 
-
-
-
-
 const App = () => {
    const { loading, data } = useQuery(testQuery, {
     pollInterval: 30000,
    });
-    // console.log(loading, data)
+    console.log(loading, data)
     return (
         <BrowserRouter>
         <Routes>

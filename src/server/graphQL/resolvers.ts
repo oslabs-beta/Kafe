@@ -1,4 +1,5 @@
 import { Console } from 'console';
+import Partitions from '../../client/components/Partitions';
 import * as adminActions from '../kafkaAdmin/adminActions';
 import {
     ACTIVE_CONTROLLER_COUNT,
@@ -81,6 +82,7 @@ const resolvers = {
 
         CPUUsageOverTime: async(parent, args, { dataSources }): Promise<any> => {
             try {
+                console.log('CPUUsage Over Time: ', parent)
                 const cpuUsage = await dataSources.prometheusAPI.instanceRangeQuery(
                     PROCESS_CPU_SECONDS_TOTAL, 
                     parent.start, 
@@ -96,13 +98,16 @@ const resolvers = {
         },
 
         JVMMemoryUsedOverTime: async(parent, args, { dataSources }): Promise<any> => {
+            const now = new Date();
             try {
+                console.log('JVM resolver: ', parent);
                 const brokerMemoryUsage = await dataSources.prometheusAPI.instanceRangeQuery(
                     JVM_MEMORY_BYTES_USED,
-                    parent.start, 
-                    parent.end, 
-                    parent.step, 
+                    parent.start ? parent.start : now, 
+                    parent.end ? parent.end : new Date(+now - 60000), 
+                    parent.step ? parent.step : '60s', 
                     [parent.id]);
+                console.log('JVM resolver returned result: ', brokerMemoryUsage);
                 return brokerMemoryUsage;
             } catch(err) {
                 console.log('Error occurred in JVMMemoryUsedOverTime resolver: ', err);
@@ -112,7 +117,7 @@ const resolvers = {
         produceTotalTimeMs: async(parent, args, { dataSources }): Promise<any> => {
             try {
                 const produceTimeMs = await dataSources.prometheusAPI.totalMsQuery(TOTAL_TIME_MS, 'Produce', [parent.id]);
-                return produceTimeMs;
+                return produceTimeMs[0];
             } catch(err) {
                 console.log('Error occurred in produceTotalTimeMs resolver: ', err);
             }
@@ -121,7 +126,7 @@ const resolvers = {
         fetchConsumerTotalTimeMs: async(parent, args, { dataSources }): Promise<any> => {
             try {
                 const fetchConsumerTimeMs = await dataSources.prometheusAPI.totalMsQuery(TOTAL_TIME_MS, 'FetchConsumer', [parent.id]);
-                return fetchConsumerTimeMs;
+                return fetchConsumerTimeMs[0];
             } catch(err) {
                 console.log('Error occurred in fetchConsumerTotalTimeMs resolver: ', err);
             }
@@ -130,7 +135,7 @@ const resolvers = {
         fetchFollowerTotalTimeMs: async(parent, args, { dataSources }): Promise<any> => {
             try {
                 const fetchFollowerTimeMs = await dataSources.prometheusAPI.totalMsQuery(TOTAL_TIME_MS, 'FetchFollower', [parent.id]);
-                return fetchFollowerTimeMs;
+                return fetchFollowerTimeMs[0];
             } catch(err) {
                 console.log('Error occurred in fetchFollowerTotalTimeMs resolver: ', err);
             }
@@ -141,7 +146,7 @@ const resolvers = {
                 const brokerBytesInOvertime = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_IN, 
                     parent.start, 
-                    parent.stop, 
+                    parent.end, 
                     parent.step, 
                     [parent.id]);
                 return brokerBytesInOvertime;
@@ -155,7 +160,7 @@ const resolvers = {
                 const brokerBytesOutOvertime = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_OUT, 
                     parent.start, 
-                    parent.stop, 
+                    parent.end, 
                     parent.step, 
                     [parent.id]);
                 return brokerBytesOutOvertime;
@@ -202,18 +207,39 @@ const resolvers = {
                 const logSize = await dataSources.prometheusAPI.topicQuery(TOPIC_LOG_SIZE, parent.name);
 
                 logSize[0].value = Number((logSize[0].value / 1000000000).toFixed(2))
-                return logSize;
+                return logSize[0];
             } catch(err) {
                 console.log(err);
             }
         },
     },
+
+    Partition: {
+        replicas: (parent) => {
+          return parent.replicas.map(
+            replica => (replica = { id: replica })
+          );
+        },
+
+        isr: (parent) => {
+          if (parent.isr.length === 0) return [];
+          return parent.isr.map(replica => (replica = { id: replica }));
+        },
+    },
     
     Query: {
-        cluster: async(): Promise<any> => {
-            console.log('cluster query')
+        cluster: async(parent, { start, end, step }): Promise<any> => {
+            
             const cluster = await adminActions.getClusterInfo();
-            console.log(cluster);
+
+            if (start) {
+                cluster.brokers.map(broker => {
+                    broker['start'] = start;
+                    broker['end'] = end;
+                    broker['step'] = step;
+                });
+            }
+            console.log('Cluster query: ', cluster)
             return cluster;
         },
 
@@ -222,13 +248,14 @@ const resolvers = {
                 const clusterInfo = await adminActions.getClusterInfo();
                 let { brokers } = clusterInfo;
                 
+                console.log('Brokers query: ', start, end, step)
                 if (start) {
                     brokers.map(broker => {
-                        broker['start'] =start;
+                        broker['start'] = start;
                         broker['end'] = end;
-                        broker['end'] = step;
+                        broker['step'] = step;
                     })
-                };
+                } 
 
                 if (ids) brokers = brokers.filter(broker => ids.includes(broker.id));
                 return brokers;
@@ -240,7 +267,9 @@ const resolvers = {
         broker: async(parent, { start, end, step, id }): Promise<any> => {
             try {
                 const clusterInfo = await adminActions.getClusterInfo();
-                const broker = clusterInfo.brokers.filter(broker => broker.id === id)[0];
+                console.log('Broker resolver: ', start, end);
+                const broker = await clusterInfo.brokers.filter(broker => broker.id === id)[0];
+                console.log('Broker query: ', broker);
 
                 if (!broker) throw new Error('No broker with that found');
 
@@ -259,6 +288,7 @@ const resolvers = {
         topics: async(): Promise<any> => {
             try {
                 const topics = await adminActions.getTopics();
+                
                 return topics;
             } catch(err) {
                 console.log(err);
@@ -274,24 +304,57 @@ const resolvers = {
             }
         },
     },
-
     Mutation: {
-        createTopic: async () => {
-
+        createTopic: async (
+            parent, 
+            {
+            topic,
+            numPartitions = -1,
+            replicationFactor = -1,
+            replicaAssignment = [],
+            configEntries = []
+            }
+        ) => {
+            try {
+                const newTopic = await adminActions.createTopics({
+                    topic,
+                    numPartitions,
+                    replicationFactor,
+                    replicaAssignment,
+                    configEntries
+                });
+                return newTopic;
+            } catch(err) {
+                console.log('Create Topic Resolver Error:', err);
+            }
         },
 
-        deleteTopic: async () => {
-
+        deleteTopic: async (parent, { name }) => {
+            try {
+                const deletedTopic = await adminActions.deleteTopics([name]);
+                return deletedTopic;
+            } catch (err) {
+                console.log('Delete Topic Resolver Error:', err);
+            }
         },
 
-        // deleteTopicRecords: async () => {
-
-        // },
-
-        reassignPartitions: async() => {
-
+        deleteTopicRecords: async (parent, {name, partitions}) => {
+            try {
+                const deletedTopicRecords = await adminActions.deleteAllTopicRecords(name, partitions);
+                // return true;   
+            } catch (err) {
+                console.log('Delete Topic Records Resolver Error:', err);
+            }
         },
 
+        reassignPartitions: async(parent , {topics}) => {
+            try {
+                const reassignPartitions = await adminActions.reassignPartitions(topics);
+                return reassignPartitions;
+            } catch (err){
+                console.log('Reassign Partitions Error:', err)
+            }
+        },
     }
 };
 
