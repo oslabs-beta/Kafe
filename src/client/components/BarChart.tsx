@@ -37,13 +37,17 @@ const chartData = [
   ];
 
 //pass data as props to this component 
+
+//Remove useState, separate theme/style elements from data
+console.log(chartData);
+
 function BarChart(chartData){
     const [userData, setUserData] = useState({
-        labels: chartData.map((data) => data.year),
+        labels: chartData?.map((data) => data.year),
         datasets: [
           {
             label: "Users Gained",
-            data: chartData.map((data) => data.userGain),
+            data: chartData?.map((data) => data.userGain),
             backgroundColor: [
               "rgba(75,192,192,1)",
               "#ecf0f1",
@@ -58,7 +62,24 @@ function BarChart(chartData){
       });
     
 return(
-<Bar data= {chartData}/>)
+<Bar data = {{
+  labels: chartData?.map((data) => data.year),
+  datasets: [
+    {
+      label: "Users Gained",
+      data: chartData?.map((data) => data.userGain),
+      backgroundColor: [
+        "rgba(75,192,192,1)",
+        "#ecf0f1",
+        "#50AF95",
+        "#f3ba2f",
+        "#2a71d0",
+      ],
+      borderColor: "black",
+      borderWidth: 2,
+    },
+  ]
+}}/>)
 }
 
 export default BarChart;
