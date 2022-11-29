@@ -32,8 +32,9 @@ export interface Topic {
     partitions: [Partition]
     partitionsCount?: Number
     replicasCount?: Number,
-    ISRCount?: Number
-    logSize?: DataPoint
+    ISRCount?: Number,
+    logSize?: DataPoint,
+    offsets?: [TopicOffset]
 };
 
 export interface Partition {
@@ -50,4 +51,11 @@ export interface DataPoint {
     time: Date,
     value: Number,
 };
+
+export interface TopicOffset {
+    partition: Number,
+    offset: String,
+    high: String,
+    low: String
+}
 
