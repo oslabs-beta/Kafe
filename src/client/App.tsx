@@ -24,22 +24,22 @@ import { useQuery } from "@apollo/client"
     `
 
 const App = () => {
-   const { loading, data } = useQuery(testQuery, {
-    pollInterval: 30000,
-   });
+  //  const { loading, data } = useQuery(testQuery, {
+  //   pollInterval: 30000,
+  //  });
     
     return (
         <BrowserRouter>
-        <Routes>
-        <Route path="/" element={<Dashboard />}>
-          <Route index element={<Main />}></Route>
-          <Route path="brokers" element={<Brokers />}></Route>
-          <Route path="producers" element={<Producers />}></Route>
-          <Route path="consumers" element={<Consumers />}></Route>
-          <Route path="Topics" element={<Topics />}></Route>
-          <Route path="Partitions" element={<Partitions />}></Route>
-        </Route>
-      </Routes>
+          <Routes>
+            <Route path="/" element={<Dashboard />}>
+              <Route index element={<Main />}></Route>
+              <Route path="brokers" element={<Brokers />}></Route>
+              <Route path="producers" element={<Producers />}></Route>
+              <Route path="consumers" element={<Consumers />}></Route>
+              <Route path="Topics" element={<Topics />}></Route>
+              <Route path="Partitions" element={<Partitions />}></Route>
+            </Route>
+          </Routes>
         </BrowserRouter>
     )
 };

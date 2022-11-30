@@ -17,7 +17,7 @@ class PrometheusAPI extends RESTDataSource {
     };
 
     getUnixTimeStamp(date): GLfloat {
-        console.log('getUnixTimestamp: ', date);
+        // console.log('getUnixTimestamp: ', date);
 
         const dateTime = parseFloat((new Date(date).getTime() / 1000).toFixed(3));
         return dateTime;
@@ -26,6 +26,7 @@ class PrometheusAPI extends RESTDataSource {
     async generateMaps(): Promise<void> {
         const brokerData = await this.get(`/api/v1/query?query={brokerid!=''}`);
 
+        console.log('brokerData: ', brokerData);
         brokerData.data.result.forEach(broker => {
             this.brokerIdtoInstance[broker.metric.brokerid] = broker.metric.instance;
             this.brokerInstancetoId[broker.metric.instance] = broker.metric.brokerid;
@@ -40,12 +41,12 @@ class PrometheusAPI extends RESTDataSource {
         }
         else query = query.replace(/filter/g, '.*');
 
-        console.log('Instance query: ', query);
+        // console.log('Instance query: ', query);
 
         try {
             const result = await this.get(`/api/v1/query?${query}`);
 
-            console.log('Instance query result: ', result);
+            // console.log('Instance query result: ', result);
             const formattedResult = await this.formatResponse(result.data.result)
             return formattedResult;
         } catch (err) {
@@ -69,9 +70,9 @@ class PrometheusAPI extends RESTDataSource {
         else query.replace(/filter/g, '.*');
 
         query += `&start=${startTime}&end=${endTime}&step=${step}`;
-
+        console.log('Instance Range Query: ', query);
         const result = await this.get(`/api/v1/query_range?${query}`);
-        console.log('Initial result:  ', result);
+        
         const formattedResult = await this.formatRangeResponse(result.data.result);
 
         console.log(`Final result for brokerId ${filter}: `, formattedResult);
@@ -113,14 +114,16 @@ class PrometheusAPI extends RESTDataSource {
     };
 
     async mapInstanceFilter(brokerIds: number[]): Promise<string> {
+        console.log('Checking mapped: ', Object.keys(this.brokerIdtoInstance));
         if (this.mapped() === false) await this.generateMaps();
 
+        console.log('Map Instance Filter: ', this.brokerIdtoInstance);
         let filterString = '';
-        for await (const id of brokerIds) {
+        for (const id of brokerIds) {
             filterString += `${this.brokerIdtoInstance[id]}|`;
         };
 
-        return filterString;
+        return filterString === 'undefined|' ? '.*' : filterString;
     };
 
     //format unix date to be timestamp, format value into number/float
@@ -139,7 +142,7 @@ class PrometheusAPI extends RESTDataSource {
     };
 
     async formatRangeResponse(result: any[]) {
-        console.log('Format range response input: ', result)
+        
         const formattedResult = [];
 
         result.forEach(object => {
@@ -149,7 +152,10 @@ class PrometheusAPI extends RESTDataSource {
 
             object.values.forEach(value => {
                 datum.values.push({
-                    time: new Date(value[0] * 1000).toLocaleString("en-US"),
+                    time: new Date(value[0] * 1000).toLocaleString("en-US", {
+                        timeStyle: "long",
+                        hour12: false,
+                      }),
                     value: Number(value[1]).toFixed(2)
                 })
             });
