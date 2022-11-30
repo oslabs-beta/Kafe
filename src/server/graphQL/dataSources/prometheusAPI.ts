@@ -31,7 +31,7 @@ class PrometheusAPI extends RESTDataSource {
             this.brokerInstancetoId[broker.metric.instance] = broker.metric.brokerid;
         });
     };
-    
+
     async instanceQuery(baseQuery, filter: number[]) {
         let query = `query=${baseQuery.query}`;
         if (filter && filter.length) {
@@ -39,7 +39,7 @@ class PrometheusAPI extends RESTDataSource {
             query = query.replace(/filter/g, filterInstances);
         }
         else query = query.replace(/filter/g, '.*');
-        
+
         console.log('Instance query: ', query);
 
         try {
@@ -71,6 +71,7 @@ class PrometheusAPI extends RESTDataSource {
         query += `&start=${startTime}&end=${endTime}&step=${step}`;
 
         const result = await this.get(`/api/v1/query_range?${query}`);
+        console.log('Initial result:  ', result);
         const formattedResult = await this.formatRangeResponse(result.data.result);
 
         console.log(`Final result for brokerId ${filter}: `, formattedResult);
@@ -82,7 +83,7 @@ class PrometheusAPI extends RESTDataSource {
         let queryFilters;
 
         if (filter && filter.length) {
-            const filterInstances = await this.mapInstanceFilter(filter); 
+            const filterInstances = await this.mapInstanceFilter(filter);
             queryFilters = `{request=~${JSON.stringify(requestType)}, quantile=~"0.50", instance=~${JSON.stringify(filterInstances)}}`;
         }
         else queryFilters = `{request=~${JSON.stringify(requestType)}, quantile=~"0.50"}`;
@@ -97,7 +98,7 @@ class PrometheusAPI extends RESTDataSource {
 
     async topicQuery(baseQuery, filter) {
         let query = `query=${baseQuery.query}`;
-        
+
         if (filter) query = query.replace(/filter/g, filter);
         else query = query.replace(/filter/g, '.*');
 
@@ -121,7 +122,7 @@ class PrometheusAPI extends RESTDataSource {
 
         return filterString;
     };
-    
+
     //format unix date to be timestamp, format value into number/float
     async formatResponse(result: any[]) {
         const formattedResult = [];

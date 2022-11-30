@@ -16,9 +16,9 @@ const container = document.getElementById('root')!;
 const root = createRoot(container);
 
 const client = new ApolloClient({
-  uri: 'http://localhost:3000/',
+  uri: 'http://localhost:3000/gql',
   cache: new InMemoryCache(),
-});  
+});
 
 const theme = createTheme({
     palette: {
@@ -56,7 +56,7 @@ root.render(
     <ThemeProvider theme={theme}>
       {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
       <CssBaseline />
-      <ApolloProvider client={client}>      
+      <ApolloProvider client={client}>
         <App />
       </ApolloProvider>
     </ThemeProvider>

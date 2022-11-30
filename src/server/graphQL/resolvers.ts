@@ -84,10 +84,10 @@ const resolvers = {
             try {
                 console.log('CPUUsage Over Time: ', parent)
                 const cpuUsage = await dataSources.prometheusAPI.instanceRangeQuery(
-                    PROCESS_CPU_SECONDS_TOTAL, 
-                    parent.start, 
-                    parent.end, 
-                    parent.step, 
+                    PROCESS_CPU_SECONDS_TOTAL,
+                    parent.start,
+                    parent.end,
+                    parent.step,
                     [parent.id]);
 
                 console.log('cpuUsage resolver result: ', cpuUsage);
@@ -103,9 +103,9 @@ const resolvers = {
                 console.log('JVM resolver: ', parent);
                 const brokerMemoryUsage = await dataSources.prometheusAPI.instanceRangeQuery(
                     JVM_MEMORY_BYTES_USED,
-                    parent.start ? parent.start : now, 
-                    parent.end ? parent.end : new Date(+now - 60000), 
-                    parent.step ? parent.step : '60s', 
+                    parent.start ? parent.start : new Date(+now - 60000 * 10),
+                    parent.end ? parent.end : now,
+                    parent.step ? parent.step : '60s',
                     [parent.id]);
                 console.log('JVM resolver returned result: ', brokerMemoryUsage);
                 return brokerMemoryUsage;
@@ -144,10 +144,10 @@ const resolvers = {
         bytesInPerSecOverTime: async(parent, args, { dataSources }): Promise<any> => {
             try {
                 const brokerBytesInOvertime = await dataSources.prometheusAPI.instanceRangeQuery(
-                    BROKER_BYTES_IN, 
-                    parent.start, 
-                    parent.end, 
-                    parent.step, 
+                    BROKER_BYTES_IN,
+                    parent.start,
+                    parent.end,
+                    parent.step,
                     [parent.id]);
                 return brokerBytesInOvertime;
             } catch(err) {
@@ -158,10 +158,10 @@ const resolvers = {
         bytesOutPerSecOverTime: async(parent, args, { dataSources }): Promise<any> => {
             try {
                 const brokerBytesOutOvertime = await dataSources.prometheusAPI.instanceRangeQuery(
-                    BROKER_BYTES_OUT, 
-                    parent.start, 
-                    parent.end, 
-                    parent.step, 
+                    BROKER_BYTES_OUT,
+                    parent.start,
+                    parent.end,
+                    parent.step,
                     [parent.id]);
                 return brokerBytesOutOvertime;
             } catch(err) {
@@ -226,10 +226,10 @@ const resolvers = {
           return parent.isr.map(replica => (replica = { id: replica }));
         },
     },
-    
+
     Query: {
         cluster: async(parent, { start, end, step }): Promise<any> => {
-            
+
             const cluster = await adminActions.getClusterInfo();
 
             if (start) {
@@ -247,7 +247,7 @@ const resolvers = {
             try {
                 const clusterInfo = await adminActions.getClusterInfo();
                 let { brokers } = clusterInfo;
-                
+
                 console.log('Brokers query: ', start, end, step)
                 if (start) {
                     brokers.map(broker => {
@@ -255,7 +255,7 @@ const resolvers = {
                         broker['end'] = end;
                         broker['step'] = step;
                     })
-                } 
+                }
 
                 if (ids) brokers = brokers.filter(broker => ids.includes(broker.id));
                 return brokers;
@@ -288,7 +288,7 @@ const resolvers = {
         topics: async(): Promise<any> => {
             try {
                 const topics = await adminActions.getTopics();
-                
+
                 return topics;
             } catch(err) {
                 console.log(err);
@@ -306,7 +306,7 @@ const resolvers = {
     },
     Mutation: {
         createTopic: async (
-            parent, 
+            parent,
             {
             topic,
             numPartitions = -1,
@@ -341,7 +341,7 @@ const resolvers = {
         deleteTopicRecords: async (parent, {name, partitions}) => {
             try {
                 const deletedTopicRecords = await adminActions.deleteAllTopicRecords(name, partitions);
-                // return true;   
+                // return true;
             } catch (err) {
                 console.log('Delete Topic Records Resolver Error:', err);
             }
