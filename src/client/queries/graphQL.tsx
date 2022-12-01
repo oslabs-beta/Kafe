@@ -7,7 +7,7 @@ export const BROKERS_CPU_USAGE = gql`
             id
             host
             port
-            JVMMemoryUsedOverTime {
+            CPUUsageOverTime {
                 topic
                 values {
                     time
@@ -18,24 +18,24 @@ export const BROKERS_CPU_USAGE = gql`
       }
 `;
 
-// export const BROKER_JVM_MEMORY_USAGE = gql`
-//     query BrokersJVMMemoryUsage($start: String, $end: String, $step: String) {
-//       brokers (start: $start, end: $end, step: $step) {
-//         id
-//         host
-//         port
-//         JVMMemoryUsedOverTime {
-//           instance: String
-//           id: Int
-//           topic: String
-//           values: {
-//             time: String
-//             value: Float
-//           }
-//         }
-//     }
-// }
-// `
+export const BROKER_JVM_MEMORY_USAGE = gql`
+    query BrokersJVMMemoryUsage($start: String, $end: String, $step: String) {
+      brokers (start: $start, end: $end, step: $step) {
+        id
+        host
+        port
+        JVMMemoryUsedOverTime {
+          instance
+          id
+          topic
+          values {
+            time
+            value
+          }
+        }
+    }
+}
+`
 
 // // export const BROKER_PRODUCE_TOTAL_TIME = gql`
 

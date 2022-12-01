@@ -81,13 +81,14 @@ const resolvers = {
         },
 
         CPUUsageOverTime: async(parent, args, { dataSources }): Promise<any> => {
+            const now = new Date();
             try {
                 console.log('CPUUsage Over Time: ', parent)
                 const cpuUsage = await dataSources.prometheusAPI.instanceRangeQuery(
                     PROCESS_CPU_SECONDS_TOTAL,
-                    parent.start,
-                    parent.end,
-                    parent.step,
+                    parent.start ? parent.start : new Date(+now - 60000 * 10),
+                    parent.end ? parent.end : now,
+                    parent.step ? parent.step : '60s',
                     [parent.id]);
 
                 console.log('cpuUsage resolver result: ', cpuUsage);

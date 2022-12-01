@@ -15,7 +15,7 @@ function Brokers(){
 return(
     <>
         <div>Brokers</div>
-        <BarChart />
+        {/* <BarChart /> */}
         <RealTimeChart/>
     </>
     );
