@@ -12,7 +12,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-
+// import 'chartjs-adapter-luxon';
 import { BROKERS_CPU_USAGE } from '../queries/graphQL';
 
 ChartJS.register(
@@ -25,7 +25,7 @@ ChartJS.register(
   Legend
 );
 
-// ChartJS.register(ChartStreaming);
+ChartJS.register(ChartStreaming);
 
 const RealTimeChart = (props) => {
   const { loading, data, refetch } = useQuery(BROKERS_CPU_USAGE, {
