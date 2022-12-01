@@ -8,11 +8,8 @@ export const BROKERS_CPU_USAGE = gql`
             host
             port
             CPUUsageOverTime {
-                topic
-                values {
-                    time
-                    value
-                }
+              time
+              value  
             }
         }
       }
@@ -25,9 +22,6 @@ export const BROKER_JVM_MEMORY_USAGE = gql`
         host
         port
         JVMMemoryUsedOverTime {
-          instance
-          id
-          topic
           values {
             time
             value

@@ -92,7 +92,7 @@ const resolvers = {
                     [parent.id]);
 
                 console.log('cpuUsage resolver result: ', cpuUsage);
-                return cpuUsage;
+                return cpuUsage[0].values;
             } catch(err){
                 console.log('Error occurred in CPUUsageOverTime resolver: ', err)
             }

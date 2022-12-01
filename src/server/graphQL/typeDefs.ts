@@ -15,7 +15,7 @@ export const typeDefs = `#graphql
     port: Int
     host: String
     underreplicatedPartitionsCount: Int
-    CPUUsageOverTime: [DataSeries]
+    CPUUsageOverTime: [DataPoint]
     JVMMemoryUsedOverTime: [DataSeries]
     produceTotalTimeMs: DataPoint
     fetchConsumerTotalTimeMs: DataPoint
