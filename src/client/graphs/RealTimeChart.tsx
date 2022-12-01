@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
 import { useQuery } from "@apollo/client";
 import ChartStreaming from "chartjs-plugin-streaming";
@@ -110,7 +110,7 @@ const RealTimeChart = (props) => {
               y: Math.random() * 99,
             })
           });
-
+          chart.update('quiet');
           console.log('Streaming: ', chart.data.datasets)
           // const queryVariables = {
           //   start: now.current.toString(),
@@ -220,8 +220,16 @@ const RealTimeChart = (props) => {
 
   // console.log(chartData);
   return (
-    <Line data={chartData} options={options} ref={chartRef}/>
-  )
+    <>
+      {useMemo(() => {
+        return loading && !loaded.current ? (
+          <div>Loading...</div>
+        ) : (
+          <Line options={options} data={chartData} ref={chartRef} />
+        );
+      }, [chartData])}
+    </>
+  );
 };
 
 export default RealTimeChart;
