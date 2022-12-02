@@ -47,11 +47,6 @@ const RealTimeChart = () => {
 
   const options = {
     responsive: true,
-    //feed time stamp to x axis, value to y
-    // parsing: {
-    //   xAxisKey: "time",
-    //   yAxisKey: "value",
-    // },
     elements: {
       line: {
         tension: 0.5,
@@ -67,13 +62,6 @@ const RealTimeChart = () => {
         delay: 10 * 1000,
         refresh: 30 * 1000,
         onRefresh: (chart) => {
-          
-          // chart.data.datasets.forEach(dataset => {
-          //     dataset.data.push({
-          //         "x": Date.now(),
-          //         "y": Math.random() * 99
-          //     });
-          // });
 
           const variables = {
             start: now.current.toString(),
@@ -87,7 +75,7 @@ const RealTimeChart = () => {
               if (loaded.current) {
                 result.data.brokers.forEach((broker, index) => {
                   broker.CPUUsageOverTime.forEach(series => chart.data.datasets[index].data.push({
-                    "x": series.time,
+                    'x': series.time,
                     'y': series.value,
                   }))
                 })
@@ -95,49 +83,15 @@ const RealTimeChart = () => {
 
               chart.update('quiet')
             })
-            .catch(err => console.log(err))
-          
-          console.log(chart.data.datasets)
+            .catch(err => console.log(err));
+
+          console.log('Updated data from refetch: ', chart.data.datasets)
         },
       },
     },
     scales: {
       x: {
         type: "realtime",
-        // realtime: {
-        //   duration: 60 * 1000,
-        //   delay: 20 * 1000,
-        //   refresh: 30 * 1000,
-        //   onRefresh: (chart) => {
-        //     console.log('Starting time: ', now)
-        //     const queryVariables = {
-        //       start: new Date(Date.now() - 20 * 60 * 1000),
-        //       end: new Date().toString(),
-        //       step: '30s',
-        //     };
-        //     now.current = new Date(queryVariables.end);
-        //     // console.log('chart dataset before refetch', chart.data.datasets);
-        //     refetch({...queryVariables})
-        //       .then(queryResult => {
-        //         if (!loading) {
-
-        //           console.log('Query Result: ', queryResult);
-        //           console.log('Initial char data: ', chart.data.datasets);
-        //           queryResult.data.brokers.forEach((broker, index) => {
-        //             // console.log('For each loop start data ', chart.data.datasets[index]);
-        //             broker.CPUUsageOverTime.forEach((series) => {
-        //               chart.data.datasets[index].data.push({
-        //                 'x': series.time,
-        //                 'y': series.value,
-        //               });
-        //             });
-                    
-        //             console.log('For each loop end data ', chart.data.datasets[index])
-        //           });
-        //         };
-        //         chart.update('quiet');
-        //       }).catch(err => console.log(err));
-        // },
         time: {
           unit: "minute",
           parser: (label: string) => new Date(label).getTime(),
