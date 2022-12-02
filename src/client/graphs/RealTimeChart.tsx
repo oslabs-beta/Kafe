@@ -30,7 +30,6 @@ ChartJS.register(
 );
 
 import { BROKERS_CPU_USAGE, BROKER_JVM_MEMORY_USAGE } from '../queries/graphQL';
-import { ModeComment } from '@mui/icons-material';
 
 const RealTimeChart = () => {
 
@@ -42,18 +41,21 @@ const RealTimeChart = () => {
   const colors = ["#003f5c", "#bc5090", "#ffa600", "#58508d", "#2a71d0"];
 
   //Get current time/date for end paramter of Broker CPU query
-  const now = useRef(new Date());
+  const now = useRef(new Date(Date.now() - 60 * 1000 * 10 * 2));
   const loaded = useRef(false);
   const chartRef = useRef(null);
-
-
 
   const options = {
     responsive: true,
     //feed time stamp to x axis, value to y
-    parsing: {
-      xAxisKey: "time",
-      yAxisKey: "value",
+    // parsing: {
+    //   xAxisKey: "time",
+    //   yAxisKey: "value",
+    // },
+    elements: {
+      line: {
+        tension: 0.4,
+      },
     },
     plugins: {
       title: {
@@ -64,66 +66,73 @@ const RealTimeChart = () => {
         duration: 5 * 60000,
         delay: 10 * 1000,
         refresh: 60 * 1000,
-        // onRefresh: (chart) => {
-        //   const variables = {
-        //     start: now.current.toString(),
-        //     end: new Date().toString(),
-        //     step: step,
-        //   };
-        //   timeNow.current = new Date(variables.end);
-        //   refetch({ ...variables }).then((result) => {
-        //     if (loaded.current) {
-        //       result.data[resource].forEach((series, index) => {
-        //         series[`${metric}`].forEach((point) => {
-        //           chart.data.datasets[index].data.push(point);
-        //         });
-        //       });
-        //       console.log('Refteched data:', chart.data.datasets, 'Refetched labels:', chart.data.labels);
-        //     }
+        onRefresh: (chart) => {
+          
+          chart.data.datasets.forEach(dataset => {
+              dataset.data.push({
+                  "x": Date.now(),
+                  "y": Math.random() * 99
+              });
+          });
 
-        //     chart.update("quiet");
-        //   });
-        // },
+          // const variables = {
+          //   start: now.current.toString(),
+          //   end: new Date().toString(),
+          //   step: step,
+          // };
+          // timeNow.current = new Date(variables.end);
+          // refetch({ ...variables }).then((result) => {
+          //   if (loaded.current) {
+          //     result.data[resource].forEach((series, index) => {
+          //       series[`${metric}`].forEach((point) => {
+          //         chart.data.datasets[index].data.push(point);
+          //       });
+          //     });
+          //     console.log('Refteched data:', chart.data.datasets, 'Refetched labels:', chart.data.labels);
+          //   }
+
+          //   chart.update("quiet");
+          // });
+        },
       },
     },
     scales: {
-      xAxes: {
+      x: {
         type: "realtime",
-        realtime: {
-          // onRefresh: chart => {
-          //     chart.data.datasets.forEach(dataset => {
-          //         dataset.data.push({
-          //             "time": moment(),
-          //             "value": Math.random() * 99
-          //         });
-          //     });
-          // }
-            onRefresh: (chart) => {
-              const queryVariables = {
-                start: now.current.toString(),
-                end: new Date().toString(),
-                step: '30s',
-              };
-              now.current = new Date(queryVariables.end);
-              // console.log('chart dataset before refetch', chart.data.datasets);
-              refetch({...queryVariables})
-                .then(queryResult => {
-                  if (loaded.current) {
-                    queryResult.data.brokers.forEach((broker, index) => {
-                      // console.log('For each loop start data ', chart.data.datasets[index]);
-                      broker.CPUUsageOverTime.forEach(series => {
-                        chart.data.datasets[index].data.push({
-                          'time': series.time,
-                          'value': series.value,
-                        });
-                      });
-                      chart.update('quiet');
-                      console.log('For each loop end data ', chart.data.datasets[index])
-                    });
-                  }
+        // realtime: {
+        //   duration: 60 * 1000,
+        //   delay: 20 * 1000,
+        //   refresh: 30 * 1000,
+        //   onRefresh: (chart) => {
+        //     console.log('Starting time: ', now)
+        //     const queryVariables = {
+        //       start: new Date(Date.now() - 20 * 60 * 1000),
+        //       end: new Date().toString(),
+        //       step: '30s',
+        //     };
+        //     now.current = new Date(queryVariables.end);
+        //     // console.log('chart dataset before refetch', chart.data.datasets);
+        //     refetch({...queryVariables})
+        //       .then(queryResult => {
+        //         if (!loading) {
 
-                });
-        },
+        //           console.log('Query Result: ', queryResult);
+        //           console.log('Initial char data: ', chart.data.datasets);
+        //           queryResult.data.brokers.forEach((broker, index) => {
+        //             // console.log('For each loop start data ', chart.data.datasets[index]);
+        //             broker.CPUUsageOverTime.forEach((series) => {
+        //               chart.data.datasets[index].data.push({
+        //                 'x': series.time,
+        //                 'y': series.value,
+        //               });
+        //             });
+                    
+        //             console.log('For each loop end data ', chart.data.datasets[index])
+        //           });
+        //         };
+        //         chart.update('quiet');
+        //       }).catch(err => console.log(err));
+        // },
         time: {
           unit: "minute",
           parser: (label: string) => new Date(label).getTime(),
@@ -140,29 +149,29 @@ const RealTimeChart = () => {
         },
         ticks: {
           autoSkip: true,
-          // maxRotation: 45,
-          // minRotation: 45,
+          maxRotation: 45,
+          minRotation: 45,
         },
       },
     },
-      yAxes: {
+      y: {
         stacked: true,
         min: 0,
         max: 100,
         title: {
           display: true,
           text: 'CPU Usage'
-        },
       },
     },
-  };
+  },
+  
 
   //GraphQL query to the backend
   const { loading, data, refetch } = useQuery(BROKERS_CPU_USAGE, {
     variables: {
-      start: new Date(now.current.valueOf() - 10 * 60000 * 2).toString(),
-      end: now.current.toString(),
-      step: '30s',
+      start: new Date(Date.now() - 60000 * 10).toString(),
+      end: new Date().toString(),
+      step: '60s',
     },
     fetchPolicy: "network-only",
     nextFetchPolicy: "network-only",
@@ -170,16 +179,14 @@ const RealTimeChart = () => {
    });
 
   useEffect(() => {
-    //make sure initial page load done
+    //make sure initial page load done ss
     if (loading || loaded.current) return;
     // const labels = data.brokers[0].CPUUsageOverTime[0].values.map(series => series.time);
     const labels = [];
     const datasets = [];
 
     data.brokers.forEach((broker, index) => {
-      // const dataPH = [];
-      // broker.CPUUsageOverTime.forEach( metric => dataPH.push(metric.value));
-      // console.log('data series placeholder:', dataPH)
+      
       const dataSet = {
         label: `Broker ${broker.id}`,
         backgroundColor: `${colors[index]}`,
@@ -187,11 +194,9 @@ const RealTimeChart = () => {
         pointRadius: 0,
         tension: 0.5,
         showLine: true,
-        data: broker.CPUUsageOverTime.map(series => series = {'time': series.time, 'value': series.value})
-        // data: dataPH
+        data: broker.CPUUsageOverTime.map(series => series = {'x': series.time, 'y': series.value})
+        
       };
-      // console.log('Use Effect Data: ', dataSet, 'useEffect loading:', loading)
-      // console.log('Datasets before pushing:', datasets);
       datasets.push(dataSet);
       console.log('Datasets after pushing:', datasets);
     });
@@ -206,8 +211,6 @@ const RealTimeChart = () => {
     loaded.current = false;
   }, []);
 
-
-  // console.log(chartData);
   return (
     <>
       {useMemo(() => {
