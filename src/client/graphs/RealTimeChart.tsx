@@ -41,7 +41,7 @@ const RealTimeChart = () => {
   const colors = ["#003f5c", "#bc5090", "#ffa600", "#58508d", "#2a71d0"];
 
   //Get current time/date for end paramter of Broker CPU query
-  const now = useRef(new Date(Date.now() - 60 * 1000 * 10 * 2));
+  const now = useRef(Date.now());
   const loaded = useRef(false);
   const chartRef = useRef(null);
 
@@ -54,45 +54,50 @@ const RealTimeChart = () => {
     // },
     elements: {
       line: {
-        tension: 0.4,
+        tension: 0.5,
       },
     },
     plugins: {
       title: {
         display: true,
-        text: '% CPU Usage Over Time',
+        text: 'CPU Usage Over Time',
       },
       streaming: {
         duration: 5 * 60000,
         delay: 10 * 1000,
-        refresh: 60 * 1000,
+        refresh: 30 * 1000,
         onRefresh: (chart) => {
           
-          chart.data.datasets.forEach(dataset => {
-              dataset.data.push({
-                  "x": Date.now(),
-                  "y": Math.random() * 99
-              });
-          });
-
-          // const variables = {
-          //   start: now.current.toString(),
-          //   end: new Date().toString(),
-          //   step: step,
-          // };
-          // timeNow.current = new Date(variables.end);
-          // refetch({ ...variables }).then((result) => {
-          //   if (loaded.current) {
-          //     result.data[resource].forEach((series, index) => {
-          //       series[`${metric}`].forEach((point) => {
-          //         chart.data.datasets[index].data.push(point);
-          //       });
+          // chart.data.datasets.forEach(dataset => {
+          //     dataset.data.push({
+          //         "x": Date.now(),
+          //         "y": Math.random() * 99
           //     });
-          //     console.log('Refteched data:', chart.data.datasets, 'Refetched labels:', chart.data.labels);
-          //   }
-
-          //   chart.update("quiet");
           // });
+
+          const variables = {
+            start: now.current.toString(),
+            end: new Date().toString(),
+            step: '60s'
+          };
+          now.current = new Date(variables.end);
+
+          refetch({...variables})
+            .then(result => {
+              if (loaded.current) {
+                result.data.brokers.forEach((broker, index) => {
+                  broker.CPUUsageOverTime.forEach(series => chart.data.datasets[index].data.push({
+                    "x": series.time,
+                    'y': series.value,
+                  }))
+                })
+              };
+
+              chart.update('quiet')
+            })
+            .catch(err => console.log(err))
+          
+          console.log(chart.data.datasets)
         },
       },
     },
@@ -156,8 +161,6 @@ const RealTimeChart = () => {
     },
       y: {
         stacked: true,
-        min: 0,
-        max: 100,
         title: {
           display: true,
           text: 'CPU Usage'

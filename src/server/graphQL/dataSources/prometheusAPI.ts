@@ -154,6 +154,7 @@ class PrometheusAPI extends RESTDataSource {
                 datum.values.push({
                     time: new Date(value[0] * 1000).toLocaleString("en-US", {
                         timeStyle: "long",
+                        dateStyle: "short",
                         hour12: false,
                       }),
                     value: Number(value[1]).toFixed(2)
