@@ -59,8 +59,8 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
       },
       streaming: {
         duration: 5 * 60000,
-        delay: 10 * 1000,
-        refresh: 10 * 1000,
+        delay: 30 * 1000,
+        refresh: 30 * 1000,
         onRefresh: (chart) => {
 
           const variables = {
