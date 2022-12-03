@@ -1,35 +1,66 @@
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
 import { useQuery } from "@apollo/client";
 
-export const BROKERS_CPU_USAGE = gql`
-    query BrokersCPUUsage ($start: String, $end: String, $step: String) {
-        brokers (start: $start, end: $end, step: $step) {
-            id
-            host
-            port
-            CPUUsageOverTime {
-              time
-              value
-            }
-        }
-      }
-`;
-
-export const BROKER_JVM_MEMORY_USAGE = gql`
-    query BrokersJVMMemoryUsage($start: String, $end: String, $step: String) {
-      brokers (start: $start, end: $end, step: $step) {
-        id
-        host
-        port
-        JVMMemoryUsedOverTime {
-          time
-          value
-        }
+export const CLUSTER_SUMMARY = gql`
+  query getClusterInfo {
+    cluster {
+      brokerCount
+      activeControllers
+      activeControllersCount
+      underreplicatedPartitionsCount
+      offlinePartitionsCount
+      underMinISRCount
     }
   }
 `;
 
-// // export const BROKER_PRODUCE_TOTAL_TIME = gql`
+export const BROKERS_CPU_USAGE = gql`
+  query BrokersCPUUsage ($start: String, $end: String, $step: String) {
+      brokers (start: $start, end: $end, step: $step) {
+          id
+          host
+          port
+          CPUUsageOverTime {
+            time
+            value
+        }
+      }
+    }
+`;
+
+export const BROKER_JVM_MEMORY_USAGE = gql`
+  query BrokersJVMMemoryUsage($start: String, $end: String, $step: String) {
+    brokers (start: $start, end: $end, step: $step) {
+      id
+      host
+      port
+      JVMMemoryUsedOverTime {
+        time
+        value
+      }
+    }
+  }
+`;
+
+export const BROKER_ALL_TOTALTIMEMS = gql`
+  query getAllTotalTimeMs {
+    brokers {
+      id
+      produceTotalTimeMs {
+        time
+        value
+      }
+      fetchConsumerTotalTimeMs {
+        time
+        value
+      }
+      fetchFollowerTotalTimeMs {
+        time
+        value
+      }
+    }
+  }
+`;
 
 
 

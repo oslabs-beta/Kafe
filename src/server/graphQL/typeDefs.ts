@@ -79,6 +79,13 @@ export const typeDefs = `#graphql
       id: Int): Broker
     topics(name: [String]): [Topic]
     topic(name: String): Topic
+    bytesInPerSecOverTime(
+      start: String!
+      end: String!
+      step: String!
+      topics: [String]
+      ids: [Int]
+    ): [DataSeries]
   }
 
   type Mutation {

@@ -151,6 +151,7 @@ const resolvers = {
                     parent.end ? parent.end : now,
                     parent.step ? parent.step : '60s',
                     [parent.id]);
+
                 console.log('bytesInPerSecOverTime Resolver Result', brokerBytesInOvertime);
                 return brokerBytesInOvertime;
 
@@ -307,6 +308,27 @@ const resolvers = {
             } catch(err) {
                 console.log(err);
             }
+        },
+
+        bytesInPerSecOverTime: async(parent, { start, end, step, topics, ids }, { dataSources }) => {
+            try {
+                const allBytesInPerSec = await dataSources.prometheusAPI.instanceQuery(
+                    BROKER_BYTES_IN,
+                    start,
+                    end,
+                    step,
+                    ids
+                );
+
+                if (topics) {
+                    let filteredBytesInPerSec = allBytesInPerSec.filter(data => topics.includes(data.topic));
+                    return filteredBytesInPerSec;
+                } else {
+                    return allBytesInPerSec;
+                }
+            } catch(err) {
+                console.log('Error in bytesInPerSecOverTime query: ', err);
+            };
         },
     },
     Mutation: {
