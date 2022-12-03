@@ -121,7 +121,7 @@ const RealTimeChart = () => {
       },
     },
   },
-  
+
 
   //GraphQL query to the backend
   const { loading, data, refetch } = useQuery(BROKERS_CPU_USAGE, {
@@ -143,7 +143,7 @@ const RealTimeChart = () => {
     const datasets = [];
 
     data.brokers.forEach((broker, index) => {
-      
+
       const dataSet = {
         label: `Broker ${broker.id}`,
         backgroundColor: `${colors[index]}`,
@@ -152,7 +152,7 @@ const RealTimeChart = () => {
         tension: 0.5,
         showLine: true,
         data: broker.CPUUsageOverTime.map(series => series = {'x': series.time, 'y': series.value})
-        
+
       };
       datasets.push(dataSet);
       console.log('Datasets after pushing:', datasets);
