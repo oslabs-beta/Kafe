@@ -62,8 +62,8 @@ class PrometheusAPI extends RESTDataSource {
 
         if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) throw "Incorrect date inputs";
 
-        if (!filter || filter === undefined) query = query.replace(/filter/g, '.*');
-        else if (filter && filter.length) {
+        // if (!filter || filter === undefined) query = query.replace(/filter/g, '.*');
+        if (filter && filter.length) {
             const filterInstances = await this.mapInstanceFilter(filter);
             query = query.replace(/filter/g, filterInstances);
         }
@@ -163,7 +163,7 @@ class PrometheusAPI extends RESTDataSource {
                         dateStyle: "short",
                         hour12: false,
                       }),
-                    value: Number(Number(value[1]).toFixed(2))
+                    value: Number(value[1]).toFixed(2)
                 })
             });
 
