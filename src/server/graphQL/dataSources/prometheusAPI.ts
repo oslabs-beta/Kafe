@@ -72,7 +72,7 @@ class PrometheusAPI extends RESTDataSource {
         query += `&start=${startTime}&end=${endTime}&step=${step}`;
         console.log('Instance Range Query: ', query);
         const result = await this.get(`/api/v1/query_range?${query}`);
-        
+        console.log('Instance Range Query Result Before Filter: ', result);
         const formattedResult = await this.formatRangeResponse(result.data.result);
 
         console.log(`Final result for brokerId ${filter}: `, formattedResult);
@@ -142,7 +142,7 @@ class PrometheusAPI extends RESTDataSource {
     };
 
     async formatRangeResponse(result: any[]) {
-        
+
         const formattedResult = [];
 
         result.forEach(object => {
@@ -157,7 +157,7 @@ class PrometheusAPI extends RESTDataSource {
                         dateStyle: "short",
                         hour12: false,
                       }),
-                    value: Number(value[1]).toFixed(2)
+                    value: Number(Number(value[1]).toFixed(2))
                 })
             });
 
@@ -166,7 +166,7 @@ class PrometheusAPI extends RESTDataSource {
                 datum['id'] = Number(this.brokerInstancetoId[object.metric.instance]);
             };
             if (object.metric.topic) datum['topic'] = object.metric.topic;
-
+            console.log(datum)
             formattedResult.push(datum);
         });
         return formattedResult;

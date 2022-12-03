@@ -91,7 +91,7 @@ const resolvers = {
                     parent.step ? parent.step : '60s',
                     [parent.id]);
 
-                console.log('cpuUsage resolver result: ', cpuUsage);
+                // console.log('cpuUsage resolver result: ', cpuUsage);
                 return cpuUsage[0].values;
             } catch(err){
                 console.log('Error occurred in CPUUsageOverTime resolver: ', err)
@@ -108,7 +108,7 @@ const resolvers = {
                     parent.end ? parent.end : now,
                     parent.step ? parent.step : '60s',
                     [parent.id]);
-                console.log('JVM resolver returned result: ', brokerMemoryUsage);
+                // console.log('JVM resolver returned result: ', brokerMemoryUsage);
                 return brokerMemoryUsage[0].values;
             } catch(err) {
                 console.log('Error occurred in JVMMemoryUsedOverTime resolver: ', err);
@@ -143,26 +143,30 @@ const resolvers = {
         },
 
         bytesInPerSecOverTime: async(parent, args, { dataSources }): Promise<any> => {
+            const now = new Date();
             try {
                 const brokerBytesInOvertime = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_IN,
-                    parent.start,
-                    parent.end,
-                    parent.step,
+                    parent.start ? parent.start : new Date(+now - 60000 * 10),
+                    parent.end ? parent.end : now,
+                    parent.step ? parent.step : '60s',
                     [parent.id]);
+                console.log('bytesInPerSecOverTime Resolver Result', brokerBytesInOvertime);
                 return brokerBytesInOvertime;
+
             } catch(err) {
                 console.log('Error occurred in bytesInPerSecOverTime resolver: ', err);
             }
         },
 
         bytesOutPerSecOverTime: async(parent, args, { dataSources }): Promise<any> => {
+            const now = new Date();
             try {
                 const brokerBytesOutOvertime = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_OUT,
-                    parent.start,
-                    parent.end,
-                    parent.step,
+                    parent.start ? parent.start : new Date(+now - 60000 * 10),
+                    parent.end ? parent.end : now,
+                    parent.step ? parent.step : '60s',
                     [parent.id]);
                 return brokerBytesOutOvertime;
             } catch(err) {
