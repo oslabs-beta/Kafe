@@ -38,7 +38,7 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
     datasets: [],
   });
 
-  const colors = ["#003f5c", "#bc5090", "#ffa600", "#58508d", "#2a71d0"];
+  const colors = ["#71ABC5", "#0F1031", "#ffa600", "#58508d", "#2a71d0"];
 
   //Get current time/date for end paramter of Broker CPU query
   const now = useRef(Date.now());

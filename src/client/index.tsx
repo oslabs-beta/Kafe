@@ -23,9 +23,9 @@ const client = new ApolloClient({
 const theme = createTheme({
     palette: {
       primary: {
-        light: '#adb5bd',
-        main: '#6c757d',
-        dark: '#495057',
+        light: '#CCE1EB',
+        main: '#71ABC5',
+        dark: '#0F1031',
         contrastText: '#fff',
       },
       secondary: {
