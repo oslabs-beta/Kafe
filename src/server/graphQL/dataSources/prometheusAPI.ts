@@ -26,7 +26,6 @@ class PrometheusAPI extends RESTDataSource {
     async generateMaps(): Promise<void> {
         const brokerData = await this.get(`/api/v1/query?query={brokerid!=''}`);
 
-        console.log('brokerData: ', brokerData);
         brokerData.data.result.forEach(broker => {
             this.brokerIdtoInstance[broker.metric.brokerid] = broker.metric.instance;
             this.brokerInstancetoId[broker.metric.instance] = broker.metric.brokerid;
@@ -71,8 +70,10 @@ class PrometheusAPI extends RESTDataSource {
 
         query += `&start=${startTime}&end=${endTime}&step=${step}`;
         console.log('Instance Range Query: ', query);
+
         const result = await this.get(`/api/v1/query_range?${query}`);
         console.log('Instance Range Query Result Before Filter: ', result);
+        
         const formattedResult = await this.formatRangeResponse(result.data.result);
 
         console.log(`Final result for brokerId ${filter}: `, formattedResult);
@@ -132,7 +133,7 @@ class PrometheusAPI extends RESTDataSource {
         result.forEach(item => {
             let newItem = {
                 time: new Date(item.value[0] * 1000).toLocaleTimeString(),
-                value: parseFloat(item.value[1]).toFixed(2)
+                value: Number(parseFloat(item.value[1]).toFixed(2))
             }
             if(item.metric.instance) newItem['id'] = Number(this.brokerInstancetoId[item.metric.instance]);
             if(item.metric.topic) newItem['topic'] = item.metric.topic;

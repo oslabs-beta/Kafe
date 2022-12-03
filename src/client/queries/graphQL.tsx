@@ -1,5 +1,4 @@
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
-import { useQuery } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const CLUSTER_SUMMARY = gql`
   query getClusterInfo {
@@ -46,6 +45,8 @@ export const BROKER_ALL_TOTALTIMEMS = gql`
   query getAllTotalTimeMs {
     brokers {
       id
+      host
+      port
       produceTotalTimeMs {
         time
         value

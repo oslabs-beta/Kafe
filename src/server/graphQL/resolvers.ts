@@ -184,9 +184,7 @@ const resolvers = {
             }
         }
     },
-    // replicasCount: Int
-    // ISRCount: Int
-    // logSize: DataPoint
+   
     Topic: {
         replicasCount: async(parent, args, { dataSources }): Promise<number> => {
             try {
@@ -291,25 +289,6 @@ const resolvers = {
             }
         },
 
-        topics: async(): Promise<any> => {
-            try {
-                const topics = await adminActions.getTopics();
-
-                return topics;
-            } catch(err) {
-                console.log(err);
-            }
-        },
-
-        topic: async(parent, { name }): Promise<any> => {
-            try {
-                const topic = await adminActions.getTopic(name);
-                return topic;
-            } catch(err) {
-                console.log(err);
-            }
-        },
-
         bytesInPerSecOverTime: async(parent, { start, end, step, topics, ids }, { dataSources }) => {
             try {
                 const allBytesInPerSec = await dataSources.prometheusAPI.instanceQuery(
@@ -329,6 +308,25 @@ const resolvers = {
             } catch(err) {
                 console.log('Error in bytesInPerSecOverTime query: ', err);
             };
+        },
+
+        topics: async(): Promise<any> => {
+            try {
+                const topics = await adminActions.getTopics();
+
+                return topics;
+            } catch(err) {
+                console.log(err);
+            }
+        },
+
+        topic: async(parent, { name }): Promise<any> => {
+            try {
+                const topic = await adminActions.getTopic(name);
+                return topic;
+            } catch(err) {
+                console.log(err);
+            }
         },
     },
     Mutation: {
