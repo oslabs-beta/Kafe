@@ -89,7 +89,7 @@ function Brokers(){
                                 </Box>
                                 <Box sx={{p: 2}}>
                                     <Typography component="p" variant="body1">
-                                        {`Time of data: ${broker.produceTotalTimeMs.time}`}
+                                        {`Time of data: ${broker.produceTotalTimeMs?.time ? broker.produceTotalTimeMs.time : new Date().toLocaleString()}`}
                                     </Typography>
                                 </Box>
                                 
