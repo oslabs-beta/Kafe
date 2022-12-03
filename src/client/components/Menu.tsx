@@ -17,12 +17,12 @@ function Menu(){
         <>
             <div>Cluster</div>
             <nav className="navbar">
-                <Button variant="contained" sx={{minWidth: 180}}><Link to="/overview" style={linkStyle}>Cluster Overview</Link></Button><br />
-                <Button variant="contained" sx={{minWidth: 180}}><Link to="/brokers" style={linkStyle}>Brokers</Link></Button><br />
-                <Button variant="contained" sx={{minWidth: 180}}><Link to="/producers" style={linkStyle}>Producers</Link></Button><br />
-                <Button variant="contained" sx={{minWidth: 180}}><Link to="/consumers" style={linkStyle}>Consumers</Link></Button><br />
-                <Button variant="contained" sx={{minWidth: 180}}><Link to="/topics" style={linkStyle}>Topics</Link></Button><br />
-                <Button variant="contained" sx={{minWidth: 180}}><Link to="/partitions" style={linkStyle}>Partitions</Link></Button>
+                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/overview" style={linkStyle}>Cluster Overview</Link></Button><br />
+                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/brokers" style={linkStyle}>Brokers</Link></Button><br />
+                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/producers" style={linkStyle}>Producers</Link></Button><br />
+                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/consumers" style={linkStyle}>Consumers</Link></Button><br />
+                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/topics" style={linkStyle}>Topics</Link></Button><br />
+                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/partitions" style={linkStyle}>Partitions</Link></Button>
             </nav>
         </>
     );

@@ -3,13 +3,14 @@ import Status from '../components/Status';
 import Menu from '../components/Menu';
 import { Link } from "react-router-dom";
 import Button from '@mui/material/Button';
+import { SvgIcon } from '@mui/material';
 
 const linkStyle = {
     margin: "5px",
     padding: "0px 0px 20px 0px",
     textDecoration: "none",
     color: 'white',
-    height: '5px',
+    height: '5px'
   };
 
 const divStyle = {
@@ -26,7 +27,6 @@ function Sidebar(){
 return(
     <>
         <div style={divStyle}>
-        <Button  variant="contained" sx={{minWidth: 180, height: "35px"}}><Link to="/" style={linkStyle}>Home</Link></Button>
             <Status />
             <Menu />
         </div>
@@ -35,3 +35,5 @@ return(
 }
 
 export default Sidebar;
+
+//<Button  variant="contained" sx={{minWidth: 170, maxHeight: 30, margin: "5px", background: "#6599CC"}}><Link to="/" style={linkStyle}>Home</Link></Button>
