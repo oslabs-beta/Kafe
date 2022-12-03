@@ -9,7 +9,7 @@ function Dashboard(){
 return(
     <>
         <Grid container spacing={2} sx={{ minHeight: '100%' }}>
-            <Grid item xs={12} sx={{bgcolor: 'primary.main', minHeight: '15%'}}>
+            <Grid item xs={12} sx={{bgcolor: 'primary.main', minHeight: '5%'}}>
                 <Header />
             </Grid>
             <Grid item xs={2} sx={{ bgcolor: 'primary.light', minHeight: '85%'}}>

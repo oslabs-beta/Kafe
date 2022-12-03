@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
+// import logo from '../assets/Logo.png';
+import { Button } from '@mui/material'
 
 const linkStyle = {
     textDecoration: "none",
@@ -9,7 +11,9 @@ const linkStyle = {
 function Header(){
 
 return(
-        <Link to="/" style={linkStyle}> <img src= "../assets/Logo.png" alt="Kafe logo not working"></img></Link>
+      <>
+      </>
+        // <Link to="/" style={linkStyle}> <Button style= {{backgroundImage:`url(${logo}) `}}></Button></Link>
     );
 }
 

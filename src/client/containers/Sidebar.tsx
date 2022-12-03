@@ -12,12 +12,21 @@ const linkStyle = {
     height: '5px',
   };
 
+const divStyle = {
+    height: "100vh",
+    margin: "0px 0px 0px 10px"
+};
+
+const buttonStyle = {
+    height: "50px"
+};
+
 function Sidebar(){
 
 return(
     <>
-        <div>
-        <Button  variant="contained" sx={{minWidth: 180}}><Link to="/" style={linkStyle}>Home</Link></Button>
+        <div style={divStyle}>
+        <Button  variant="contained" sx={{minWidth: 180, height: "35px"}}><Link to="/" style={linkStyle}>Home</Link></Button>
             <Status />
             <Menu />
         </div>
