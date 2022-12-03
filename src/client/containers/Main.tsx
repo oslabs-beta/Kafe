@@ -5,10 +5,10 @@ import Visuals from '../components/Visuals';
 function Main(){
 
 return(
-    <>
-        <Outlet />
-    </>
+        <>
+            <Outlet />
+        </>
     );
-}
+};
 
 export default Main;

@@ -32,7 +32,7 @@ const ApolloServerStart = async() => {
     await server.start();
 
     app.use(
-        '/',
+        '/gql',
         cors<cors.CorsRequest>(),
         expressMiddleware(server, {
             context: async () => {
@@ -60,3 +60,4 @@ ApolloServerStart();
 
 
 
+//

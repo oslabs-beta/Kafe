@@ -17,7 +17,7 @@ class PrometheusAPI extends RESTDataSource {
     };
 
     getUnixTimeStamp(date): GLfloat {
-        console.log('getUnixTimestamp: ', date);
+        // console.log('getUnixTimestamp: ', date);
 
         const dateTime = parseFloat((new Date(date).getTime() / 1000).toFixed(3));
         return dateTime;
@@ -31,7 +31,7 @@ class PrometheusAPI extends RESTDataSource {
             this.brokerInstancetoId[broker.metric.instance] = broker.metric.brokerid;
         });
     };
-    
+
     async instanceQuery(baseQuery, filter: number[]) {
         let query = `query=${baseQuery.query}`;
         if (filter && filter.length) {
@@ -39,13 +39,13 @@ class PrometheusAPI extends RESTDataSource {
             query = query.replace(/filter/g, filterInstances);
         }
         else query = query.replace(/filter/g, '.*');
-        
-        console.log('Instance query: ', query);
+
+        // console.log('Instance query: ', query);
 
         try {
             const result = await this.get(`/api/v1/query?${query}`);
 
-            console.log('Instance query result: ', result);
+            // console.log('Instance query result: ', result);
             const formattedResult = await this.formatResponse(result.data.result)
             return formattedResult;
         } catch (err) {
@@ -55,13 +55,14 @@ class PrometheusAPI extends RESTDataSource {
 
     async instanceRangeQuery(baseQuery, start: string, end: string, step: string, filter) {
         let query = `query=${baseQuery.query}`;
-
+        
         //format start, end to be valid timestamp
         const startTime = this.getUnixTimeStamp(start);
         const endTime = this.getUnixTimeStamp(end);
 
         if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) throw "Incorrect date inputs";
 
+        if (!filter || filter === undefined) query = query.replace(/filter/g, '.*');
         if (filter && filter.length) {
             const filterInstances = await this.mapInstanceFilter(filter);
             query = query.replace(/filter/g, filterInstances);
@@ -69,12 +70,19 @@ class PrometheusAPI extends RESTDataSource {
         else query.replace(/filter/g, '.*');
 
         query += `&start=${startTime}&end=${endTime}&step=${step}`;
+        console.log('Instance Range Query: ', query);
 
-        const result = await this.get(`/api/v1/query_range?${query}`);
-        const formattedResult = await this.formatRangeResponse(result.data.result);
+        try {
+            const result = await this.get(`/api/v1/query_range?${query}`);
+            console.log('Instance Range Query Result Before Filter: ', result);
+            
+            const formattedResult = await this.formatRangeResponse(result.data.result);
 
-        console.log(`Final result for brokerId ${filter}: `, formattedResult);
-        return formattedResult;
+            console.log(`Final result for brokerId ${filter}: `, formattedResult);
+            return formattedResult;
+        } catch(err) {
+            console.log('Instance Range Query Error: ', err);
+        };
     };
 
     async totalMsQuery(baseQuery, requestType, filter) {
@@ -82,7 +90,7 @@ class PrometheusAPI extends RESTDataSource {
         let queryFilters;
 
         if (filter && filter.length) {
-            const filterInstances = await this.mapInstanceFilter(filter); 
+            const filterInstances = await this.mapInstanceFilter(filter);
             queryFilters = `{request=~${JSON.stringify(requestType)}, quantile=~"0.50", instance=~${JSON.stringify(filterInstances)}}`;
         }
         else queryFilters = `{request=~${JSON.stringify(requestType)}, quantile=~"0.50"}`;
@@ -97,7 +105,7 @@ class PrometheusAPI extends RESTDataSource {
 
     async topicQuery(baseQuery, filter) {
         let query = `query=${baseQuery.query}`;
-        
+
         if (filter) query = query.replace(/filter/g, filter);
         else query = query.replace(/filter/g, '.*');
 
@@ -112,23 +120,25 @@ class PrometheusAPI extends RESTDataSource {
     };
 
     async mapInstanceFilter(brokerIds: number[]): Promise<string> {
+        console.log('Checking mapped: ', Object.keys(this.brokerIdtoInstance));
         if (this.mapped() === false) await this.generateMaps();
 
+        console.log('Map Instance Filter: ', this.brokerIdtoInstance);
         let filterString = '';
-        for await (const id of brokerIds) {
+        for (const id of brokerIds) {
             filterString += `${this.brokerIdtoInstance[id]}|`;
         };
 
-        return filterString;
+        return filterString === 'undefined|' ? '.*' : filterString;
     };
-    
+
     //format unix date to be timestamp, format value into number/float
     async formatResponse(result: any[]) {
         const formattedResult = [];
         result.forEach(item => {
             let newItem = {
                 time: new Date(item.value[0] * 1000).toLocaleTimeString(),
-                value: parseFloat(item.value[1]).toFixed(2)
+                value: Number(parseFloat(item.value[1]).toFixed(2))
             }
             if(item.metric.instance) newItem['id'] = Number(this.brokerInstancetoId[item.metric.instance]);
             if(item.metric.topic) newItem['topic'] = item.metric.topic;
@@ -138,7 +148,7 @@ class PrometheusAPI extends RESTDataSource {
     };
 
     async formatRangeResponse(result: any[]) {
-        console.log('Format range response input: ', result)
+
         const formattedResult = [];
 
         result.forEach(object => {
@@ -148,7 +158,11 @@ class PrometheusAPI extends RESTDataSource {
 
             object.values.forEach(value => {
                 datum.values.push({
-                    time: new Date(value[0] * 1000).toLocaleString("en-US"),
+                    time: new Date(value[0] * 1000).toLocaleString("en-US", {
+                        timeStyle: "long",
+                        dateStyle: "short",
+                        hour12: false,
+                      }),
                     value: Number(value[1]).toFixed(2)
                 })
             });
@@ -158,7 +172,7 @@ class PrometheusAPI extends RESTDataSource {
                 datum['id'] = Number(this.brokerInstancetoId[object.metric.instance]);
             };
             if (object.metric.topic) datum['topic'] = object.metric.topic;
-
+            console.log(datum)
             formattedResult.push(datum);
         });
         return formattedResult;
