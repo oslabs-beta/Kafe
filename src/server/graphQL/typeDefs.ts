@@ -2,25 +2,26 @@
 export const typeDefs = `#graphql
   type Cluster {
     brokers: [Broker]!
-    controllersCount: Int
-    underReplicatedPartitionsCount: Int
+    brokerCount: Int
+    activeControllers: [Broker]
+    activeControllersCount: Int
+    underreplicatedPartitionsCount: Int
     offlinePartitionsCount: Int
     underMinISRCount: Int
   }
 
   type Broker {
-    id: Int!
+    id: Int
     port: Int
     host: String
-    underReplicatedPartitionsCount: Int
-    networkRequestRate: Datapoint
+    underreplicatedPartitionsCount: Int
     CPUUsageOverTime: [DataPoint]
     JVMMemoryUsedOverTime: [DataPoint]
     produceTotalTimeMs: DataPoint
-    consumerTotalTimeMs: DataPoint
-    followerTotalTimeMs: DataPoint
-    bytesInPerSecOverTime: [DataPoint]
-    bytesOutPerSecOverTime: [DataPoint]
+    fetchConsumerTotalTimeMs: DataPoint
+    fetchFollowerTotalTimeMs: DataPoint
+    bytesInPerSecOverTime: [DataSeries]
+    bytesOutPerSecOverTime: [DataSeries]
     messagesInPerSec: [DataPoint]
   }
 
@@ -30,15 +31,15 @@ export const typeDefs = `#graphql
     partitionsCount: Int
     replicasCount: Int
     ISRCount: Int
-    logSize: DataPoint
+    logSize: DataPoint,
+    offsets: [TopicOffset]
   }
 
   type Partition {
     partitionId: Int!
-    underReplicatedPartitions: Int
     leader: Broker
     replicas: [Broker]!
-    isrList: [Broker]!
+    isr: [Broker]!
   }
 
   type DataPoint {
@@ -46,22 +47,51 @@ export const typeDefs = `#graphql
     value: Float
   }
 
+  type DataSeries {
+    instance: String
+    id: Int
+    topic: String
+    values: [DataPoint]!
+  }
+
+  type TopicOffset {
+    partition: Int
+    offset: String
+    low: String
+    high: String
+  }
+
   type Query {
+    cluster(
+      start: String,
+      end: String,
+      step: String
+      ): Cluster
     brokers(
-      start: String, 
-      end: String, 
-      step: String, 
+      start: String,
+      end: String,
+      step: String,
       ids: [Int]): [Broker]!
     broker(
       start: String
-      end: String, 
-      step: String, 
-      ids: [Int]): Broker
+      end: String,
+      step: String,
+      id: Int): Broker
+    bytesInPerSecOverTime(
+      start: String
+      end: String
+      step: String
+      topics: [String]
+      ids: [Int]
+    ): [DataSeries]
+    topics(name: [String]): [Topic]
+    topic(name: String): Topic
   }
 
   type Mutation {
     createTopic: Topic
     deleteTopic: Topic
-    reassignPartition: Partition
+    reassignPartitions: Partition
+    deleteTopicRecords: Boolean
   }
 `;

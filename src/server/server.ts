@@ -9,7 +9,7 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import PrometheusAPI from './graphQL/dataSources/prometheusAPI';
 import { typeDefs } from './graphQL/typeDefs';
 import resolvers from './graphQL/resolvers';
-import { admin } from './kafkaAdmin/admin'
+import { admin } from './kafkaAdmin/admin';
 
 const PORT: number | string = process.env.PORT || 3000;
 
@@ -32,7 +32,7 @@ const ApolloServerStart = async() => {
     await server.start();
 
     app.use(
-        '/',
+        '/gql',
         cors<cors.CorsRequest>(),
         expressMiddleware(server, {
             context: async () => {
@@ -50,7 +50,8 @@ const ApolloServerStart = async() => {
     console.log(`Server running at port: ${PORT}`);
 
     const info = await admin.describeCluster();
-    console.log('Cluster Info:',info);
+    const activeController = info.brokers.find(broker => broker.nodeId === info.controller)
+    console.log('Server.ts Cluster Info:', activeController);
     return server;
 }
 
@@ -59,3 +60,4 @@ ApolloServerStart();
 
 
 
+//
