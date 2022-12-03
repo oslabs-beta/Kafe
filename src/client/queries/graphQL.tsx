@@ -65,9 +65,9 @@ export const BROKER_ALL_TIME_MS = gql`
 
 export const BROKER_BYTES_IN = gql`
   query BytesInOverTime ($start: String, $end: String, $step: String, $ids: [Int]) {
-    bytesInPerSecOverTime (start: $start, end: $end, step: $step, ids: $ids) {
+    topicsBytesIn: bytesInPerSecOverTime (start: $start, end: $end, step: $step, ids: $ids) {
       topic
-      values {
+      bytesIn: values {
         time
         value
       }

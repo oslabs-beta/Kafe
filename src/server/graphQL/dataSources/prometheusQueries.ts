@@ -62,7 +62,7 @@ export const TOTAL_TIME_MS: PromQuery = {
 //Broker bytes in over time
 export const BROKER_BYTES_IN: PromQuery = {
     name: 'Broker Bytes in Over Time',
-    query: 'avg_over_time(kafka_server_brokertopicmetrics_bytesinpersec{topic!="", instance=~"filter"}[60s])',
+    query: 'sum(rate(kafka_server_brokertopicmetrics_bytesinpersec{topic!="", instance=~"filter"}[60s]))by(topic)',
     type: 'broker'
 };
 

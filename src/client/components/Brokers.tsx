@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 
 import RealTimeChart from '../graphs/RealTimeChart';
 
-import { BROKER_ALL_TIME_MS } from '../queries/graphQL';
+import { BROKER_ALL_TIME_MS, BROKER_BYTES_IN } from '../queries/graphQL';
 
 function Brokers(){
     const [brokerInfo, setBrokerInfo] = useState([]);
@@ -29,7 +29,28 @@ function Brokers(){
         <>
             <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
                 <h2>Brokers</h2>
-                
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                        <Paper 
+                          sx={{
+                            p: 3,
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                          elevation={8}>
+                            <RealTimeChart
+                                query={ BROKER_BYTES_IN }
+                                metric = {'bytesIn'}
+                                resources = {'topicsBytesIn'}
+                                yLabel={'Bytes Used'}
+                                title={'Bytes In Over Time'}
+                                step={'30s'}
+                                labelName={'Topic'}
+                                labelId={'topic'}/>
+                          </Paper>
+                    </Grid>
+                </Grid>
+
                 {brokerInfo.length > 0 &&
                 <Grid container spacing={3} sx={{ mt: 1, mb: 4 }}>
                     {brokerInfo.map(broker => 
