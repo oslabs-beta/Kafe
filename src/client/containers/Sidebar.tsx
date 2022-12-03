@@ -2,11 +2,14 @@ import React from 'react';
 import Status from '../components/Status';
 import Menu from '../components/Menu';
 import { Link } from "react-router-dom";
+import Button from '@mui/material/Button';
 
 const linkStyle = {
-    margin: "1rem",
+    margin: "5px",
+    padding: "0px 0px 20px 0px",
     textDecoration: "none",
-    color: 'white'
+    color: 'white',
+    height: '5px',
   };
 
 function Sidebar(){
@@ -14,7 +17,7 @@ function Sidebar(){
 return(
     <>
         <div>
-        <button><Link to="/" style={linkStyle}>Home</Link></button>
+        <Button  variant="contained" sx={{minWidth: 180}}><Link to="/" style={linkStyle}>Home</Link></Button>
             <Status />
             <Menu />
         </div>

@@ -9,7 +9,7 @@ const linkStyle = {
 function Header(){
 
 return(
-        <Link to="/" style={linkStyle}><h1>Kafe</h1></Link>
+        <Link to="/" style={linkStyle}> <img src= "../assets/Logo.png" alt="Kafe logo not working"></img></Link>
     );
 }
 

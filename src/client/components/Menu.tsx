@@ -1,10 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Button from '@mui/material/Button';
 
 const linkStyle = {
-    margin: "1rem",
+    display: 'flex',
+    margin: "0px",
+    padding: "0px 0px 20px 0px",
     textDecoration: "none",
-    color: 'white'
+    color: 'white',
+    height: '5px',
   };
 
 function Menu(){
@@ -13,12 +17,12 @@ function Menu(){
         <>
             <div>Cluster</div>
             <nav className="navbar">
-                <button><Link to="/overview" style={linkStyle}>Cluster Overview</Link></button><br />
-                <button><Link to="/brokers" style={linkStyle}>Brokers</Link></button><br />
-                <button><Link to="/producers" style={linkStyle}>Producers</Link></button><br />
-                <button><Link to="/consumers" style={linkStyle}>Consumers</Link></button><br />
-                <button><Link to="/topics" style={linkStyle}>Topics</Link></button><br />
-                <button><Link to="/partitions" style={linkStyle}>Partitions</Link></button>
+                <Button variant="contained" sx={{minWidth: 180}}><Link to="/overview" style={linkStyle}>Cluster Overview</Link></Button><br />
+                <Button variant="contained" sx={{minWidth: 180}}><Link to="/brokers" style={linkStyle}>Brokers</Link></Button><br />
+                <Button variant="contained" sx={{minWidth: 180}}><Link to="/producers" style={linkStyle}>Producers</Link></Button><br />
+                <Button variant="contained" sx={{minWidth: 180}}><Link to="/consumers" style={linkStyle}>Consumers</Link></Button><br />
+                <Button variant="contained" sx={{minWidth: 180}}><Link to="/topics" style={linkStyle}>Topics</Link></Button><br />
+                <Button variant="contained" sx={{minWidth: 180}}><Link to="/partitions" style={linkStyle}>Partitions</Link></Button>
             </nav>
         </>
     );
