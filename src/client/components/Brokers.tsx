@@ -38,7 +38,7 @@ function Brokers(){
                             flexDirection: "column",
                           }}
                           elevation={8}>
-                            {/* <RealTimeChart
+                            <RealTimeChart
                                 query={ BROKER_BYTES_IN }
                                 metric = {'bytesIn'}
                                 resources = {'topicsBytesIn'}
@@ -46,7 +46,7 @@ function Brokers(){
                                 title={'Bytes In Over Time'}
                                 step={'30s'}
                                 labelName={'Topic'}
-                                labelId={'topic'}/> */}
+                                labelId={'topic'}/>
                           </Paper>
                     </Grid>
                 </Grid>

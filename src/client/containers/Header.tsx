@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-// import logo from '../assets/Logo.png';
+import logo from '../assets/Logo.png';
 import { Button } from '@mui/material'
 
 const linkStyle = {
@@ -11,9 +11,7 @@ const linkStyle = {
 function Header(){
 
 return(
-      <>
-      </>
-        // <Link to="/" style={linkStyle}> <Button style= {{backgroundImage:`url(${logo}) `}}></Button></Link>
+        <Link to="/" style={linkStyle}> <Button style= {{backgroundImage:`url(${logo})`}}></Button></Link>
     );
 }
 
