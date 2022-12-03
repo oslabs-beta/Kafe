@@ -8,29 +8,74 @@ import Typography from "@mui/material/Typography";
 
 import RealTimeChart from '../graphs/RealTimeChart';
 
-import { BROKER_ALL_TOTALTIMEMS } from '../queries/graphQL';
+import { BROKER_ALL_TIME_MS } from '../queries/graphQL';
 
 function Brokers(){
     const [brokerInfo, setBrokerInfo] = useState([]);
     
     const timeRef = useRef(new Date(Date.now()));
-    const { loading, data, refetch } = useQuery(BROKER_ALL_TOTALTIMEMS);
+    const { loading, data, refetch } = useQuery(BROKER_ALL_TIME_MS, { pollInterval: 20 * 1000 });
 
     useEffect(() => {
         if (loading) return;
 
         if (data.brokers) setBrokerInfo(data.brokers);
-    }, [loading]);
+    }, [loading, data]);
 
     console.log('Brokers component: ', brokerInfo);
+    
     const isLoading = <div>Loading...</div>
     return(
         <>
-            <h3>Brokers</h3>
-            {brokerInfo.length > 0 &&
+            <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
+                <h2>Brokers</h2>
+                
+                {brokerInfo.length > 0 &&
                 <Grid container spacing={3} sx={{ mt: 1, mb: 4 }}>
-                    {brokerInfo.map(broker => <div>'Hello'</div>)}
+                    {brokerInfo.map(broker => 
+                        <Grid key={`$Broker${broker.id}MsMetrics`} item xs={12} md={6}>
+                            <Paper 
+                                sx={{
+                                  p: 2,
+                                  display: "flex",
+                                  flexDirection: "column",
+                                }}
+                                elevation={8}>
+                                <Typography component="p" variant="h6">{`Broker ${broker.id}`}</Typography>
+                                <Box sx={{p: 2}}>
+                                    <Typography component="p" variant="body1">
+                                        {`Follower Average Time (ms): ${broker.fetchFollowerTotalTimeMs ? broker.fetchFollowerTotalTimeMs.value : 0}`}
+                                    </Typography>
+                                    <Typography color="text.secondary" sx={{ flex: 1 }}>
+                                    {'Average time in ms it takes replicate partitions to receive new data'}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{p: 2}}>
+                                    <Typography component="p" variant="body1">
+                                        {`Consumer Average Time (ms): ${broker.fetchConsumerTotalTimeMs ? broker.fetchConsumerTotalTimeMs.value : 0}`}
+                                    </Typography>
+                                    <Typography color="text.secondary" sx={{ flex: 1 }}>
+                                        {'Average time in ms it takes consumers to receive new data'}
+                                    </Typography>
+                                </Box>  
+                                <Box sx={{p: 2}}>
+                                    <Typography component="p" variant="body1">
+                                        {`Producer Average Time (ms): ${broker.produceTotalTimeMs ? broker.produceTotalTimeMs.value : 0}`}
+                                    </Typography>
+                                    <Typography color="text.secondary" sx={{ flex: 1 }}>
+                                        {'Average time in ms it takes producers to send new data to the broker'}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{p: 2}}>
+                                    <Typography component="p" variant="body1">
+                                        {`Time of data: ${broker.produceTotalTimeMs.time}`}
+                                    </Typography>
+                                </Box>
+                                
+                            </Paper>
+                        </Grid>)}
                 </Grid> }
+            </Container>   
         </>
     );
 }

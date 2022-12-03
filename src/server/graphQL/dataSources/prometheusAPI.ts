@@ -55,14 +55,15 @@ class PrometheusAPI extends RESTDataSource {
 
     async instanceRangeQuery(baseQuery, start: string, end: string, step: string, filter) {
         let query = `query=${baseQuery.query}`;
-
+        
         //format start, end to be valid timestamp
         const startTime = this.getUnixTimeStamp(start);
         const endTime = this.getUnixTimeStamp(end);
 
         if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) throw "Incorrect date inputs";
 
-        if (filter && filter.length) {
+        if (!filter || filter === undefined) query = query.replace(/filter/g, '.*');
+        else if (filter && filter.length) {
             const filterInstances = await this.mapInstanceFilter(filter);
             query = query.replace(/filter/g, filterInstances);
         }
@@ -71,13 +72,17 @@ class PrometheusAPI extends RESTDataSource {
         query += `&start=${startTime}&end=${endTime}&step=${step}`;
         console.log('Instance Range Query: ', query);
 
-        const result = await this.get(`/api/v1/query_range?${query}`);
-        console.log('Instance Range Query Result Before Filter: ', result);
-        
-        const formattedResult = await this.formatRangeResponse(result.data.result);
+        try {
+            const result = await this.get(`/api/v1/query_range?${query}`);
+            console.log('Instance Range Query Result Before Filter: ', result);
+            
+            const formattedResult = await this.formatRangeResponse(result.data.result);
 
-        console.log(`Final result for brokerId ${filter}: `, formattedResult);
-        return formattedResult;
+            console.log(`Final result for brokerId ${filter}: `, formattedResult);
+            return formattedResult;
+        } catch(err) {
+            console.log('Instance Range Query Error: ', err);
+        };
     };
 
     async totalMsQuery(baseQuery, requestType, filter) {

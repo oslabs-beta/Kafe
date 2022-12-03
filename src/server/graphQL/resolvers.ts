@@ -290,12 +290,14 @@ const resolvers = {
         },
 
         bytesInPerSecOverTime: async(parent, { start, end, step, topics, ids }, { dataSources }) => {
+            
+            const now = new Date();
             try {
-                const allBytesInPerSec = await dataSources.prometheusAPI.instanceQuery(
+                const allBytesInPerSec = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_IN,
-                    start,
-                    end,
-                    step,
+                    start ? start : new Date(+now - 60000 * 10),
+                    end ? end : now,
+                    step ? step : '60s',
                     ids
                 );
 

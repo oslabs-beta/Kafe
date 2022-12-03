@@ -17,7 +17,7 @@ const ClusterSummary = () => {
                   <Grid item xs={12} md={6}>
                     <Paper 
                       sx={{
-                        p: 2,
+                        p: 3,
                         display: "flex",
                         flexDirection: "column",
                       }}
@@ -37,7 +37,7 @@ const ClusterSummary = () => {
                   <Grid item xs={12} md={6}>
                     <Paper 
                       sx={{
-                        p: 2,
+                        p: 3,
                         display: "flex",
                         flexDirection: "column",
                       }}
@@ -47,7 +47,7 @@ const ClusterSummary = () => {
                           metric = {'JVMMemoryUsedOverTime'}
                           resources = {'brokers'}
                           yLabel={'Memory Usage'}
-                          title = {'JVM Memory Usage Over Time'}
+                          title = {'Memory Usage Over Time'}
                           step={'30s'}
                           labelName={'Broker'}
                           labelId={'id'}/>

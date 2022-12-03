@@ -78,9 +78,9 @@ export const typeDefs = `#graphql
       step: String,
       id: Int): Broker
     bytesInPerSecOverTime(
-      start: String!
-      end: String!
-      step: String!
+      start: String
+      end: String
+      step: String
       topics: [String]
       ids: [Int]
     ): [DataSeries]

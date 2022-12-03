@@ -41,7 +41,7 @@ export const BROKER_JVM_MEMORY_USAGE = gql`
   }
 `;
 
-export const BROKER_ALL_TOTALTIMEMS = gql`
+export const BROKER_ALL_TIME_MS = gql`
   query getAllTotalTimeMs {
     brokers {
       id
@@ -63,7 +63,17 @@ export const BROKER_ALL_TOTALTIMEMS = gql`
   }
 `;
 
-
+export const BROKER_BYTES_IN = gql`
+  query BytesInOverTime ($start: String, $end: String, $step: String, $ids: [Int]) {
+    bytesInPerSecOverTime (start: $start, end: $end, step: $step, ids: $ids) {
+      topic
+      values {
+        time
+        value
+      }
+    }
+  }
+`
 
 // type Query {
 //   cluster(

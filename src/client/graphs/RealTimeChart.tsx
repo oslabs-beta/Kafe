@@ -115,8 +115,8 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
     },
       y: {
         title: {
-          display: yLabel ? true: false,
-          text: yLabel
+          display: true,
+          text: yLabel,
       },
     },
   },
