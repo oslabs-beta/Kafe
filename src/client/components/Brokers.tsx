@@ -7,17 +7,11 @@ import BarChart from '../graphs/BarChart';
 import RealTimeChart from '../graphs/RealTimeChart';
 
 function Brokers(){
-    // const { data } = useQuery(brokerQuery, {
-    //     pollInterval: 1000000,
-    //    });
-    //     console.log(data)
 
-return(
-    <>
-        <div>Brokers</div>
-        {/* <BarChart /> */}
-        <RealTimeChart/>
-    </>
+    return(
+            <>
+                <div>Brokers</div>
+            </>
     );
 }
 

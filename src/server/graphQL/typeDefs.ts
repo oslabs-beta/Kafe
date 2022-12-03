@@ -16,7 +16,7 @@ export const typeDefs = `#graphql
     host: String
     underreplicatedPartitionsCount: Int
     CPUUsageOverTime: [DataPoint]
-    JVMMemoryUsedOverTime: [DataSeries]
+    JVMMemoryUsedOverTime: [DataPoint]
     produceTotalTimeMs: DataPoint
     fetchConsumerTotalTimeMs: DataPoint
     fetchFollowerTotalTimeMs: DataPoint
@@ -68,14 +68,14 @@ export const typeDefs = `#graphql
       step: String
       ): Cluster
     brokers(
-      start: String, 
-      end: String, 
-      step: String, 
+      start: String,
+      end: String,
+      step: String,
       ids: [Int]): [Broker]!
     broker(
       start: String
-      end: String, 
-      step: String, 
+      end: String,
+      step: String,
       id: Int): Broker
     topics(name: [String]): [Topic]
     topic(name: String): Topic

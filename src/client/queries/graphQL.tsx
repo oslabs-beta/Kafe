@@ -9,7 +9,7 @@ export const BROKERS_CPU_USAGE = gql`
             port
             CPUUsageOverTime {
               time
-              value  
+              value
             }
         }
       }
@@ -22,14 +22,12 @@ export const BROKER_JVM_MEMORY_USAGE = gql`
         host
         port
         JVMMemoryUsedOverTime {
-          values {
-            time
-            value
-          }
+          time
+          value
         }
     }
-}
-`
+  }
+`;
 
 // // export const BROKER_PRODUCE_TOTAL_TIME = gql`
 

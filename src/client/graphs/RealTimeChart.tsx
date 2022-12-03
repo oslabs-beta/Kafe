@@ -31,7 +31,7 @@ ChartJS.register(
 
 import { BROKERS_CPU_USAGE, BROKER_JVM_MEMORY_USAGE } from '../queries/graphQL';
 
-const RealTimeChart = () => {
+const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelName, labelId }) => {
 
   const [chartData, setChartData] = useState({
     labels: [],
@@ -54,27 +54,27 @@ const RealTimeChart = () => {
     },
     plugins: {
       title: {
-        display: true,
-        text: 'CPU Usage Over Time',
+        display: title ? true : false,
+        text: title,
       },
       streaming: {
         duration: 5 * 60000,
         delay: 10 * 1000,
-        refresh: 30 * 1000,
+        refresh: 10 * 1000,
         onRefresh: (chart) => {
 
           const variables = {
             start: now.current.toString(),
             end: new Date().toString(),
-            step: '60s'
+            step: step ? step : '60s'
           };
           now.current = new Date(variables.end);
 
           refetch({...variables})
             .then(result => {
               if (loaded.current) {
-                result.data.brokers.forEach((broker, index) => {
-                  broker.CPUUsageOverTime.forEach(series => chart.data.datasets[index].data.push({
+                result.data[resources].forEach((resource, index) => {
+                  resource[metric].forEach(series => chart.data.datasets[index].data.push({
                     'x': series.time,
                     'y': series.value,
                   }))
@@ -114,21 +114,19 @@ const RealTimeChart = () => {
       },
     },
       y: {
-        stacked: true,
         title: {
-          display: true,
-          text: 'CPU Usage'
+          display: yLabel ? true: false,
+          text: yLabel
       },
     },
   },
 
-
   //GraphQL query to the backend
-  const { loading, data, refetch } = useQuery(BROKERS_CPU_USAGE, {
+  const { loading, data, refetch } = useQuery(query, {
     variables: {
       start: new Date(Date.now() - 60000 * 10).toString(),
       end: new Date().toString(),
-      step: '60s',
+      step: step ? step : '60s',
     },
     fetchPolicy: "network-only",
     nextFetchPolicy: "network-only",
@@ -142,17 +140,18 @@ const RealTimeChart = () => {
     const labels = [];
     const datasets = [];
 
-    data.brokers.forEach((broker, index) => {
+    console.log('Use Effect: ', data);
+
+    data[resources].forEach((resource, index) => {
 
       const dataSet = {
-        label: `Broker ${broker.id}`,
+        label: `${labelName}: ${resource[labelId]}`,
         backgroundColor: `${colors[index]}`,
         borderColor: `${colors[index]}`,
         pointRadius: 0,
         tension: 0.5,
         showLine: true,
-        data: broker.CPUUsageOverTime.map(series => series = {'x': series.time, 'y': series.value})
-
+        data: resource[metric].map(series => series = {'x': series.time, 'y': series.value})
       };
       datasets.push(dataSet);
       console.log('Datasets after pushing:', datasets);

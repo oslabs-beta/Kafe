@@ -109,7 +109,7 @@ const resolvers = {
                     parent.step ? parent.step : '60s',
                     [parent.id]);
                 console.log('JVM resolver returned result: ', brokerMemoryUsage);
-                return brokerMemoryUsage;
+                return brokerMemoryUsage[0].values;
             } catch(err) {
                 console.log('Error occurred in JVMMemoryUsedOverTime resolver: ', err);
             }

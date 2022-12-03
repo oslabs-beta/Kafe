@@ -9,17 +9,18 @@ const linkStyle = {
 
 function Menu(){
 
-return(
-    <>
-        <div>Cluster</div>
-        <nav className="navbar">
-            <button><Link to="/brokers" style={linkStyle}>Brokers</Link></button><br />
-            <button><Link to="/producers" style={linkStyle}>Producers</Link></button><br />
-            <button><Link to="/consumers" style={linkStyle}>Consumers</Link></button><br />
-            <button><Link to="/topics" style={linkStyle}>Topics</Link></button><br />
-            <button><Link to="/partitions" style={linkStyle}>Partitions</Link></button>
-        </nav>
-    </>
+    return(
+        <>
+            <div>Cluster</div>
+            <nav className="navbar">
+                <button><Link to="/overview" style={linkStyle}>Cluster Overview</Link></button><br />
+                <button><Link to="/brokers" style={linkStyle}>Brokers</Link></button><br />
+                <button><Link to="/producers" style={linkStyle}>Producers</Link></button><br />
+                <button><Link to="/consumers" style={linkStyle}>Consumers</Link></button><br />
+                <button><Link to="/topics" style={linkStyle}>Topics</Link></button><br />
+                <button><Link to="/partitions" style={linkStyle}>Partitions</Link></button>
+            </nav>
+        </>
     );
 }
 
