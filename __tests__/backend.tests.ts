@@ -288,11 +288,51 @@ describe('graphQL queries', () => {
   describe('Topics query', () => {
     it('Should be able to gather basic topic information using kafkaAdmin', async () => {
       const result = await global.apolloServer.executeOperation({
-
+        query: `query Topics {
+          topics {
+            name
+            partitions {
+              partitionId
+            }
+            partitionsCount
+            offsets {
+              offset
+              low
+              high
+            }
+          }
+        }`
+      }, 
+      {
+        contextValue: {
+          dataSources: {
+            prometheusAPI: new PrometheusAPI(),
+          },
+        },
       });
 
+      console.log(typeof result.body.singleResult.data.topics)
+      expect(result.body.singleResult.data.topics).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            name: expect.any(String),
+            partitions: expect.arrayContaining([
+              expect.objectContaining({
+                partitionId: expect.any(Number),
+              })
+            ]),
+            partitionsCount: expect.any(Number),
+            offsets: expect.arrayContaining([
+              expect.objectContaining({
+                offset: expect.any(String),
+                low: expect.any(String),
+                high: expect.any(String),
+              })
+            ]),
+          })
+        ])
+      );
     });
 
   });
-
 });
