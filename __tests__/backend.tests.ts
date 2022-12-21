@@ -84,5 +84,5 @@ describe('graphQL queries', () => {
         expect(result.body.singleResult.data.cluster.offlinePartitionsCount).toBeGreaterThanOrEqual(0);
         expect(result.body.singleResult.data.cluster.underMinISRCount).toBeGreaterThanOrEqual(0);
     });
-  })
+  });
 });
