@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './containers/Dashboard';
 import Main from './containers/Main';
 import Brokers from './components/Brokers';
-import Producers from './components/Producers';
 import Consumers from './components/Consumers';
 import Topics from './components/Topics';
 import Partitions from './components/Partitions';
@@ -19,7 +18,6 @@ const App = () => {
               <Route index element={<Main />}></Route>
               <Route path="overview" element={<ClusterSummary/>}></Route>
               <Route path="brokers" element={<Brokers />}></Route>
-              <Route path="producers" element={<Producers />}></Route>
               <Route path="consumers" element={<Consumers />}></Route>
               <Route path="topics" element={<Topics />}></Route>
               <Route path="partitions" element={<Partitions />}></Route>
