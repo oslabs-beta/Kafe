@@ -145,15 +145,15 @@ const resolvers = {
         bytesInPerSecOverTime: async(parent, args, { dataSources }): Promise<any> => {
             const now = new Date();
             try {
-                const brokerBytesInOvertime = await dataSources.prometheusAPI.instanceRangeQuery(
+                const brokerBytesInOverTime = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_IN,
                     parent.start ? parent.start : new Date(+now - 60000 * 10),
                     parent.end ? parent.end : now,
                     parent.step ? parent.step : '60s',
                     [parent.id]);
 
-                console.log('bytesInPerSecOverTime Resolver Result', brokerBytesInOvertime);
-                return brokerBytesInOvertime;
+                console.log('bytesInPerSecOverTime Resolver Result', brokerBytesInOverTime);
+                return brokerBytesInOverTime;
 
             } catch(err) {
                 console.log('Error occurred in bytesInPerSecOverTime resolver: ', err);
@@ -163,13 +163,13 @@ const resolvers = {
         bytesOutPerSecOverTime: async(parent, args, { dataSources }): Promise<any> => {
             const now = new Date();
             try {
-                const brokerBytesOutOvertime = await dataSources.prometheusAPI.instanceRangeQuery(
+                const brokerBytesOutOverTime = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_OUT,
                     parent.start ? parent.start : new Date(+now - 60000 * 10),
                     parent.end ? parent.end : now,
                     parent.step ? parent.step : '60s',
                     [parent.id]);
-                return brokerBytesOutOvertime;
+                return brokerBytesOutOverTime;
             } catch(err) {
                 console.log('Error occurred in bytesOutPerSecOverTime resolver: ', err);
             }

@@ -4,7 +4,7 @@ import { admin } from '../src/server/kafkaAdmin/admin';
 import apolloServer from '../src/server/server';
 import PrometheusAPI from '../src/server/graphQL/dataSources/prometheusAPI';
 
-const server = "http://localhost:3000/"
+const server = 'http://localhost:3000/';
 
 beforeAll(async () => {
     global.apolloServer = await apolloServer;
@@ -34,6 +34,8 @@ describe('Bad endpoints', () => {
 
 //Testing graphQL queries
 describe('graphQL queries', () => {
+
+  //Cluster queries
   describe('Cluster Query', ()=> {
     it('Cluster query should return all nested data including broker info, activeController and so on', async() => {
       const result = await global.apolloServer.executeOperation({
@@ -72,17 +74,225 @@ describe('graphQL queries', () => {
           }`
         },
         {
-            contextValue: {
-                dataSources: {
-                    prometheusAPI: new PrometheusAPI(),
-                }
+          contextValue: {
+            dataSources: {
+              prometheusAPI: new PrometheusAPI(),
             }
+          }
         })
-        console.log('result:', result.body.singleResult);
+        
         expect(result.body.singleResult.data.cluster.activeControllersCount).toBeGreaterThanOrEqual(0);
         expect(result.body.singleResult.data.cluster.underreplicatedPartitionsCount).toBeGreaterThanOrEqual(0);
         expect(result.body.singleResult.data.cluster.offlinePartitionsCount).toBeGreaterThanOrEqual(0);
         expect(result.body.singleResult.data.cluster.underMinISRCount).toBeGreaterThanOrEqual(0);
     });
   });
+
+  //Broker queries
+  describe('Broker queries', ()=> {
+
+    //Kafka admin query
+    it('Should be able to query basic information of all active brokers with kafkaAdmin', async () => {
+      const result = await global.apolloServer.executeOperation({
+        query: `query Brokers {
+          brokers {
+            id
+            host
+            port
+          }
+        }`
+      }, 
+      {
+        constextValue: {
+          dataSources: {
+            prometheusAPI: new PrometheusAPI,
+          }
+        }
+      });
+
+      expect(result.body.singleResult.data.brokers).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(Number),
+            host: expect.any(String),
+            port: expect.any(Number),
+          })
+        ])
+      );
+    });
+
+    //Single DataPoint queries
+    it('Should return a single DataPoint for fetch TimeMs broker queries',  async () => {
+      const result = await global.apolloServer.executeOperation({
+        query: `query Brokers {
+          brokers{
+            id
+            produceTotalTimeMs {
+              time
+              value
+            }
+            fetchConsumerTotalTimeMs {
+              time
+              value
+            }
+            fetchFollowerTotalTimeMs {
+              time
+              value
+            }
+          }
+        }`
+      },
+      {
+        contextValue: {
+          dataSources: {
+            prometheusAPI: new PrometheusAPI(),
+          },
+        },
+      });
+
+      expect(result.body.singleResult.data.brokers).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(Number),
+            produceTotalTimeMs: expect.objectContaining({
+              time: expect.any(String),
+              value: expect.any(Number),
+            }),
+            fetchConsumerTotalTimeMs: expect.objectContaining({
+              time: expect.any(String),
+              value: expect.any(Number),
+            }),
+            fetchFollowerTotalTimeMs: expect.objectContaining({
+              time: expect.any(String),
+              value: expect.any(Number),
+            }),
+          })
+        ])
+      )
+    });
+
+    //DataPoint array broker queries
+    it('Should be able to acquire time series metrics for all brokers', async () => {
+      const result = await global.apolloServer.executeOperation({
+        query: `query Brokers {
+          brokers {
+            id
+            underreplicatedPartitionsCount
+            CPUUsageOverTime {
+              time
+              value
+            }
+            JVMMemoryUsedOverTime {
+              time
+              value
+            }
+          }
+        }`
+      }, 
+      {
+        contextValue: {
+          dataSources: {
+            prometheusAPI: new PrometheusAPI(),
+          },
+        },
+      });
+
+      // console.log('Brokers metrics result: ', result.body.singleResult)
+      expect(result.body.singleResult.data.brokers).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(Number),
+            underreplicatedPartitionsCount: expect.any(Number),
+            CPUUsageOverTime: expect.arrayContaining([
+              expect.objectContaining({
+                time: expect.any(String),
+                value: expect.any(Number),
+              })
+            ]),
+            JVMMemoryUsedOverTime: expect.arrayContaining([
+              expect.objectContaining({
+                time: expect.any(String),
+                value: expect.any(Number),
+              })
+            ]),
+          })
+        ])
+      ); 
+    });
+
+    //Data series queries
+    it('Should be able to acquire data series metrics for all brokers', async () => {
+      const result = await global.apolloServer.executeOperation({
+        query: `query Brokers {
+          brokers {
+            id
+            bytesInPerSecOverTime {
+              topic
+              values {
+                time
+                value
+              }
+            }
+            bytesOutPerSecOverTime {
+              topic
+              values {
+                time
+                value
+              }
+            }
+          }
+        }`
+      },
+      {
+        contextValue: {
+          dataSources: {
+            prometheusAPI: new PrometheusAPI(),
+          },
+        },
+      });
+      
+      expect(result.body.singleResult.data.brokers).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(Number),
+            bytesInPerSecOverTime: expect.arrayContaining([
+              expect.objectContaining({
+                topic: expect.any(String),
+                values: expect.arrayContaining([
+                  expect.objectContaining({
+                    time: expect.any(String),
+                    value: expect.any(Number),
+                  })
+                ]),
+              })
+            ]),
+            bytesOutPerSecOverTime: expect.arrayContaining([
+              expect.objectContaining({
+                topic: expect.any(String),
+                values: expect.arrayContaining([
+                  expect.objectContaining({
+                    time: expect.any(String),
+                    value: expect.any(Number),
+                  })
+                ]),
+              })
+            ]),
+          })
+        ])
+      );
+    });
+
+  });
+
+  //Topics query
+  describe('Topics query', () => {
+    it('Should be able to gather basic topic information using kafkaAdmin', async () => {
+      const result = await global.apolloServer.executeOperation({
+
+      });
+
+    });
+
+  });
+
 });
