@@ -33,14 +33,16 @@ import { BROKERS_CPU_USAGE, BROKER_JVM_MEMORY_USAGE } from '../queries/graphQL';
 
 const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelName, labelId }) => {
 
+// useState hook: declare new variables 'chartData' and 'setChartData', and set the initial state of 'chartData' to the defined object.
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [],
   });
 
+  //Colors are hard coded -- refactor to use MUI definitions 
   const colors = ["#71ABC5", "#0F1031", "#ffa600", "#58508d", "#2a71d0"];
 
-  //Get current time/date for end paramter of Broker CPU query
+  //Get current time/date for end parameter of Broker CPU query
   const now = useRef(Date.now());
   const loaded = useRef(false);
   const chartRef = useRef(null);

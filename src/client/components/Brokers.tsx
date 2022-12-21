@@ -4,6 +4,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
+//We implemented global typography, do we need the below?
 import Typography from "@mui/material/Typography";
 
 import RealTimeChart from '../graphs/RealTimeChart';
@@ -13,7 +14,7 @@ import { BROKER_ALL_TIME_MS, BROKER_BYTES_IN } from '../queries/graphQL';
 function Brokers(){
     const [brokerInfo, setBrokerInfo] = useState([]);
     
-    const timeRef = useRef(new Date(Date.now()));
+    // const timeRef = useRef(new Date(Date.now()));
     const { loading, data, refetch } = useQuery(BROKER_ALL_TIME_MS, { pollInterval: 20 * 1000 });
 
     useEffect(() => {
