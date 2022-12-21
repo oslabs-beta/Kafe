@@ -1,6 +1,5 @@
-import { Console } from 'console';
-import Partitions from '../../client/components/Partitions';
 import * as adminActions from '../kafkaAdmin/adminActions';
+
 import {
     ACTIVE_CONTROLLER_COUNT,
     UNDER_REPLICATED_PARTITIONS_COUNT,
@@ -26,7 +25,7 @@ const resolvers = {
                 const underReplicatedPartitions = await dataSources.prometheusAPI.instanceQuery(UNDER_REPLICATED_PARTITIONS_COUNT);
 
                 console.log('Underreplicated partitions resolver result: ', underReplicatedPartitions);
-                return Number(underReplicatedPartitions[0].value);
+                return underReplicatedPartitions.length ? Number(underReplicatedPartitions[0].value) : 0;
             }catch(err) {
                 console.log('Error occured during cluster resolver underreplicatedPartitionsCount:', err);
             }
@@ -37,7 +36,7 @@ const resolvers = {
                 const offlinePartitions = await dataSources.prometheusAPI.instanceQuery(OFFLINE_PARTITIONS);
 
                 console.log('Offline partitions resolver result: ', offlinePartitions);
-                return Number(offlinePartitions[0].value);
+                return offlinePartitions.length ? Number(offlinePartitions[0].value) : 0;
             } catch(err){
                 console.log('Error occured during cluster resolver offlinePartitionsCount:', err);
             }
@@ -45,10 +44,11 @@ const resolvers = {
 
         activeControllersCount: async(parent, args, { dataSources }): Promise<Number> => {
             try {
+                console.log('what is dataSources: ', dataSources.prometheusAPI);
                 const activeControllers = await dataSources.prometheusAPI.instanceQuery(ACTIVE_CONTROLLER_COUNT);
 
                 console.log('Active controllers count resolver result: ', activeControllers);
-                const activeControllersCount = Number(activeControllers[0].value);
+                const activeControllersCount = activeControllers.length ? Number(activeControllers[0].value) : 0;
                 return activeControllersCount;
             } catch(err) {
                 console.log('Error occured during activeControllersCount resolver: ', err)
@@ -60,7 +60,7 @@ const resolvers = {
                 const underMinISRObject = await dataSources.prometheusAPI.instanceQuery(UNDER_MIN_ISR_COUNT);
 
                 console.log('UnderMinISRCount resolver result: ', underMinISRObject);
-                const underMinISRCount = Number(underMinISRObject[0].value);
+                const underMinISRCount = underMinISRObject.length ? Number(underMinISRObject[0].value) : 0;
                 return underMinISRCount;
             } catch(err) {
                 console.log('Error occured during underMinISRCount resolver: ', err);
