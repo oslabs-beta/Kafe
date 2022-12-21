@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
 import Dashboard from './containers/Dashboard';
 import Main from './containers/Main';
 import Brokers from './components/Brokers';
@@ -9,10 +8,9 @@ import Consumers from './components/Consumers';
 import Topics from './components/Topics';
 import Partitions from './components/Partitions';
 import ClusterSummary from './components/ClusterSummary';
-import { useQuery } from "@apollo/client"
-
 
 const App = () => {
+  //  Refactor based on final UI decisions and make DRY; see Studify for examples; consider conditional rendering of buttons based on confirmed connection to brokers
 
     return (
         <BrowserRouter>
