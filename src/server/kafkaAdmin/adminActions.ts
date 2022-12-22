@@ -7,7 +7,8 @@ import {
     ITopicConfig,
     ITopicPartitionConfig,
     PartitionReassignment,
-    OngoingTopicReassignment
+    OngoingTopicReassignment,
+    ConfigEntries,
     } from 'kafkajs';
 
 //CLUSTER ADMIN ACTIONS//
@@ -41,7 +42,7 @@ export const getTopics = async (): Promise<ITopicMetadata[] | undefined> => {
         const topics = await admin.listTopics();
         const topicData = await admin.fetchTopicMetadata({ topics });
         
-        console.log('TopicData Before: ', topicData);
+        console.log('getTopics action TopicData Before: ', topicData);
         
         for await (const topic of topicData.topics) {
             topic['partitionsCount'] = topic.partitions.length;
@@ -49,7 +50,7 @@ export const getTopics = async (): Promise<ITopicMetadata[] | undefined> => {
             topic['offsets'] = topicOffsets;
         };
 
-        console.log('TopicData After: ', topicData);
+        console.log('getTopics action TopicData After: ', topicData);
         return topicData.topics;
     } catch(err) {
         console.log(err);
@@ -76,12 +77,24 @@ export const getTopic = async (topicName: String) => {
 //   partitions: <array>
 // }
 
-export const createTopics = async (topic: ITopicConfig) => {
+export const createTopic = async (name: string, replicationFactor: number, numPartitions: number, configEntries: ConfigEntries[]) => {
     try {
+        const newTopicOptions = {
+            topic: name,
+            replicationFactor,
+            numPartitions,
+        };
+
+        if (configEntries) newTopicOptions['configEntries'] = configEntries;
+
         const newTopic = await admin.createTopics({
-            topics: [topic]
+            topics: [newTopicOptions]
         });
-        return newTopic;
+
+        if (newTopic) {
+            const newTopicInfo = await admin.fetchTopicMetadata({ topics: [name] });
+            return newTopicInfo.topics[0];
+        };
     } catch(err) {
         console.log(err);
     }

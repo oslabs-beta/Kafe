@@ -1,6 +1,6 @@
 const request = require('supertest');
 import { admin } from '../src/server/kafkaAdmin/admin';
-
+// jest.useFakeTimers();
 import apolloServer from '../src/server/server';
 import PrometheusAPI from '../src/server/graphQL/dataSources/prometheusAPI';
 
@@ -18,6 +18,7 @@ afterAll(async () => {
 
 //Testing for bad endpoints 
 describe('Bad endpoints', () => {
+   
     it('Should send 404 status with POST request', () => {
         return request(server).post('/api/post').expect(404);
     });
@@ -29,14 +30,13 @@ describe('Bad endpoints', () => {
     it('Should send 404 status with DELETE request', () => {
         return request(server).post('/api/delete').expect(404);
     });
-  
 });
 
 //Testing graphQL queries
 describe('graphQL queries', () => {
 
   //Cluster queries
-  describe('Cluster Query', ()=> {
+  xdescribe('Cluster Query', ()=> {
     it('Cluster query should return all nested data including broker info, activeController and so on', async() => {
       const result = await global.apolloServer.executeOperation({
         query: `query Cluster {
@@ -89,7 +89,7 @@ describe('graphQL queries', () => {
   });
 
   //Broker queries
-  describe('Broker queries', ()=> {
+  xdescribe('Broker queries', ()=> {
 
     //Kafka admin query
     it('Should be able to query basic information of all active brokers with kafkaAdmin', async () => {
@@ -285,7 +285,7 @@ describe('graphQL queries', () => {
   });
 
   //Topics query
-  describe('Topics query', () => {
+  xdescribe('Topics query', () => {
     it('Should be able to gather basic topic information using kafkaAdmin', async () => {
       const result = await global.apolloServer.executeOperation({
         query: `query Topics {
@@ -335,4 +335,52 @@ describe('graphQL queries', () => {
     });
 
   });
+
+  //Mutations
+  describe('Mutation queries', () => {
+
+    //Topic mutations
+    describe('Topic mutations', () => {
+      // beforeAll(async()=> {
+      //   const result = await global.apolloServer.executeOperation({
+      //     query: `mutation AddTopic {
+            
+      //     }`
+      //   });
+
+      // });
+      it('Should add a topic if it does not exist', async () => {
+        const nonExistentResult = await global.apolloServer.executeOperation({
+          query: `query getTopic ($name: String!) {
+            topic (name: $name){
+              name
+            }
+          }`, 
+          variables: { name: 'ToBeCreated3'}
+        });
+
+        expect(nonExistentResult.body.singleResult.data.topic).toBeNull();
+
+        const result = await global.apolloServer.executeOperation({
+          query: `mutation CreateTopic ($name: String!) {
+            createTopic(name: $name){
+              name
+            }
+          }`, variables: { name: 'ToBeCreated3' }
+        });
+        console.log('createTopic result', result.body.singleResult.data)
+
+        expect(result.body.singleResult.data.createTopic).toBeTruthy();
+      });
+
+    });
+
+    
+    // describe('Partitions mutations', () => {
+    //   it('Should reassign partitions ')
+
+    // });
+    
+  });
+  
 });

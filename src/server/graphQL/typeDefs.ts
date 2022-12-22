@@ -88,8 +88,13 @@ export const typeDefs = `#graphql
     topic(name: String): Topic
   }
 
+  input ConfigEntry {
+    name: String!
+    value: String!
+  }
+
   type Mutation {
-    createTopic: Topic
+    createTopic (name: String, numPartitions: Int, replicationFactor: Int, configEntries: [ConfigEntry]): Topic
     deleteTopic: Topic
     reassignPartitions: Partition
     deleteTopicRecords: Boolean

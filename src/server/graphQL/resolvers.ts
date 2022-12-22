@@ -335,21 +335,20 @@ const resolvers = {
         createTopic: async (
             parent,
             {
-            topic,
+            name,
             numPartitions = -1,
             replicationFactor = -1,
-            replicaAssignment = [],
             configEntries = []
             }
         ) => {
             try {
-                const newTopic = await adminActions.createTopics({
-                    topic,
+                console.log('Topic mutation request received: ', name);
+                const newTopic = await adminActions.createTopic(
+                    name,
                     numPartitions,
                     replicationFactor,
-                    replicaAssignment,
                     configEntries
-                });
+                );
                 return newTopic;
             } catch(err) {
                 console.log('Create Topic Resolver Error:', err);
