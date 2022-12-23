@@ -184,7 +184,7 @@ const resolvers = {
             }
         }
     },
-   
+
     Topic: {
         replicasCount: async(parent, args, { dataSources }): Promise<number> => {
             try {
@@ -290,7 +290,7 @@ const resolvers = {
         },
 
         bytesInPerSecOverTime: async(parent, { start, end, step, topics, ids }, { dataSources }) => {
-            
+
             const now = new Date();
             try {
                 const allBytesInPerSec = await dataSources.prometheusAPI.instanceRangeQuery(
@@ -367,7 +367,8 @@ const resolvers = {
         deleteTopicRecords: async (parent, {name, partitions}) => {
             try {
                 const deletedTopicRecords = await adminActions.deleteAllTopicRecords(name, partitions);
-                // return true;
+                //offset set to -1 to delete all records
+                return true;
             } catch (err) {
                 console.log('Delete Topic Records Resolver Error:', err);
             }

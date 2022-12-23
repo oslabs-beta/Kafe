@@ -1,14 +1,15 @@
 import { admin } from './admin';
-import { 
-    ITopicMetadata, 
+import {
+    ITopicMetadata,
     SeekEntry,
-    AssignerProtocol, 
+    AssignerProtocol,
     GroupDescription,
     ITopicConfig,
     ITopicPartitionConfig,
     PartitionReassignment,
     OngoingTopicReassignment,
     ConfigEntries,
+    ConfigResourceTypes
     } from 'kafkajs';
 
 //CLUSTER ADMIN ACTIONS//
@@ -41,9 +42,9 @@ export const getTopics = async (): Promise<ITopicMetadata[] | undefined> => {
     try {
         const topics = await admin.listTopics();
         const topicData = await admin.fetchTopicMetadata({ topics });
-        
+
         console.log('getTopics action TopicData Before: ', topicData);
-        
+
         for await (const topic of topicData.topics) {
             topic['partitionsCount'] = topic.partitions.length;
             const topicOffsets = await admin.fetchTopicOffsets(topic.name);
@@ -100,10 +101,44 @@ export const createTopic = async (name: string, replicationFactor: number, numPa
     }
 };
 
-export const deleteTopics = async (topics: string[]): Promise<void> => {
-    await admin.deleteTopics({
-        topics
-    });
+//set server config to enable topic deletion
+export const enableTopicDeletion = async() => {
+    const cluster = await admin.describeCluster();
+    console.log('Enable Topic Deletion ', cluster);
+  await admin.alterConfigs({
+            validateOnly: false,
+            resources: [
+            {
+                type: ConfigResourceTypes.TOPIC,
+                name: cluster.brokers[0].nodeId.toString(),
+                configEntries: [{name: 'delete.topic.enable',  value: 'true'}]
+            }
+            ]});
+//   deleteTopic.resources[0].configEntries[0].configValue === 'true';
+  console.log('which nodeId are we trying to delete from:', cluster.brokers[0].nodeId.toString());
+  return;
+}
+
+export const deleteTopics = async (topics: string[]): Promise<any> => {
+    //enable deletion config
+    // await enableTopicDeletion();
+    try{
+        console.log('List of topics to be deleted: ', topics)
+        const existingtopics = await admin.listTopics();
+        const deletedTopics = await admin.fetchTopicMetadata({ topics: topics });
+
+        console.log('Existing topics: ', existingtopics);
+        console.log('Topics to be deleted: ',  deletedTopics.topics[0]);
+        await admin.deleteTopics({
+            topics
+        });
+
+        return deletedTopics.topics[0];
+
+    } catch(err) {
+        console.log('Delete topics error: ', err)
+    }
+
 };
 
 export const deleteAllTopicRecords = async (topic: string, partitions: SeekEntry[]): Promise<void> => {
@@ -170,3 +205,4 @@ export const deleteConsumers = async (consumer: string[]): Promise<void> => {
         console.log('Groups that failed deletion: ', err.groups);
     }
 }
+

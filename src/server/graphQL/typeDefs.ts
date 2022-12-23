@@ -84,8 +84,20 @@ export const typeDefs = `#graphql
       topics: [String]
       ids: [Int]
     ): [DataSeries]
-    topics(name: [String]): [Topic]
+    topics: [Topic]
     topic(name: String): Topic
+  }
+
+  type OngoingTopicReassignment {
+    topic: String
+    partitions: [OngoingPartitionReassignment]
+  }
+
+  type OngoingPartitionReassignment {
+    partitionIndex: Int,
+    replicas: [Int],
+    addingReplicas: [Int]
+    removingReplicas: [Int]
   }
 
   input ConfigEntry {
@@ -93,10 +105,26 @@ export const typeDefs = `#graphql
     value: String!
   }
 
+  input PartitionReplicas {
+    partition: Int,
+    replcias: [Int]
+  }
+
+  input PartitionReassignment {
+    topic: String!,
+    partitionAssignment: [PartitionReplicas]
+  }
+
+  input partitionOffset {
+    partition: Int,
+    offset: Int
+  }
+
   type Mutation {
     createTopic (name: String, numPartitions: Int, replicationFactor: Int, configEntries: [ConfigEntry]): Topic
-    deleteTopic: Topic
-    reassignPartitions: Partition
-    deleteTopicRecords: Boolean
+    deleteTopic (name: String): Topic
+    reassignPartitions(topics: [PartitionReassignment]): [OngoingTopicReassignment]
+    deleteTopicRecords(topic: String, partitions: [partitionOffset] ): Boolean
   }
 `;
+

@@ -16,13 +16,13 @@ afterAll(async () => {
     await global.kafkaAdmin.disconnect();
 });
 
-//Testing for bad endpoints 
+//Testing for bad endpoints
 describe('Bad endpoints', () => {
-   
+
     it('Should send 404 status with POST request', () => {
         return request(server).post('/api/post').expect(404);
     });
-    
+
     it('Should send 404 status with PUT request', () => {
       return request(server).post('/api/put').expect(404);
     });
@@ -47,7 +47,7 @@ describe('graphQL queries', () => {
               host
           }
           brokerCount
-          }           
+          }
         }`
       },
       {
@@ -57,7 +57,7 @@ describe('graphQL queries', () => {
             }
         }
       });
-      
+
       expect(Array.isArray(result.body.singleResult.data.cluster.brokers)).toBeTruthy();
       expect(typeof result.body.singleResult.data.cluster.brokerCount).toBe("number");
     });
@@ -80,7 +80,7 @@ describe('graphQL queries', () => {
             }
           }
         })
-        
+
         expect(result.body.singleResult.data.cluster.activeControllersCount).toBeGreaterThanOrEqual(0);
         expect(result.body.singleResult.data.cluster.underreplicatedPartitionsCount).toBeGreaterThanOrEqual(0);
         expect(result.body.singleResult.data.cluster.offlinePartitionsCount).toBeGreaterThanOrEqual(0);
@@ -101,11 +101,11 @@ describe('graphQL queries', () => {
             port
           }
         }`
-      }, 
+      },
       {
-        constextValue: {
+        contextValue: {
           dataSources: {
-            prometheusAPI: new PrometheusAPI,
+            prometheusAPI: new PrometheusAPI(),
           }
         }
       });
@@ -188,7 +188,7 @@ describe('graphQL queries', () => {
             }
           }
         }`
-      }, 
+      },
       {
         contextValue: {
           dataSources: {
@@ -217,7 +217,7 @@ describe('graphQL queries', () => {
             ]),
           })
         ])
-      ); 
+      );
     });
 
     //Data series queries
@@ -250,7 +250,7 @@ describe('graphQL queries', () => {
           },
         },
       });
-      
+
       expect(result.body.singleResult.data.brokers).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
@@ -302,7 +302,7 @@ describe('graphQL queries', () => {
             }
           }
         }`
-      }, 
+      },
       {
         contextValue: {
           dataSources: {
@@ -338,27 +338,40 @@ describe('graphQL queries', () => {
 
   //Mutations
   describe('Mutation queries', () => {
+    //need to figure out a way to get a unique random string that persist in this test block
+    it('deleteTopic mutation should return the topic that was deleted', async()=> {
+      //add a test topic first
+      // const newTopic = await global.apolloServer.executeOperation({
+      //   query: `mutation CreateTopic ($name: String!) {
+      //     createTopic(name: $name){
+      //       name
+      //     }
+      //   }`, variables: { name: 'deleteTopic test1' }
+      // });
+      // console.log('createTopic result', newTopic.body.singleResult.data);
 
+      //need to set server config to enable topic deletion
+      const result = await global.apolloServer.executeOperation({
+        query:`mutation deleteTopic ($name: String!) {
+          deleteTopic(name: $name){
+            name
+          }
+        }`, variables: {name: 'ToBeCreated3'}
+      });
+      console.log('deleteTopic result', result.body.singleResult.data);
+      expect(result.body.singleResult.data.deleteTopic).toBeTruthy();
+    });
     //Topic mutations
     describe('Topic mutations', () => {
-      // beforeAll(async()=> {
-      //   const result = await global.apolloServer.executeOperation({
-      //     query: `mutation AddTopic {
-            
-      //     }`
-      //   });
-
-      // });
       it('Should add a topic if it does not exist', async () => {
         const nonExistentResult = await global.apolloServer.executeOperation({
           query: `query getTopic ($name: String!) {
             topic (name: $name){
               name
             }
-          }`, 
-          variables: { name: 'ToBeCreated3'}
+          }`,
+          variables: { name: 'ToBeCreated7'}
         });
-
         expect(nonExistentResult.body.singleResult.data.topic).toBeNull();
 
         const result = await global.apolloServer.executeOperation({
@@ -366,21 +379,47 @@ describe('graphQL queries', () => {
             createTopic(name: $name){
               name
             }
-          }`, variables: { name: 'ToBeCreated3' }
+          }`, variables: { name: 'ToBeCreated7' }
         });
         console.log('createTopic result', result.body.singleResult.data)
 
         expect(result.body.singleResult.data.createTopic).toBeTruthy();
       });
 
+      // it('deleteTopic mutation should return the topic that was deleted', async()=> {
+      //   //add a test topic first
+      //   // const newTopic = await global.apolloServer.executeOperation({
+      //   //   query: `mutation CreateTopic ($name: String!) {
+      //   //     createTopic(name: $name){
+      //   //       name
+      //   //     }
+      //   //   }`, variables: { name: 'deleteTopic test1' }
+      //   // });
+      //   // console.log('createTopic result', newTopic.body.singleResult.data);
+
+      //   //need to set server config to enable topic deletion
+      //   const result = await global.apolloServer.executeOperation({
+      //     query:`mutation deleteTopic ($name: String!) {
+      //       deleteTopic(name: $name){
+      //         name
+      //       }
+      //     }`, variables: {name: 'ToBeCreated'}
+      //   });
+      //   console.log('deleteTopic result', result.body.singleResult.data);
+      //   expect(result.body.singleResult.data.deleteTopic).toBeTruthy();
+      // });
+
     });
 
-    
-    // describe('Partitions mutations', () => {
-    //   it('Should reassign partitions ')
 
-    // });
-    
+    describe('Partitions mutations', () => {
+      it('Should reassign partitions', async () => {
+
+      })
+
+    });
+
+
   });
-  
+
 });

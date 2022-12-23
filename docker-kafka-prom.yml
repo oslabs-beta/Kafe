@@ -1,11 +1,11 @@
 version: '2.1'
 
 services:
-  zookeeper: 
+  zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
     hostname: zookeeper
     container_name: zookeeper
-    ports: 
+    ports:
     - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -16,7 +16,7 @@ services:
     volumes:
     - ./configs/jmx_exp:/usr/share/jmx_exp
 
-  kafka1: 
+  kafka1:
     image: confluentinc/cp-kafka:7.0.1
     hostname: kafka1
     container_name: kafka1
@@ -31,6 +31,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
       KAFKA_OPTS: -javaagent:/usr/share/jmx_exp/jmx_prometheus_javaagent-0.16.1.jar=8081:/usr/share/jmx_exp/kafka.yml
       KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
@@ -39,7 +40,7 @@ services:
     volumes:
     - ./configs/jmx_exp:/usr/share/jmx_exp/
 
-  kafka2: 
+  kafka2:
     image: confluentinc/cp-kafka:7.0.1
     hostname: kafka2
     container_name: kafka2
@@ -54,6 +55,7 @@ services:
       KAFKA_BROKER_ID: 2
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
       KAFKA_OPTS: -javaagent:/usr/share/jmx_exp/jmx_prometheus_javaagent-0.16.1.jar=8081:/usr/share/jmx_exp/kafka.yml
       KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
@@ -62,7 +64,7 @@ services:
     volumes:
     - ./configs/jmx_exp:/usr/share/jmx_exp/
 
-  kafka3: 
+  kafka3:
     image: confluentinc/cp-kafka:7.0.1
     hostname: kafka3
     container_name: kafka3
@@ -77,6 +79,7 @@ services:
       KAFKA_BROKER_ID: 3
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
       KAFKA_OPTS: -javaagent:/usr/share/jmx_exp/jmx_prometheus_javaagent-0.16.1.jar=8081:/usr/share/jmx_exp/kafka.yml
       KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
@@ -84,17 +87,16 @@ services:
     - zookeeper
     volumes:
     - ./configs/jmx_exp:/usr/share/jmx_exp/
-  
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
     ports:
     - 9090:9090
-    volumes: 
+    volumes:
     - ./configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  
-  
 
 
-  
-  
+
+
+
