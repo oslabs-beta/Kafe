@@ -364,7 +364,7 @@ const resolvers = {
             }
         },
 
-        deleteTopicRecords: async (parent, {name, partitions}) => {
+        deleteTopicRecords: async (parent, { name, partitions }) => {
             try {
                 const deletedTopicRecords = await adminActions.deleteAllTopicRecords(name, partitions);
                 //offset set to -1 to delete all records
@@ -374,9 +374,12 @@ const resolvers = {
             }
         },
 
-        reassignPartitions: async(parent , {topics}) => {
+        reassignPartitions: async(parent , { topics }) => {
             try {
+                console.log('reassignPartitions resolver: ', topics)
                 const reassignPartitions = await adminActions.reassignPartitions(topics);
+
+                console.log('reassignPartitions result: ', reassignPartitions);
                 return reassignPartitions;
             } catch (err){
                 console.log('Reassign Partitions Error:', err)

@@ -4,7 +4,7 @@ const { Kafka, Partitioners } = require('kafkajs');
 
 const app = express();
 const kafka = new Kafka({
-    clientId: 'franz-companion',
+    clientId: 'kafe-companion',
     brokers: ['localhost:9091', 'localhost:9092', 'localhost:9093']
 });
 

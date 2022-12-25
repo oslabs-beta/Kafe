@@ -24,14 +24,15 @@ services:
       - "9091:9091"
       - "8081:8081"
     environment:
+      KAFKA_BROKER_ID: 1
       KAFKA_ADVERTISED_LISTENERS: LISTENER_INTERNAL://kafka1:19091, LISTENER_EXTERNAL://localhost:9091
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_BROKER_ID: 1
-      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=ERROR,kafka.producer.async.DefaultEventHandler=ERROR,state.change.logger=ERROR"
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
       KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_AUTO_DELETE_TOPICS_ENABLE: "false"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
       KAFKA_OPTS: -javaagent:/usr/share/jmx_exp/jmx_prometheus_javaagent-0.16.1.jar=8081:/usr/share/jmx_exp/kafka.yml
       KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
@@ -48,14 +49,15 @@ services:
       - "9092:9092"
       - "8082:8081"
     environment:
+      KAFKA_BROKER_ID: 2
       KAFKA_ADVERTISED_LISTENERS: LISTENER_INTERNAL://kafka2:19092, LISTENER_EXTERNAL://localhost:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_BROKER_ID: 2
-      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=ERROR,kafka.producer.async.DefaultEventHandler=ERROR,state.change.logger=ERROR"
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
       KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_AUTO_DELETE_TOPICS_ENABLE: "false"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
       KAFKA_OPTS: -javaagent:/usr/share/jmx_exp/jmx_prometheus_javaagent-0.16.1.jar=8081:/usr/share/jmx_exp/kafka.yml
       KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
@@ -72,14 +74,15 @@ services:
       - "9093:9093"
       - "8083:8081"
     environment:
+      KAFKA_BROKER_ID: 3
       KAFKA_ADVERTISED_LISTENERS: LISTENER_INTERNAL://kafka3:19093, LISTENER_EXTERNAL://localhost:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_BROKER_ID: 3
-      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=ERROR,kafka.producer.async.DefaultEventHandler=ERROR,state.change.logger=ERROR"
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
       KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_AUTO_DELETE_TOPICS_ENABLE: "false"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
       KAFKA_OPTS: -javaagent:/usr/share/jmx_exp/jmx_prometheus_javaagent-0.16.1.jar=8081:/usr/share/jmx_exp/kafka.yml
       KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"

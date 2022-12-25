@@ -89,12 +89,12 @@ export const typeDefs = `#graphql
   }
 
   type OngoingTopicReassignment {
-    topic: String
+    name: String
     partitions: [OngoingPartitionReassignment]
   }
 
   type OngoingPartitionReassignment {
-    partitionIndex: Int,
+    partition: Int,
     replicas: [Int],
     addingReplicas: [Int]
     removingReplicas: [Int]
@@ -107,7 +107,7 @@ export const typeDefs = `#graphql
 
   input PartitionReplicas {
     partition: Int,
-    replcias: [Int]
+    replicas: [Int]
   }
 
   input PartitionReassignment {

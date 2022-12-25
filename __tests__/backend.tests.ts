@@ -3,8 +3,10 @@ import { admin } from '../src/server/kafkaAdmin/admin';
 // jest.useFakeTimers();
 import apolloServer from '../src/server/server';
 import PrometheusAPI from '../src/server/graphQL/dataSources/prometheusAPI';
+import { faker } from '@faker-js/faker';
 
 const server = 'http://localhost:3000/';
+
 
 beforeAll(async () => {
     global.apolloServer = await apolloServer;
@@ -311,7 +313,7 @@ describe('graphQL queries', () => {
         },
       });
 
-      console.log(typeof result.body.singleResult.data.topics)
+      // console.log(typeof result.body.singleResult.data.topics)
       expect(result.body.singleResult.data.topics).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
@@ -338,31 +340,8 @@ describe('graphQL queries', () => {
 
   //Mutations
   describe('Mutation queries', () => {
-    //need to figure out a way to get a unique random string that persist in this test block
-    it('deleteTopic mutation should return the topic that was deleted', async()=> {
-      //add a test topic first
-      // const newTopic = await global.apolloServer.executeOperation({
-      //   query: `mutation CreateTopic ($name: String!) {
-      //     createTopic(name: $name){
-      //       name
-      //     }
-      //   }`, variables: { name: 'deleteTopic test1' }
-      // });
-      // console.log('createTopic result', newTopic.body.singleResult.data);
-
-      //need to set server config to enable topic deletion
-      const result = await global.apolloServer.executeOperation({
-        query:`mutation deleteTopic ($name: String!) {
-          deleteTopic(name: $name){
-            name
-          }
-        }`, variables: {name: 'ToBeCreated3'}
-      });
-      console.log('deleteTopic result', result.body.singleResult.data);
-      expect(result.body.singleResult.data.deleteTopic).toBeTruthy();
-    });
     //Topic mutations
-    describe('Topic mutations', () => {
+    xdescribe('Topic mutations', () => {
       it('Should add a topic if it does not exist', async () => {
         const nonExistentResult = await global.apolloServer.executeOperation({
           query: `query getTopic ($name: String!) {
@@ -381,41 +360,112 @@ describe('graphQL queries', () => {
             }
           }`, variables: { name: 'ToBeCreated7' }
         });
-        console.log('createTopic result', result.body.singleResult.data)
-
+        // console.log('createTopic result', result.body.singleResult.data)
         expect(result.body.singleResult.data.createTopic).toBeTruthy();
       });
 
-      // it('deleteTopic mutation should return the topic that was deleted', async()=> {
-      //   //add a test topic first
-      //   // const newTopic = await global.apolloServer.executeOperation({
-      //   //   query: `mutation CreateTopic ($name: String!) {
-      //   //     createTopic(name: $name){
-      //   //       name
-      //   //     }
-      //   //   }`, variables: { name: 'deleteTopic test1' }
-      //   // });
-      //   // console.log('createTopic result', newTopic.body.singleResult.data);
+      it('deleteTopic mutation should delete a topic and return the topic that was deleted', async()=> {
 
-      //   //need to set server config to enable topic deletion
-      //   const result = await global.apolloServer.executeOperation({
-      //     query:`mutation deleteTopic ($name: String!) {
-      //       deleteTopic(name: $name){
-      //         name
-      //       }
-      //     }`, variables: {name: 'ToBeCreated'}
-      //   });
-      //   console.log('deleteTopic result', result.body.singleResult.data);
-      //   expect(result.body.singleResult.data.deleteTopic).toBeTruthy();
-      // });
+        //need to set server config to enable topic deletion
+        const result = await global.apolloServer.executeOperation({
+          query:`mutation deleteTopic ($name: String!) {
+            deleteTopic(name: $name){
+              name
+            }
+          }`, variables: {name: 'ToBeCreated7'}
+        });
+        // console.log('deleteTopic result', result.body.singleResult.data);
+        expect(result.body.singleResult.data.deleteTopic).toBeTruthy();
+
+        const deletedTopic = await global.apolloServer.executeOperation({
+          query: `query getTopic ($name: String!) {
+            topic (name: $name){
+              name
+            }
+          }`,
+          variables: { name: 'ToBeCreated7'}
+        });
+
+        expect(deletedTopic.body.singleResult.data.topic).toBeNull();
+      });
 
     });
 
-
+    jest.setTimeout(10000);
     describe('Partitions mutations', () => {
-      it('Should reassign partitions', async () => {
+      
+      let testTopic;
+      //Create test topic to reassign partitions for
+      beforeAll(async() => {
 
-      })
+        testTopic = faker.random.alphaNumeric(10);
+
+        try {
+          const topics = await global.kafkaAdmin.listTopics();
+
+          const newTopic = await global.kafkaAdmin.createTopics({
+            topics: [{
+              topic: testTopic,
+              replicaAssignment: [{ partition: 0, replicas: [1, 0]}]
+            }],
+            waitForLeaders: true,
+          });
+
+          
+          console.log('All topics before creation ', topics);
+          return;
+        } catch(err) {
+          console.log('Partition reassignment error creating topic: ', err);
+        };
+        
+      });
+
+      
+      afterAll(async() => {
+        jest.setTimeout(10000);
+        return await global.kafkaAdmin.deleteTopics({
+          topics: [testTopic],
+        });
+      });
+
+      it('Should reassign partitions', async () => {
+        const result = await global.apolloServer.executeOperation({
+          query: `mutation ReassignPartitions($topics: [PartitionReassignment]) {
+            reassignPartitions (topics: $topics) {
+              name
+              partitions {
+                partition
+                replicas
+                addingReplicas
+                removingReplicas
+              }
+            }
+          }`,
+          variables: {
+            topics: [
+              {
+                topic: testTopic,
+                partitionAssignment: [{ partition: 0, replicas: [2, 3]}],
+              },
+            ],
+          },
+        });
+
+        // console.log(result.body.singleResult.data.reassignPartitions);
+        expect(result.body.singleResult.data.reassignPartitions.filter((topic) => 
+          topic.name === testTopic
+        )).toEqual([{
+          name: testTopic,
+          partitions: [
+            {
+              partition: 0,
+              replicas: [2, 3, 1, 0],
+              addingReplicas: [2, 3],
+              removingReplicas: [1, 0],
+            },
+          ],
+        }]);
+      });
 
     });
 

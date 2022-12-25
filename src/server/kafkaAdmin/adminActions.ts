@@ -121,7 +121,7 @@ export const enableTopicDeletion = async() => {
 
 export const deleteTopics = async (topics: string[]): Promise<any> => {
     //enable deletion config
-    // await enableTopicDeletion();
+    
     try{
         console.log('List of topics to be deleted: ', topics)
         const existingtopics = await admin.listTopics();
@@ -171,6 +171,8 @@ export const reassignPartitions = async (topics: PartitionReassignment[]): Promi
             topics
         });
         const result = await admin.listPartitionReassignments({});
+
+        console.log('Admin reassignPartitions result: ', result);
         return result.topics;
     } catch(err) {
         console.log(err);
