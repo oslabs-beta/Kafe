@@ -4,7 +4,9 @@ export const CLUSTER_SUMMARY = gql`
   query getClusterInfo {
     cluster {
       brokerCount
-      activeControllers
+      activeControllers {
+        id
+      }
       activeControllersCount
       underreplicatedPartitionsCount
       offlinePartitionsCount

@@ -14,10 +14,13 @@ const divStyle = {
 function Sidebar(){
 
     let connectStatus = 'Loading';
-    const status = useQuery(CLUSTER_SUMMARY);
-    console.log('   status is... ', status);
-    if(status.data)connectStatus = 'Connected';
-
+    const { loading, data } = useQuery(CLUSTER_SUMMARY);
+    
+    if(!loading) {
+        console.log('status is... ', data);
+        connectStatus = 'Connected';
+    }
+    // if (error) return `Error! ${error.message}`;
     // check session if dashboard remounts
 
 //   useEffect(() => {
