@@ -1,10 +1,10 @@
 const express = require('express');
 const { Kafka, Partitioners } = require('kafkajs');
 
-const app = express();
 
+const app = express();
 const kafka = new Kafka({
-    clientId: 'franz-companion',
+    clientId: 'kafe-companion',
     brokers: ['localhost:9091', 'localhost:9092', 'localhost:9093']
 });
 
@@ -26,7 +26,6 @@ const sendMessages = async () => {
         ]
     })
 };
-
 const consumeMessages = async () => {
     await consumer.connect();
     await consumer.subscribe({
@@ -35,6 +34,7 @@ const consumeMessages = async () => {
         ],
         fromBeginning: true
     });
+    
     await consumer.run({
         eachMessage: async({ topic, partition, message, heartbeat, pause }) => {
             console.log({
@@ -42,16 +42,25 @@ const consumeMessages = async () => {
                 value: message.value.toString(),
                 topic,
                 partition,
-                heartbeat,
             })
         }
-    })
+    });
+   
 };
 
 sendMessages();
 consumeMessages();
 
-
-app.listen(3333, () => {
+const server = app.listen(3333, () => {
     console.log('Listening on port 3333...')
 });
+
+server.close();
+
+module.exports = {
+    sendMessages,
+    consumeMessages,
+    app,
+    producer,
+    consumer
+};
