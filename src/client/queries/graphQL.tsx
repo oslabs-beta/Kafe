@@ -77,3 +77,17 @@ export const BROKER_BYTES_IN = gql`
   }
 `;
 
+export const LIST_TOPICS = gql`
+query Query {
+  topics {
+    name
+    ISRCount
+    logSize {
+      value
+      time
+    }
+    partitionsCount
+    replicasCount
+  }
+}
+`;
