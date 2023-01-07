@@ -1,24 +1,24 @@
 import React from 'react';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
-import { useQuery } from "@apollo/client";
+import { useQuery } from '@apollo/client';
+// import { LIST_TOPICS } from '../queries/graphQL';
 
-const topicQuery =   gql`
-query GetCluster {
-  cluster {
-    brokers {
-      id
-      host
-      port
-    }
-  }
-}
-`
+function Topics() {
+  // const { loading, data } = useQuery(LIST_TOPICS);
 
-function Topics(){
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
-return(
-    <div>Topics</div>
-    );
+  return (
+    <div>
+      <div>Topics</div>
+      {/* <ul>
+        {data.listTopics.topics.map((topic) => (
+          <li key={topic}>{topic}</li>
+        ))}
+      </ul> */}
+    </div>
+  );
 }
 
 export default Topics;
