@@ -84,14 +84,47 @@ export const typeDefs = `#graphql
       topics: [String]
       ids: [Int]
     ): [DataSeries]
-    topics(name: [String]): [Topic]
+    topics: [Topic]
     topic(name: String): Topic
   }
 
+  type OngoingTopicReassignment {
+    name: String
+    partitions: [OngoingPartitionReassignment]
+  }
+
+  type OngoingPartitionReassignment {
+    partition: Int,
+    replicas: [Int],
+    addingReplicas: [Int]
+    removingReplicas: [Int]
+  }
+
+  input ConfigEntry {
+    name: String!
+    value: String!
+  }
+
+  input PartitionReplicas {
+    partition: Int,
+    replicas: [Int]
+  }
+
+  input PartitionReassignment {
+    topic: String!,
+    partitionAssignment: [PartitionReplicas]
+  }
+
+  input partitionOffset {
+    partition: Int,
+    offset: Int
+  }
+
   type Mutation {
-    createTopic: Topic
-    deleteTopic: Topic
-    reassignPartitions: Partition
-    deleteTopicRecords: Boolean
+    createTopic (name: String, numPartitions: Int, replicationFactor: Int, configEntries: [ConfigEntry]): Topic
+    deleteTopic (name: String): Topic
+    reassignPartitions(topics: [PartitionReassignment]): [OngoingTopicReassignment]
+    deleteTopicRecords(topic: String, partitions: [partitionOffset] ): Boolean
   }
 `;
+
