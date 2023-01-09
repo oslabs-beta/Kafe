@@ -27,17 +27,40 @@ testProducer.connect()
   }))
   .catch((err) => console.log(err));
 
-const testConsumer = client.consumer({groupId: 'dlq-test'});
+// const testConsumer = client.consumer({groupId: 'dlq-testt'});
 
-testConsumer.connect()
-  .then(() => {
-    testConsumer.subscribe({topics: ['DeadLetterQueue'], fromBeginning: true})
-  })
-  .then(() => {
-    testConsumer.run({
-      eachMessage: async({topic, partition, message}) => {
-        console.log(JSON.parse(message.value.toString()));
-      }
-    })
-  })
-  .catch((err) => console.log(err))
+// testConsumer.connect()
+//   .then(() => {
+//     console.log('KAFE CONSUMER CONNECTED')
+//     testConsumer.subscribe({topics: ['DeadLetterQueue'], fromBeginning: true})
+//   })
+//   .then(() => {
+//     console.log('KAFE CONSUMER EACH BLOCK');
+//     testConsumer.run({
+//       eachMessage: ({topic, partition, message}) => {
+//           console.log('From Kafe consumer: ')
+//           console.log(JSON.parse(message.value.toString()));
+//       }
+//     });
+//   })
+//   .catch((err) => console.log(err));
+
+// const consumer = kafka.consumer({groupId: 'dlq-test'});
+
+// consumer.connect()
+//   .then(() => {
+//     console.log('CONSUMER CONNECTED');
+//     consumer.subscribe({topics: ['DeadLetterQueue'], fromBeginning: true})
+//   })
+//   .then(() => {
+//     console.log('CONSUMER EACH MESSAGE');
+//     consumer.run({
+//       eachMessage: ({topic, partition, message}) => {
+//         console.log('From original consumer: ');
+//         console.log(message.value.toString());
+//       }
+//     })
+//   })
+//   .catch((err) => {
+//     console.log('Error occurred: ', err);
+//   })

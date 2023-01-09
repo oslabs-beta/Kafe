@@ -9,6 +9,7 @@ import Consumers from './components/Consumers';
 import Topics from './components/Topics';
 import Partitions from './components/Partitions';
 import ClusterSummary from './components/ClusterSummary';
+import DLQ from './components/DLQ';
 import { useQuery } from "@apollo/client"
 
 
@@ -25,6 +26,7 @@ const App = () => {
               <Route path="consumers" element={<Consumers />}></Route>
               <Route path="topics" element={<Topics />}></Route>
               <Route path="partitions" element={<Partitions />}></Route>
+              <Route path="dlq" element={<DLQ />}></Route>
             </Route>
           </Routes>
         </BrowserRouter>

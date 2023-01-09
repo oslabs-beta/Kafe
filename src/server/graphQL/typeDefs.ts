@@ -61,6 +61,19 @@ export const typeDefs = `#graphql
     high: String
   }
 
+  type DLQMessage {
+    timestamp: String
+    value: DLQMessageValue
+  }
+
+  type DLQMessageValue {
+    originalTopic: String
+    originalMessage: String
+    clientType: String
+    err: String
+  }
+
+  
   type Query {
     cluster(
       start: String,
@@ -86,6 +99,7 @@ export const typeDefs = `#graphql
     ): [DataSeries]
     topics: [Topic]
     topic(name: String): Topic
+    dlq: [DLQMessage]
   }
 
   type OngoingTopicReassignment {

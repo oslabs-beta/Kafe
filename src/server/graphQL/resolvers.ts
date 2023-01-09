@@ -1,4 +1,9 @@
 import * as adminActions from '../kafkaAdmin/adminActions';
+import * as dotenv from 'dotenv';
+import { Kafka, logLevel } from 'kafkajs';
+import { KafeDLQClient } from 'kafe-dlq';
+
+dotenv.config();
 
 import {
     ACTIVE_CONTROLLER_COUNT,
@@ -16,6 +21,15 @@ import {
     TOPIC_LOG_SIZE
     } from './dataSources/prometheusQueries';
 
+const kafka = new Kafka({
+    clientId: 'KafeDLQ',
+    brokers: process.env.KAFKA_BROKERS.split(','),
+    logLevel: logLevel.ERROR
+});
+
+const client = new KafeDLQClient(kafka);
+const consumer = kafka.consumer({ groupId: 'DLQConsumer', maxWaitTimeInMs: 7000 });
+// consumer.logger().setLogLevel(logLevel.DEBUG);
 
 const resolvers = {
     // underMinISRCount: Int
@@ -329,6 +343,43 @@ const resolvers = {
             } catch(err) {
                 console.log(err);
             }
+        },
+
+        dlq: async(parent, args, context): Promise<any> => {
+            return new Promise((resolve, reject) => {
+
+                const DLQMessages = [];
+                consumer.connect()
+                  .then(() => {
+                    console.log('dlq resolver consumer connected...');
+                    consumer.subscribe({ topics: ['DeadLetterQueue'], fromBeginning: true })
+                  })
+                  .then(() => {
+                    consumer.run({
+                        eachMessage: async({ topic, partition, message}) => {
+                            DLQMessages.push({
+                                timestamp: new Date(message.timestamp).toLocaleString('en-US', {
+                                    timeStyle: "long",
+                                    dateStyle: "short",
+                                    hour12: false,
+                                }),
+                                value: JSON.parse(message.value.toString()),
+                            })
+                        },
+                    });
+                  })
+                  .catch((err: Error) => {
+                    console.log(err);
+                    reject(err);
+                  })
+                  .finally(() => {
+                      setTimeout(() => {
+                        consumer.disconnect();
+                        resolve(DLQMessages)
+                        return DLQMessages;
+                      }, 5000);
+                  });
+            })
         },
     },
     Mutation: {
