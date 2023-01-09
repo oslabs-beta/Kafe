@@ -358,7 +358,7 @@ const resolvers = {
                     consumer.run({
                         eachMessage: async({ topic, partition, message}) => {
                             DLQMessages.push({
-                                timestamp: new Date(message.timestamp).toLocaleString('en-US', {
+                                timestamp: new Date(parseInt(message.timestamp)).toLocaleString('en-US', {
                                     timeStyle: "long",
                                     dateStyle: "short",
                                     hour12: false,
