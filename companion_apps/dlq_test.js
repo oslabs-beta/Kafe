@@ -27,7 +27,7 @@ testProducer.connect()
   }))
   .catch((err) => console.log(err));
 
-const testConsumer = client.consumer({groupId: 'dlq-testt'});
+// const testConsumer = client.consumer({groupId: 'dlq-testt'});
 
 // testConsumer.connect()
 //   .then(() => {

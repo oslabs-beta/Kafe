@@ -27,9 +27,19 @@ const kafka = new Kafka({
     logLevel: logLevel.ERROR
 });
 
+const consumerMap = new Map();
+
+
 const client = new KafeDLQClient(kafka);
+// const consumer = client.consumer({ groupId: 'DLQConsumer' });
 const consumer = kafka.consumer({ groupId: 'DLQConsumer', maxWaitTimeInMs: 7000 });
 // consumer.logger().setLogLevel(logLevel.DEBUG);
+var i: any;
+for (i = 1; i < 4; i++) {
+    consumerMap.set(i, kafka.consumer({ groupId: 'DLQConsumer', maxWaitTimeInMs: 7000}))
+};
+
+i = 1;
 
 const resolvers = {
     // underMinISRCount: Int
@@ -346,12 +356,16 @@ const resolvers = {
         },
 
         dlq: async(parent, args, context): Promise<any> => {
+            const consumer = consumerMap.get(i);
+            ++i;
+            if (i > 3) i = 1;
+
             return new Promise((resolve, reject) => {
 
                 const DLQMessages = [];
                 consumer.connect()
                   .then(() => {
-                    console.log('dlq resolver consumer connected...');
+                    console.log(`dlq resolver consumer${i === 1 ? 3 : i - 1} connected...`);
                     consumer.subscribe({ topics: ['DeadLetterQueue'], fromBeginning: true })
                   })
                   .then(() => {
@@ -374,12 +388,49 @@ const resolvers = {
                   })
                   .finally(() => {
                       setTimeout(() => {
+                        console.log(`consumer${i === 1 ? 3 : i - 1} disconnecting...`);
                         consumer.disconnect();
                         resolve(DLQMessages)
                         return DLQMessages;
                       }, 5000);
                   });
-            })
+            });
+            // return new Promise((resolve, reject) => {
+
+            //     const DLQMessages = [];
+            //     consumer.connect()
+            //       .then(() => {
+            //         console.log('dlq resolver consumer connected...');
+            //         consumer.subscribe({ topics: ['DeadLetterQueue'], fromBeginning: true })
+            //       })
+            //       .then(() => {
+            //         consumer.run({
+            //             eachMessage: ({ topic, partition, message}) => {
+            //                 DLQMessages.push({
+            //                     timestamp: new Date(parseInt(message.timestamp)).toLocaleString('en-US', {
+            //                         timeStyle: "long",
+            //                         dateStyle: "short",
+            //                         hour12: false,
+            //                     }),
+            //                     value: JSON.parse(message.value.toString()),
+            //                 })
+            //             },
+            //         });
+            //       })
+            //       .catch((err: Error) => {
+            //         console.log(err);
+            //         reject(err);
+            //         return err;
+            //       })
+            //       .finally(() => {
+            //           setTimeout(() => {
+            //             console.log('consumer disconnecting...');
+            //             consumer.disconnect();
+            //             resolve(DLQMessages)
+            //             return DLQMessages;
+            //           }, 5000);
+            //       });
+            // });
         },
     },
     Mutation: {

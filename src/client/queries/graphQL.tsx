@@ -73,7 +73,21 @@ export const BROKER_BYTES_IN = gql`
       }
     }
   }
-`
+`;
+
+export const GET_DLQ_MESSAGES = gql`
+  query getDLQMessages {
+    dlqMessages: dlq {
+      timestamp
+      value {
+        originalMessage
+        originalTopic
+        clientType
+        err
+      }
+    }
+  }
+`;
 
 // type Query {
 //   cluster(
@@ -112,4 +126,4 @@ export const BROKER_BYTES_IN = gql`
 //     }
 //   }
 // }
-// `
+// ` 
