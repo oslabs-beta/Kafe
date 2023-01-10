@@ -4,7 +4,8 @@ import Dashboard from './containers/Dashboard';
 import Main from './containers/Main';
 import Brokers from './components/Brokers';
 import Consumers from './components/Consumers';
-import Topics from './components/Topics';
+import ListTopics from './components/ListTopics';
+import CreateTopic from './components/CreateTopic';
 import Partitions from './components/Partitions';
 import ClusterSummary from './components/ClusterSummary';
 
@@ -19,7 +20,8 @@ const App = () => {
               <Route path="overview" element={<ClusterSummary/>}></Route>
               <Route path="brokers" element={<Brokers />}></Route>
               <Route path="consumers" element={<Consumers />}></Route>
-              <Route path="topics" element={<Topics />}></Route>
+              <Route path="listtopics" element={<ListTopics />}></Route>
+              <Route path="createtopic" element={<CreateTopic />}></Route>
               <Route path="partitions" element={<Partitions />}></Route>
             </Route>
           </Routes>

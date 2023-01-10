@@ -91,3 +91,11 @@ query Query {
   }
 }
 `;
+
+export const CREATE_TOPIC = gql`
+mutation Mutation($name: String, $numPartitions: Int, $replicationFactor: Int) {
+  createTopic(name: $name, numPartitions: $numPartitions, replicationFactor: $replicationFactor) {
+    name
+  }
+}
+`;
