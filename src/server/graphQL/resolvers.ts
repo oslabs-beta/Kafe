@@ -390,7 +390,8 @@ const resolvers = {
                       setTimeout(() => {
                         console.log(`consumer${i === 1 ? 3 : i - 1} disconnecting...`);
                         consumer.disconnect();
-                        resolve(DLQMessages)
+                        resolve(DLQMessages);
+                        console.log(DLQMessages);
                         return DLQMessages;
                       }, 5000);
                   });
