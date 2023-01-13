@@ -6,6 +6,7 @@ import Brokers from './components/Brokers';
 import Consumers from './components/Consumers';
 import ListTopics from './components/ListTopics';
 import CreateTopic from './components/CreateTopic';
+import DeleteTopic from './components/DeleteTopic';
 import Partitions from './components/Partitions';
 import ClusterSummary from './components/ClusterSummary';
 
@@ -22,6 +23,7 @@ const App = () => {
               <Route path="consumers" element={<Consumers />}></Route>
               <Route path="listtopics" element={<ListTopics />}></Route>
               <Route path="createtopic" element={<CreateTopic />}></Route>
+              <Route path="deletetopic" element={<DeleteTopic />}></Route>
               <Route path="partitions" element={<Partitions />}></Route>
             </Route>
           </Routes>

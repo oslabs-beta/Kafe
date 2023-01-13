@@ -22,6 +22,7 @@ function Menu(){
                 <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/consumers" style={linkStyle}>Consumers</Link></Button><br />
                 <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/listtopics" style={linkStyle}>List Topics</Link></Button><br />
                 <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/createtopic" style={linkStyle}>Create Topic</Link></Button><br />
+                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/deletetopic" style={linkStyle}>Delete Topic</Link></Button><br />
                 <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/partitions" style={linkStyle}>Partitions</Link></Button>
             </nav>
         </>
