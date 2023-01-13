@@ -359,8 +359,7 @@ const resolvers = {
             const consumer = consumerMap.get(i);
             ++i;
             if (i > 6) i = 1;
-            const consumerNumber = i === 1? 6 : i - 1
-            // await consumer.disconnect();
+            const consumerNumber = i === 1? 6 : i - 1;
 
             return new Promise((resolve, reject) => {
                 const DLQMessages = [];
@@ -429,42 +428,6 @@ const resolvers = {
             //               }, 5000);
             //           });
             //     });
-            // return new Promise((resolve, reject) => {
-
-            //     const DLQMessages = [];
-            //     consumer.connect()
-            //       .then(() => {
-            //         console.log('dlq resolver consumer connected...');
-            //         consumer.subscribe({ topics: ['DeadLetterQueue'], fromBeginning: true })
-            //       })
-            //       .then(() => {
-            //         consumer.run({
-            //             eachMessage: ({ topic, partition, message}) => {
-            //                 DLQMessages.push({
-            //                     timestamp: new Date(parseInt(message.timestamp)).toLocaleString('en-US', {
-            //                         timeStyle: "long",
-            //                         dateStyle: "short",
-            //                         hour12: false,
-            //                     }),
-            //                     value: JSON.parse(message.value.toString()),
-            //                 })
-            //             },
-            //         });
-            //       })
-            //       .catch((err: Error) => {
-            //         console.log(err);
-            //         reject(err);
-            //         return err;
-            //       })
-            //       .finally(() => {
-            //           setTimeout(() => {
-            //             console.log('consumer disconnecting...');
-            //             consumer.disconnect();
-            //             resolve(DLQMessages)
-            //             return DLQMessages;
-            //           }, 5000);
-            //       });
-            // });
         },
     },
     Mutation: {

@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { GET_DLQ_MESSAGES } from '../queries/graphQL';
 import { useQuery } from "@apollo/client";
-// import EnhancedTable from './EnhancedTable';
 import EnhancedTable from './EnhancedTable';
 
 const DLQ = (props) => {
@@ -28,7 +27,7 @@ const DLQ = (props) => {
     useEffect(() => {
         if (error || loading) return;
         if (data) {
-            console.log('querydata:', data)
+            // console.log('querydata:', data)
             setDLQ((dlq) => {
                 dlqRef.current = [...data.dlqMessages, ...dlq];
                 return [...data.dlqMessages, ...dlq];
@@ -41,8 +40,32 @@ const DLQ = (props) => {
         };
     }, [loading, data]);
 
-    console.log('Data: ', data);
+    // console.log('Data: ', data);
     console.log('Current DLQ: ', dlq);
+
+    const removeMessageHandler = (indices: number[]) => {
+        if (!indices.length) return;
+        
+        indices.sort((a, b) => b - a);
+
+        setDLQ((dlq) => {
+            for (let i = indices.length; i >= 0; i--) {
+                dlq.splice(indices[i], 1);
+            };
+            dlqRef.current = dlq;
+            return dlq;
+        });
+    };
+
+    const reverseOrderHandler = () => {
+        if (!dlq.length) return;
+
+        setDLQ((dlq) => {
+            dlq.reverse();
+            dlqRef.current = dlq;
+            return dlq;
+        });
+    };
 
     return (
         <>
@@ -50,6 +73,8 @@ const DLQ = (props) => {
             {dlq.length > 0 && <EnhancedTable
                             data={dlq}
                             headers={['Time of Error', 'Original Message', 'Original Topic', 'Client Type', 'Error Message']}
+                            removeMessageHandler={removeMessageHandler}
+                            reverseOrderHandler={reverseOrderHandler}
                             />}
         </>
     )
