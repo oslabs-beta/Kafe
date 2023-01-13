@@ -88,6 +88,12 @@ query Query {
     }
     partitionsCount
     replicasCount
+    partitions {
+      partitionId
+      replicas {
+        id
+      }
+    }
   }
 }
 `;
@@ -95,6 +101,22 @@ query Query {
 export const CREATE_TOPIC = gql`
 mutation Mutation($name: String, $numPartitions: Int, $replicationFactor: Int) {
   createTopic(name: $name, numPartitions: $numPartitions, replicationFactor: $replicationFactor) {
+    name
+  }
+}
+`;
+
+export const DELETE_TOPIC = gql`
+mutation DeleteTopic($name: String) {
+  deleteTopic(name: $name) {
+    name
+  }
+}
+`;
+
+export const REASSIGN_PARTITIONS = gql`
+mutation DeleteTopic($name: String) {
+  deleteTopic(name: $name) {
     name
   }
 }

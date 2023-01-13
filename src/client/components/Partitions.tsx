@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from "@apollo/client";
+import { LIST_TOPICS } from '../queries/graphQL';
 
 //  Static list of topics; placeholder for GQL query
 const topics = {
@@ -43,6 +44,8 @@ function Partitions() {
     setSubmitted(true);
   };
 
+  const { loading, data } = useQuery(LIST_TOPICS, { pollInterval: 20 * 1000 });
+
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor="topic-select">Existing Topics</label><br />
@@ -51,9 +54,9 @@ function Partitions() {
         value={selectedTopic}
         onChange={handleTopicChange}
       >
-        {Object.keys(topics).map((topic) => (
-          <option key={topic} value={topic}>
-            {topic}
+        {data.topics.map((data) => (
+          <option key={data.name} value={data.name}>
+            {data.name}
           </option>
         ))}
       </select>

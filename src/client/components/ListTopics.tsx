@@ -21,9 +21,8 @@ function ListTopics() {
       {data.topics.map((el) => (
         <>
           <ul>
-            <li>{el.name}</li>
+            <li>{el.name}, {el.partitionsCount}</li>
           </ul>
-          <PaperStyles key={el.name} title={el.name} />
         </>
       ))}
     </div>
