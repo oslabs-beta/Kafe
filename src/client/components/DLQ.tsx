@@ -14,29 +14,30 @@ const DLQ = (props) => {
     });
 
     const dlqRef = useRef(null)
-    
+
     useEffect(() => {
-        const dlqMessages = JSON.parse(localStorage.getItem('DLQMessages'));
+        const dlqMessages = JSON.parse(sessionStorage.getItem('DLQMessages'));
         console.log('DLQMessages from localStorage: ', dlqMessages)
         if (dlqMessages?.length){
             setDLQ(dlqMessages);
             dlqRef.current = dlqMessages;
         };
-        
+
     }, []);
 
     useEffect(() => {
         if (error || loading) return;
         if (data) {
-            setDLQ((dlq) => { 
-                dlqRef.current = [...dlq, ...data.dlqMessages];
-                return [...dlq, ...data.dlqMessages];
+            console.log('querydata:', data)
+            setDLQ((dlq) => {
+                dlqRef.current = [...data.dlqMessages, ...dlq];
+                return [...data.dlqMessages, ...dlq];
             });
         };
 
         return () => {
-            console.log('Setting DLQ... ', dlqRef.current);
-            localStorage.setItem('DLQMessages', JSON.stringify(dlqRef.current));
+            sessionStorage.setItem('DLQMessages', JSON.stringify(dlqRef.current));
+            console.log('localStorage DLQ:',JSON.stringify(dlqRef.current))
         };
     }, [loading, data]);
 
@@ -46,8 +47,8 @@ const DLQ = (props) => {
     return (
         <>
             <div>Dead Letter Queue Component</div>
-            {dlq.length > 0 && <EnhancedTable 
-                            data={dlq} 
+            {dlq.length > 0 && <EnhancedTable
+                            data={dlq}
                             headers={['Time of Error', 'Original Message', 'Original Topic', 'Client Type', 'Error Message']}
                             />}
         </>

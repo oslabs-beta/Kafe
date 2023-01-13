@@ -23,11 +23,11 @@ testProducer.connect()
   }))
   .then(() => testProducer.send({
     topic: 'bad',
-    messages: [{key: '1', value: '-1'}, {key: '2', value: '-2'}, {key: '3', value: '3'}]
+    messages: [{key: '1', value: '-121'}, {key: '2', value: '-112'}, {key: '3', value: '3'}]
   }))
   .catch((err) => console.log(err));
 
-const testConsumer = client.consumer({groupId: 'dlq-testt'}); 
+const testConsumer = client.consumer({groupId: 'dlq-testt'});
 // testConsumer.connect()
 //   .then(() => {
 //     console.log('KAFE CONSUMER CONNECTED')

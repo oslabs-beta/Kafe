@@ -26,7 +26,8 @@ const EnhancedTable = ({ data, headers }) => {
             };
         });
 
-        console.log('Row data: ', newRows);
+        console.log('Row data: ', data, data.length);
+        console.log('Row info: ', newRows, newRows.length);
         setRows(newRows);
     }, [data]);
 
@@ -42,7 +43,7 @@ const EnhancedTable = ({ data, headers }) => {
                 </TableHead>
                 <TableBody>
                     {rows.length > 0 && rows.map((row, i) => (
-                        <TableRow 
+                        <TableRow
                             key={`${row.originalMessage}${i}`}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                 <TableCell component="th" scope="row">
