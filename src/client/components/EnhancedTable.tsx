@@ -45,13 +45,17 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
                     removeMessageHandler={removeMessageHandler}/>
                 <TableContainer >
                     <Table sx={{ minWidth: 650 }} aria-label="DLQ table">
-                        <EnhancedTableHeader headers={headers}/>
+                        <EnhancedTableHeader 
+                            headers={headers}
+                            setSelected={setSelected}
+                            numRows={rows.length}/>
                         <TableBody>
                             {rows.length > 0 && rows.map((row, i) => (
                                 <EnhancedTableRow
                                     key={`${row.originalMessage}${i}`}
                                     row={row}
                                     index={i}
+                                    checked={selected.has(i)}
                                     setSelected={setSelected}/>
                             ))}
                         </TableBody>

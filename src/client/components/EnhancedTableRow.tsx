@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
-import { I } from 'chart.js/dist/chunks/helpers.core';
 
-
-const EnhancedTableRow = ({ row, index, setSelected }) => {
-    const [checked, setChecked] = useState(false);
+const EnhancedTableRow = ({ row, index, setSelected, checked }) => {
 
     const handleChecked = () => {
         if (checked) setSelected(selected => {
@@ -20,7 +17,6 @@ const EnhancedTableRow = ({ row, index, setSelected }) => {
             return set;
         });
 
-        setChecked(!checked);
     };
 
     return (
