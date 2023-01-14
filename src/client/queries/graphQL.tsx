@@ -77,25 +77,18 @@ export const BROKER_BYTES_IN = gql`
   }
 `;
 
-export const LIST_TOPICS = gql`
-query Query {
-  topics {
-    name
-    ISRCount
-    logSize {
-      value
-      time
-    }
-    partitionsCount
-    replicasCount
-    partitions {
-      partitionId
-      replicas {
-        id
+export const GET_DLQ_MESSAGES = gql`
+  query getDLQMessages {
+    dlqMessages: dlq {
+      timestamp
+      value {
+        originalMessage
+        originalTopic
+        clientType
+        err
       }
     }
   }
-}
 `;
 
 export const CREATE_TOPIC = gql`
@@ -114,10 +107,14 @@ mutation DeleteTopic($name: String) {
 }
 `;
 
-export const REASSIGN_PARTITIONS = gql`
-mutation DeleteTopic($name: String) {
-  deleteTopic(name: $name) {
-    name
-  }
-}
-`;
+// const tempQuery =   gql`
+// query GetCluster {
+//   cluster {
+//     brokers {
+//       id
+//       host
+//       port
+//     }
+//   }
+// }
+// `
