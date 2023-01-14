@@ -75,4 +75,49 @@ export const BROKER_BYTES_IN = gql`
       }
     }
   }
-`
+`;
+
+export const LIST_TOPICS = gql`
+query Query {
+  topics {
+    name
+    ISRCount
+    logSize {
+      value
+      time
+    }
+    partitionsCount
+    replicasCount
+    partitions {
+      partitionId
+      replicas {
+        id
+      }
+    }
+  }
+}
+`;
+
+export const CREATE_TOPIC = gql`
+mutation Mutation($name: String, $numPartitions: Int, $replicationFactor: Int) {
+  createTopic(name: $name, numPartitions: $numPartitions, replicationFactor: $replicationFactor) {
+    name
+  }
+}
+`;
+
+export const DELETE_TOPIC = gql`
+mutation DeleteTopic($name: String) {
+  deleteTopic(name: $name) {
+    name
+  }
+}
+`;
+
+export const REASSIGN_PARTITIONS = gql`
+mutation DeleteTopic($name: String) {
+  deleteTopic(name: $name) {
+    name
+  }
+}
+`;
