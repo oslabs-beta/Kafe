@@ -4,9 +4,7 @@ export const CLUSTER_SUMMARY = gql`
   query getClusterInfo {
     cluster {
       brokerCount
-      activeControllers {
-        id
-      }
+      activeControllers
       activeControllersCount
       underreplicatedPartitionsCount
       offlinePartitionsCount
@@ -91,21 +89,32 @@ export const GET_DLQ_MESSAGES = gql`
   }
 `;
 
-export const CREATE_TOPIC = gql`
-mutation Mutation($name: String, $numPartitions: Int, $replicationFactor: Int) {
-  createTopic(name: $name, numPartitions: $numPartitions, replicationFactor: $replicationFactor) {
-    name
-  }
-}
-`;
+// type Query {
+//   cluster(
+//     start: String,
+//     end: String,
+//     step: String
+//     ): Cluster
+//   brokers(
+//     start: String,
+//     end: String,
+//     step: String,
+//     ids: [Int]): [Broker]!
+//   broker(
+//     start: String
+//     end: String,
+//     step: String,
+//     id: Int): Broker
+//   topics(name: [String]): [Topic]
+//   topic(name: String): Topic
+// }
 
-export const DELETE_TOPIC = gql`
-mutation DeleteTopic($name: String) {
-  deleteTopic(name: $name) {
-    name
-  }
-}
-`;
+// type Mutation {
+//   createTopic: Topic
+//   deleteTopic: Topic
+//   reassignPartitions: Partition
+//   deleteTopicRecords: Boolean
+// }
 
 // const tempQuery =   gql`
 // query GetCluster {
@@ -117,4 +126,4 @@ mutation DeleteTopic($name: String) {
 //     }
 //   }
 // }
-// `
+// ` 
