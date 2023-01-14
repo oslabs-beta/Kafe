@@ -4,9 +4,7 @@ export const CLUSTER_SUMMARY = gql`
   query getClusterInfo {
     cluster {
       brokerCount
-      activeControllers {
-        id
-      }
+      activeControllers
       activeControllersCount
       underreplicatedPartitionsCount
       offlinePartitionsCount
@@ -77,9 +75,21 @@ export const BROKER_BYTES_IN = gql`
   }
 `;
 
-export const LIST_TOPICS = gql`;
-
 export const GET_DLQ_MESSAGES = gql`
+  query getDLQMessages {
+    dlqMessages: dlq {
+      timestamp
+      value {
+        originalMessage
+        originalTopic
+        clientType
+        err
+      }
+    }
+  }
+`;
+
+export const LIST_TOPICS = gql`
 query Query {
   topics {
     name
@@ -98,18 +108,6 @@ query Query {
     }
   }
 }
-`;
-  query getDLQMessages {
-    dlqMessages: dlq {
-      timestamp
-      value {
-        originalMessage
-        originalTopic
-        clientType
-        err
-      }
-    }
-  }
 `;
 
 export const CREATE_TOPIC = gql`
@@ -134,4 +132,43 @@ mutation DeleteTopic($name: String) {
     name
   }
 }
-`; 
+`;
+
+// type Query {
+//   cluster(
+//     start: String,
+//     end: String,
+//     step: String
+//     ): Cluster
+//   brokers(
+//     start: String,
+//     end: String,
+//     step: String,
+//     ids: [Int]): [Broker]!
+//   broker(
+//     start: String
+//     end: String,
+//     step: String,
+//     id: Int): Broker
+//   topics(name: [String]): [Topic]
+//   topic(name: String): Topic
+// }
+
+// type Mutation {
+//   createTopic: Topic
+//   deleteTopic: Topic
+//   reassignPartitions: Partition
+//   deleteTopicRecords: Boolean
+// }
+
+// const tempQuery =   gql`
+// query GetCluster {
+//   cluster {
+//     brokers {
+//       id
+//       host
+//       port
+//     }
+//   }
+// }
+// ` 
