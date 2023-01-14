@@ -1,19 +1,18 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
 import Dashboard from './containers/Dashboard';
 import Main from './containers/Main';
 import Brokers from './components/Brokers';
-import Producers from './components/Producers';
 import Consumers from './components/Consumers';
-import Topics from './components/Topics';
+import ListTopics from './components/ListTopics';
+import CreateTopic from './components/CreateTopic';
+import DeleteTopic from './components/DeleteTopic';
 import Partitions from './components/Partitions';
 import ClusterSummary from './components/ClusterSummary';
 import DLQ from './components/DLQ';
-import { useQuery } from "@apollo/client"
-
 
 const App = () => {
+  //  Refactor based on final UI decisions and make DRY; see Studify for examples; consider conditional rendering of buttons based on confirmed connection to brokers
 
     return (
         <BrowserRouter>
@@ -22,9 +21,10 @@ const App = () => {
               <Route index element={<Main />}></Route>
               <Route path="overview" element={<ClusterSummary/>}></Route>
               <Route path="brokers" element={<Brokers />}></Route>
-              <Route path="producers" element={<Producers />}></Route>
               <Route path="consumers" element={<Consumers />}></Route>
-              <Route path="topics" element={<Topics />}></Route>
+              <Route path="listtopics" element={<ListTopics />}></Route>
+              <Route path="createtopic" element={<CreateTopic />}></Route>
+              <Route path="deletetopic" element={<DeleteTopic />}></Route>
               <Route path="partitions" element={<Partitions />}></Route>
               <Route path="dlq" element={<DLQ />}></Route>
             </Route>

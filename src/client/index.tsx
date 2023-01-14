@@ -5,12 +5,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import 'regenerator-runtime/runtime';
 
-//  Q: CssBaseline in index or app to best create global styles and layout
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-
 import App from './App';
 
 const container = document.getElementById('root')!;
@@ -39,7 +33,6 @@ const theme = createTheme({
 
     typography: {
       fontFamily: [
-        'Roboto',
         '-apple-system',
         'BlinkMacSystemFont',
         '"Segoe UI"',
@@ -55,7 +48,6 @@ const theme = createTheme({
 
 root.render(
     <ThemeProvider theme={theme}>
-      {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
       <CssBaseline />
       <ApolloProvider client={client}>
         <App />

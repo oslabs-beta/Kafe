@@ -1,4 +1,5 @@
 import React from 'react';
+//  Is useQuery somehow being used here?
 import { useQuery } from "@apollo/client";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
