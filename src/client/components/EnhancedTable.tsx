@@ -57,6 +57,8 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
         }
 
         setFilteredRows(filtered);
+        // setFilteredRows(filteredRows => filtered)
+        console.log('filteredRows:',filteredRows)
     }, [rows, topicFilter, clientFilter]);
 
     const pageChangeHandler = (event: unknown, page: number) => {
@@ -95,7 +97,7 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
                             setTopic={setTopicFilter}
                             setClient={setClientFilter}/>
                         <TableBody>
-                            {filteredRows.length > 0 && rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => (
+                            {filteredRows.length > 0 && filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => (
                                 <EnhancedTableRow
                                     key={`${row.originalMessage}${i}`}
                                     row={row}

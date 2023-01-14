@@ -21,14 +21,14 @@ testProducer.connect()
     topic: 'good',
     messages: [{key: '1', value: '1'}, {key: '2', value: '2'}, {key: '3', value: '3'}]
   }))
-  // .then(() => testProducer.send({
-  //   topic: 'bad',
-  //   messages: [{key: '1', value: '-222'}, {key: '2', value: '-333'}, {key: '3', value: '3'}]
-  // }))
   .then(() => testProducer.send({
-    topic: 'realbad',
-    messages: [{key: '1', value: '-666'}, {key: '2', value: '-333'}, {key: '3', value: '3'}]
+    topic: 'bad',
+    messages: [{key: '1', value: '-777'}, {key: '2', value: '-333'}, {key: '3', value: '3'}]
   }))
+  // .then(() => testProducer.send({
+  //   topic: 'reallybad',
+  //   messages: [{key: '1', value: '-7'}, {key: '2', value: '-13'}, {key: '3', value: '3'}]
+  // }))
   .catch((err) => console.log(err));
 
 const testConsumer = client.consumer({groupId: 'dlq-testt'});
