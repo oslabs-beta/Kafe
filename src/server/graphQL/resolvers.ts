@@ -375,7 +375,9 @@ const resolvers = {
                                 hour12: false,
                             }),
                             value: JSON.parse(message.value.toString()),
-                        })
+                        });
+
+                        console.log('Withing eachMessage function: ', DLQMessages);
                     },
                 });
                 setTimeout(() => {

@@ -16,9 +16,11 @@ import EnhancedTableToolbar from './EnhancedTableToolbar';
 const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandler }) => {
     const [rows, setRows] = useState([]);
     const [selected, setSelected] = useState(new Set());
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const [clientFilter, setClientFilter] = useState('');
     const [topicFilter, setTopicFilter] = useState('');
-    const [ordering, setOrdering] = useState('Descending');
+    const [order, setOrder] = useState('desc');
 
     useEffect(() => {
         const newRows = data.map(datum => {
@@ -35,7 +37,20 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
         setRows(newRows);
     }, [data]);
 
-    console.log(selected);
+    const pageChangeHandler = (event: unknown, page: number) => {
+        if (page < 0) return;
+        setPage(page);
+    };
+
+    const rowsPerPageChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const result = parseInt(event.target.value, 10);
+        if (!result) return;
+
+        setRowsPerPage(result);
+        setPage(0);
+    };
+
+    // console.log('Enhanced table rows: ', rows);
     return(
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '99%', mb: 2 }}>
@@ -48,9 +63,12 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
                         <EnhancedTableHeader 
                             headers={headers}
                             setSelected={setSelected}
-                            numRows={rows.length}/>
+                            numRows={rows.length}
+                            order={order}
+                            setOrder={setOrder}
+                            reverseOrder={reverseOrderHandler}/>
                         <TableBody>
-                            {rows.length > 0 && rows.map((row, i) => (
+                            {rows.length > 0 && rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => (
                                 <EnhancedTableRow
                                     key={`${row.originalMessage}${i}`}
                                     row={row}
@@ -61,6 +79,15 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 20]}
+                    component="div"
+                    count={rows.length}
+                    page={page}
+                    rowsPerPage={rowsPerPage}
+                    onPageChange={pageChangeHandler}
+                    onRowsPerPageChange={rowsPerPageChangeHandler}
+                />
             </Paper>
         </Box>
         

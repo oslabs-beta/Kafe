@@ -61,9 +61,8 @@ const DLQ = (props) => {
         if (!dlq.length) return;
 
         setDLQ((dlq) => {
-            dlq.reverse();
-            dlqRef.current = dlq;
-            return dlq;
+            const newDLQ = [...dlq].reverse();
+            return newDLQ;
         });
     };
 
