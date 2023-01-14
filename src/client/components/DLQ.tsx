@@ -49,13 +49,14 @@ const DLQ = (props) => {
 
     const removeMessageHandler = (indices: number[]) => {
         if (!indices.length) return;
-        
+
         indices.sort((a, b) => b - a);
 
         setDLQ((dlq) => {
             for (let i = indices.length; i >= 0; i--) {
                 dlq.splice(indices[i], 1);
             };
+            //delete functionality
             dlqRef.current = dlq;
             return dlq;
         });

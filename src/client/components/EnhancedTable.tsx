@@ -44,6 +44,7 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
 
     useEffect(() => {
         console.log('Setting filtered rows from : ', rows);
+        //filtered dlq array
         let filtered = [];
         if (topicFilter && clientFilter) {
             filtered = rows.filter(row => row.originalTopic === topicFilter && row.clientType === clientFilter);
@@ -77,13 +78,13 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
     return(
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '99%', mb: 2 }}>
-                <EnhancedTableToolbar 
+                <EnhancedTableToolbar
                     numSelected={selected.size}
                     selected={Array.from(selected)}
                     removeMessageHandler={removeMessageHandler}/>
                 <TableContainer >
                     <Table sx={{ minWidth: 650 }} aria-label="DLQ table">
-                        <EnhancedTableHeader 
+                        <EnhancedTableHeader
                             headers={headers}
                             setSelected={setSelected}
                             numRows={filteredRows.length}
@@ -116,7 +117,7 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
                 />
             </Paper>
         </Box>
-        
+
     );
 };
 

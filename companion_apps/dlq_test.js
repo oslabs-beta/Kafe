@@ -21,9 +21,13 @@ testProducer.connect()
     topic: 'good',
     messages: [{key: '1', value: '1'}, {key: '2', value: '2'}, {key: '3', value: '3'}]
   }))
+  // .then(() => testProducer.send({
+  //   topic: 'bad',
+  //   messages: [{key: '1', value: '-222'}, {key: '2', value: '-333'}, {key: '3', value: '3'}]
+  // }))
   .then(() => testProducer.send({
-    topic: 'bad',
-    messages: [{key: '1', value: '-121'}, {key: '2', value: '-112'}, {key: '3', value: '3'}]
+    topic: 'realbad',
+    messages: [{key: '1', value: '-666'}, {key: '2', value: '-333'}, {key: '3', value: '3'}]
   }))
   .catch((err) => console.log(err));
 
