@@ -4,8 +4,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableSortLabel from '@mui/material/TableSortLabel';
+import EnhancedTableFilter from './EnhancedTableFilter';
 
-const EnhancedTableHeader = ({ headers, setSelected, numRows, order, setOrder, reverseOrder }) => {
+const EnhancedTableHeader = ({ headers, setSelected, numRows, order, setOrder, reverseOrder, topics, setTopic, setClient }) => {
     const [checked, setChecked] = useState(false);
 
     const handleCheck = () => {
@@ -26,7 +27,8 @@ const EnhancedTableHeader = ({ headers, setSelected, numRows, order, setOrder, r
 
         setChecked(!checked);
     };
-    console.log('Table Header component: ', order);
+
+    // console.log('Table Header component: ', order);
     return (
         <TableHead>
             <TableRow>
@@ -55,7 +57,18 @@ const EnhancedTableHeader = ({ headers, setSelected, numRows, order, setOrder, r
                                     reverseOrder();
                                 }}/>
                         </TableCell> :
-                    <TableCell key={`header${i}`} align={i === headers.length - 1 ? "right" : i > 0 ? "center" :  "left"}>{header}</TableCell>
+                    (header === 'Client Type' || header === 'Original Topic') ?
+                        <TableCell
+                            key={`header${i}`}
+                            align="center">
+                                {header}
+                            <EnhancedTableFilter
+                                title={header}
+                                filters={header === 'Original Topic' ? topics : ['Consumer', 'Producer']}
+                                setFilterHandler={header === 'Original Topic' ? setTopic : setClient}
+                                />
+                        </TableCell> :
+                    <TableCell key={`header${i}`} align={i === headers.length - 1 ? "right" : "center"}>{header}</TableCell>
                 ))}
             </TableRow>
         </TableHead>

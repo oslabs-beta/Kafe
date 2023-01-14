@@ -4,11 +4,10 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { alpha } from '@mui/material/styles';
 
 const EnhancedTableToolbar = ({ numSelected, selected, removeMessageHandler }) => {
-    console.log('Enhanced Toolbar Component: ', selected);
+    
     return (
         <Toolbar
               sx={{
@@ -37,16 +36,10 @@ const EnhancedTableToolbar = ({ numSelected, selected, removeMessageHandler }) =
                   Dead Letter Queue Messages
                 </Typography>
               )}
-              {numSelected > 0 ? (
+              {numSelected > 0 && (
                 <Tooltip title="Delete">
                   <IconButton>
                     <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Filter list">
-                  <IconButton>
-                    <FilterListIcon />
                   </IconButton>
                 </Tooltip>
               )}

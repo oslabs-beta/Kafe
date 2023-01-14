@@ -7,6 +7,7 @@ const DLQ = (props) => {
 
     const [dlq, setDLQ] = useState([]);
     const [pollInterval, setPollInterval] = useState(60000);
+    const [order, setOrder] = useState('desc');
 
     const { loading, error, data, refetch } = useQuery(GET_DLQ_MESSAGES, {
         pollInterval: (pollInterval || 60000)
@@ -18,6 +19,7 @@ const DLQ = (props) => {
         const dlqMessages = JSON.parse(sessionStorage.getItem('DLQMessages'));
         console.log('DLQMessages from localStorage: ', dlqMessages)
         if (dlqMessages?.length){
+            dlqMessages.sort((a, b) => b.timestamp - a.timestamp);
             setDLQ(dlqMessages);
             dlqRef.current = dlqMessages;
         };
@@ -29,8 +31,13 @@ const DLQ = (props) => {
         if (data) {
             // console.log('querydata:', data)
             setDLQ((dlq) => {
-                dlqRef.current = [...data.dlqMessages, ...dlq];
-                return [...data.dlqMessages, ...dlq];
+                if (order === 'desc') {
+                    dlqRef.current = [...data.dlqMessages, ...dlq];
+                    return [...data.dlqMessages, ...dlq];
+                }
+                data.dlqMessages.reverse();
+                dlqRef.current = [...dlq, ...data.dlqMessages];
+                return [...dlq, ...data.dlqMessages];
             });
         };
 
@@ -39,9 +46,6 @@ const DLQ = (props) => {
             console.log('localStorage DLQ:',JSON.stringify(dlqRef.current))
         };
     }, [loading, data]);
-
-    // console.log('Data: ', data);
-    console.log('Current DLQ: ', dlq);
 
     const removeMessageHandler = (indices: number[]) => {
         if (!indices.length) return;
@@ -66,6 +70,9 @@ const DLQ = (props) => {
         });
     };
 
+    // console.log('Data: ', data);
+    // console.log('Current DLQ: ', dlq);
+    // console.log('DLQ Parent Component order: ', order);
     return (
         <>
             <div>Dead Letter Queue Component</div>
@@ -74,7 +81,8 @@ const DLQ = (props) => {
                             headers={['Time of Error', 'Original Message', 'Original Topic', 'Client Type', 'Error Message']}
                             removeMessageHandler={removeMessageHandler}
                             reverseOrderHandler={reverseOrderHandler}
-                            />}
+                            order={order}
+                            setOrder={setOrder}/>}
         </>
     )
 };

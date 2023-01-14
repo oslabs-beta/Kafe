@@ -13,17 +13,21 @@ import EnhancedTableHeader from './EnhancedTableHeader';
 import EnhancedTableRow from './EnhancedTableRow';
 import EnhancedTableToolbar from './EnhancedTableToolbar';
 
-const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandler }) => {
+const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandler, order, setOrder }) => {
     const [rows, setRows] = useState([]);
     const [selected, setSelected] = useState(new Set());
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [topics, setTopics] = useState(new Set());
+    const [filteredRows, setFilteredRows] = useState([]);
     const [clientFilter, setClientFilter] = useState('');
     const [topicFilter, setTopicFilter] = useState('');
-    const [order, setOrder] = useState('desc');
 
     useEffect(() => {
+        const dlqTopics = new Set();
+
         const newRows = data.map(datum => {
+            dlqTopics.add(datum.value.originalTopic);
             return {
                 time: datum.timestamp,
                 originalMessage: datum.value.originalMessage,
@@ -35,7 +39,24 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
 
         // console.log('Row info: ', newRows);
         setRows(newRows);
+        setTopics(dlqTopics);
     }, [data]);
+
+    useEffect(() => {
+        console.log('Setting filtered rows from : ', rows);
+        let filtered = [];
+        if (topicFilter && clientFilter) {
+            filtered = rows.filter(row => row.originalTopic === topicFilter && row.clientType === clientFilter);
+        } else if (topicFilter) {
+            filtered = rows.filter(row => row.originalTopic === topicFilter);
+        } else if (clientFilter) {
+            filtered = rows.filter(row => row.clientType === clientFilter);
+        } else {
+            filtered = [...rows];
+        }
+
+        setFilteredRows(filtered);
+    }, [rows, topicFilter, clientFilter]);
 
     const pageChangeHandler = (event: unknown, page: number) => {
         if (page < 0) return;
@@ -51,6 +72,8 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
     };
 
     // console.log('Enhanced table rows: ', rows);
+    // console.log('Enhanced table topics: ', topics);
+    console.log(`Enhanced Table filters set to ${topicFilter} and ${clientFilter}`);
     return(
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '99%', mb: 2 }}>
@@ -63,12 +86,15 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
                         <EnhancedTableHeader 
                             headers={headers}
                             setSelected={setSelected}
-                            numRows={rows.length}
+                            numRows={filteredRows.length}
                             order={order}
                             setOrder={setOrder}
-                            reverseOrder={reverseOrderHandler}/>
+                            reverseOrder={reverseOrderHandler}
+                            topics={Array.from(topics)}
+                            setTopic={setTopicFilter}
+                            setClient={setClientFilter}/>
                         <TableBody>
-                            {rows.length > 0 && rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => (
+                            {filteredRows.length > 0 && rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => (
                                 <EnhancedTableRow
                                     key={`${row.originalMessage}${i}`}
                                     row={row}
@@ -82,7 +108,7 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 20]}
                     component="div"
-                    count={rows.length}
+                    count={filteredRows?.length}
                     page={page}
                     rowsPerPage={rowsPerPage}
                     onPageChange={pageChangeHandler}
