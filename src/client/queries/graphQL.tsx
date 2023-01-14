@@ -77,7 +77,9 @@ export const BROKER_BYTES_IN = gql`
   }
 `;
 
-export const LIST_TOPICS = gql`
+export const LIST_TOPICS = gql`;
+
+export const GET_DLQ_MESSAGES = gql`
 query Query {
   topics {
     name
@@ -96,6 +98,18 @@ query Query {
     }
   }
 }
+`;
+  query getDLQMessages {
+    dlqMessages: dlq {
+      timestamp
+      value {
+        originalMessage
+        originalTopic
+        clientType
+        err
+      }
+    }
+  }
 `;
 
 export const CREATE_TOPIC = gql`
@@ -120,4 +134,4 @@ mutation DeleteTopic($name: String) {
     name
   }
 }
-`;
+`; 

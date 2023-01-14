@@ -9,6 +9,7 @@ import CreateTopic from './components/CreateTopic';
 import DeleteTopic from './components/DeleteTopic';
 import Partitions from './components/Partitions';
 import ClusterSummary from './components/ClusterSummary';
+import DLQ from './components/DLQ';
 
 const App = () => {
   //  Refactor based on final UI decisions and make DRY; see Studify for examples; consider conditional rendering of buttons based on confirmed connection to brokers
@@ -25,6 +26,7 @@ const App = () => {
               <Route path="createtopic" element={<CreateTopic />}></Route>
               <Route path="deletetopic" element={<DeleteTopic />}></Route>
               <Route path="partitions" element={<Partitions />}></Route>
+              <Route path="dlq" element={<DLQ />}></Route>
             </Route>
           </Routes>
         </BrowserRouter>

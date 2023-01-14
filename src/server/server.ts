@@ -44,9 +44,7 @@ const ApolloServerStart = async() => {
                 }
             }
         })
-       
     );
-    
     // app.get('/*', (req: express.Request, res: express.Response) => {
     //     res.status(200).sendFile(path.resolve(__dirname, '../client/index.html'));
     // });

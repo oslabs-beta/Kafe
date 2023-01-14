@@ -34,7 +34,7 @@ const consumeMessages = async () => {
         ],
         fromBeginning: true
     });
-    
+
     await consumer.run({
         eachMessage: async({ topic, partition, message, heartbeat, pause }) => {
             console.log({
@@ -45,7 +45,7 @@ const consumeMessages = async () => {
             })
         }
     });
-   
+
 };
 
 sendMessages();
