@@ -57,8 +57,7 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
         }
 
         setFilteredRows(filtered);
-        // setFilteredRows(filteredRows => filtered)
-        console.log('filteredRows:',filteredRows)
+        
     }, [rows, topicFilter, clientFilter]);
 
     const pageChangeHandler = (event: unknown, page: number) => {
@@ -76,13 +75,14 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
 
     // console.log('Enhanced table rows: ', rows);
     // console.log('Enhanced table topics: ', topics);
-    console.log(`Enhanced Table filters set to ${topicFilter} and ${clientFilter}`);
+    // console.log(`Enhanced Table filters set to ${topicFilter} and ${clientFilter}`);
     return(
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '99%', mb: 2 }}>
                 <EnhancedTableToolbar
                     numSelected={selected.size}
                     selected={Array.from(selected)}
+                    setSelected={setSelected}
                     removeMessageHandler={removeMessageHandler}/>
                 <TableContainer >
                     <Table sx={{ minWidth: 650 }} aria-label="DLQ table">

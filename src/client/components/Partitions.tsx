@@ -44,7 +44,7 @@ function Partitions() {
     setSubmitted(true);
   };
 
-  const { loading, data } = useQuery(LIST_TOPICS, { pollInterval: 20 * 1000 });
+  const { loading, data } = useQuery(LIST_TOPICS);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -54,7 +54,7 @@ function Partitions() {
         value={selectedTopic}
         onChange={handleTopicChange}
       >
-        {data.topics.map((data) => (
+        {data?.topics.map((data) => (
           <option key={data.name} value={data.name}>
             {data.name}
           </option>

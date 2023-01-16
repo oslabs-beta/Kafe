@@ -376,8 +376,6 @@ const resolvers = {
                             }),
                             value: JSON.parse(message.value.toString()),
                         });
-
-                        console.log('Withing eachMessage function: ', DLQMessages);
                     },
                 });
                 setTimeout(() => {

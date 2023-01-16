@@ -42,6 +42,8 @@
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.10.14",
     "@mui/material": "^5.10.14",
+    "bcryptjs": "^2.4.3",
+    "bcryptjs-react": "^2.4.6",
     "chart.js": "^4.0.1",
     "chartjs-adapter-luxon": "^1.3.0",
     "chartjs-plugin-streaming": "^2.0.0",

@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
 
-const EnhancedTableToolbar = ({ numSelected, selected, removeMessageHandler }) => {
+const EnhancedTableToolbar = ({ numSelected, selected, setSelected, removeMessageHandler }) => {
     
     return (
         <Toolbar
@@ -38,7 +38,10 @@ const EnhancedTableToolbar = ({ numSelected, selected, removeMessageHandler }) =
               )}
               {numSelected > 0 && (
                 <Tooltip title="Delete">
-                  <IconButton>
+                  <IconButton onClick = {()=> {
+                    removeMessageHandler(selected);
+                    setSelected(new Set());
+                    }}>
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>

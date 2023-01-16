@@ -2,12 +2,14 @@ import React, {useState, useEffect, useRef} from 'react';
 import { GET_DLQ_MESSAGES } from '../queries/graphQL';
 import { useQuery } from "@apollo/client";
 import EnhancedTable from './EnhancedTable';
+import PieChart from '../graphs/PieChart';
 
 const DLQ = (props) => {
 
     const [dlq, setDLQ] = useState([]);
     const [pollInterval, setPollInterval] = useState(60000);
     const [order, setOrder] = useState('desc');
+    const [pieChartData, setPieChartData] = useState({});
 
     const { loading, error, data, refetch } = useQuery(GET_DLQ_MESSAGES, {
         pollInterval: (pollInterval || 60000)
@@ -19,9 +21,10 @@ const DLQ = (props) => {
         const dlqMessages = JSON.parse(sessionStorage.getItem('DLQMessages'));
         console.log('DLQMessages from localStorage: ', dlqMessages)
         if (dlqMessages?.length){
-            dlqMessages.sort((a, b) => b.timestamp - a.timestamp);
-            setDLQ(dlqMessages);
+            dlqMessages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
             dlqRef.current = dlqMessages;
+            
+            setDLQ(dlqMessages);
         };
 
     }, []);
@@ -32,6 +35,8 @@ const DLQ = (props) => {
             // console.log('querydata:', data)
             setDLQ((dlq) => {
                 if (order === 'desc') {
+                    // console.log('new dlq msg:', data.dlqMessages);
+                    // console.log('old dlq msg:', dlq);
                     dlqRef.current = [...data.dlqMessages, ...dlq];
                     return [...data.dlqMessages, ...dlq];
                 }
@@ -47,18 +52,31 @@ const DLQ = (props) => {
         };
     }, [loading, data]);
 
+    useEffect(() => {
+      const newPieChartData = {};
+      for (const dlqMessage of dlq) {
+        const topic = dlqMessage.value.originalTopic;
+        if (newPieChartData[topic]) newPieChartData[topic] += 1;
+        else newPieChartData[topic] = 1;   
+      };       
+      setPieChartData(newPieChartData);
+    }, [dlq]);
+
     const removeMessageHandler = (indices: number[]) => {
         if (!indices.length) return;
-
+        console.log('selected row/rows:', indices);
         indices.sort((a, b) => b - a);
 
         setDLQ((dlq) => {
-            for (let i = indices.length; i >= 0; i--) {
-                dlq.splice(indices[i], 1);
+            const newDLQ = [...dlq];
+            for (const index of indices) {
+                newDLQ.splice(index, 1);
             };
             //delete functionality
-            dlqRef.current = dlq;
-            return dlq;
+            dlqRef.current = newDLQ;
+            console.log('newDLQ after splice',newDLQ);
+            sessionStorage.setItem('DLQMessages', JSON.stringify(newDLQ));
+            return newDLQ;
         });
     };
 
@@ -84,6 +102,11 @@ const DLQ = (props) => {
                             reverseOrderHandler={reverseOrderHandler}
                             order={order}
                             setOrder={setOrder}/>}
+            {dlq.length > 0 && <PieChart
+                            label={'# of failed messages'}
+                            labels={Object.keys(pieChartData)}
+                            data = {Object.values(pieChartData)}
+            />}
         </>
     )
 };
