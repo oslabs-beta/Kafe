@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import bcrypt from 'bcryptjs-react';
+import sha256 from 'crypto-js/sha256';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -14,22 +14,21 @@ function djb2(str){
 };
   
 function hashStringToColor(str) {
-  const salt = bcrypt.genSaltSync(5);
-  const bcryptHash = bcrypt.hashSync(str, salt);
+  
+  const cryptoStr = sha256(str).toString();
 
-  const hash = djb2(bcryptHash);
-  const r = (hash & 0xFF0000) >> 16;
+  const hash = djb2(cryptoStr);
+  const r = (hash & 0xFF0000) >> 15;
   const g = (hash & 0x00FF00) >> 8;
   const b = hash & 0x0000FF;
 
   return `rgba(${r}, ${g}, ${b}, 0.3)`;
 };
 
-
-
 const PieChart = ({ label, labels, data}) => {
   const [backgroundColors, setBackgroundColors] = useState([]);
-  
+  const chartRef = useRef(null);
+
   useEffect(() => {
     const colors = [];
     
@@ -39,8 +38,21 @@ const PieChart = ({ label, labels, data}) => {
 
     setBackgroundColors(colors);
   }, [labels]);
-  
-  console.log('Colors: ', backgroundColors);
+
+  const options = {
+    responsive: true,
+    plugins: {
+        legend: {
+            position: 'top' as const,
+        },
+        title: {
+            display: true,
+            text: label,
+        },
+    },
+  };
+
+  console.log(labels, data);
 
   return (
         <Pie 
@@ -53,6 +65,8 @@ const PieChart = ({ label, labels, data}) => {
                   borderWidth: 1,     
                 }],          
             }}
+            options={options}
+            ref={chartRef}
             redraw={true}/>
     );
 };

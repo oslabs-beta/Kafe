@@ -41,10 +41,12 @@ const DLQ = (props) => {
                     // console.log('new dlq msg:', data.dlqMessages);
                     // console.log('old dlq msg:', dlq);
                     dlqRef.current = [...data.dlqMessages, ...dlq];
+                    sessionStorage.setItem('DLQMessages', JSON.stringify(dlqRef.current));
                     return [...data.dlqMessages, ...dlq];
                 }
                 data.dlqMessages.reverse();
                 dlqRef.current = [...dlq, ...data.dlqMessages];
+                sessionStorage.setItem('DLQMessages', JSON.stringify(dlqRef.current));
                 return [...dlq, ...data.dlqMessages];
             });
         };
@@ -93,7 +95,7 @@ const DLQ = (props) => {
     };
 
     // console.log('Data: ', data);
-    // console.log('Current DLQ: ', dlq);
+    console.log('Current DLQ: ', dlq);
     // console.log('DLQ Parent Component order: ', order);
     return (
         <>
@@ -116,7 +118,7 @@ const DLQ = (props) => {
                        }}
                        elevation={8}>
                          <PieChart
-                            label={'# of failed messages'}
+                            label={'Failed Messages by Original Topic'}
                             labels={Object.keys(pieChartData)}
                             data = {Object.values(pieChartData)}/>
                        </Paper>

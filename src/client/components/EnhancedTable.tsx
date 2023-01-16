@@ -2,16 +2,23 @@ import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import EnhancedTableHeader from './EnhancedTableHeader';
 import EnhancedTableRow from './EnhancedTableRow';
 import EnhancedTableToolbar from './EnhancedTableToolbar';
+
+const deepClone = (row) => {
+    if (typeof(row) !== 'object') return row;
+
+    const res = {};
+    for (const key in row) {
+        res[key] = deepClone(row[key]);
+    };
+
+    return res;
+};
 
 const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandler, order, setOrder }) => {
     const [rows, setRows] = useState([]);
@@ -44,20 +51,34 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
 
     useEffect(() => {
         console.log('Setting filtered rows from : ', rows);
-        //filtered dlq array
+        //Filtered row data
         let filtered = [];
         if (topicFilter && clientFilter) {
-            filtered = rows.filter(row => row.originalTopic === topicFilter && row.clientType === clientFilter);
+            rows.forEach(row => {
+                if (row.originalTopic === topicFilter && row.clientType === clientFilter) {
+                    filtered.push(deepClone(row));
+                };
+            });
         } else if (topicFilter) {
-            filtered = rows.filter(row => row.originalTopic === topicFilter);
+            rows.forEach(row => {
+                if (row.originalTopic === topicFilter) {
+                    filtered.push(deepClone(row));
+                };
+            });
         } else if (clientFilter) {
-            filtered = rows.filter(row => row.clientType === clientFilter);
+            rows.forEach(row => {
+                if (row.clientType === clientFilter) {
+                    filtered.push(deepClone(row));
+                };
+            });
         } else {
-            filtered = [...rows];
-        }
+            rows.forEach(row => filtered.push(deepClone(row)));
+        };
 
-        setFilteredRows(filtered);
-        
+        setFilteredRows((filteredRows) => {
+            return filtered;
+        });
+
     }, [rows, topicFilter, clientFilter]);
 
     const pageChangeHandler = (event: unknown, page: number) => {
@@ -75,7 +96,7 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
 
     // console.log('Enhanced table rows: ', rows);
     // console.log('Enhanced table topics: ', topics);
-    // console.log(`Enhanced Table filters set to ${topicFilter} and ${clientFilter}`);
+    console.log(`Filtered row data: `, filteredRows);
     return(
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '99%', mb: 2 }}>
