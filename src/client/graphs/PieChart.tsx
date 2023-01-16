@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import sha256 from 'crypto-js/sha256';
-
-ChartJS.register(ArcElement, Tooltip, Legend);
+import ChartStreaming from "chartjs-plugin-streaming";
 
 function djb2(str){
     var hash = 5381;
@@ -28,6 +27,8 @@ function hashStringToColor(str) {
 const PieChart = ({ label, labels, data}) => {
   const [backgroundColors, setBackgroundColors] = useState([]);
   const chartRef = useRef(null);
+  ChartJS.register(ArcElement, Tooltip, Legend);
+  ChartJS.unregister(ChartStreaming);
 
   useEffect(() => {
     const colors = [];
@@ -41,6 +42,7 @@ const PieChart = ({ label, labels, data}) => {
 
   const options = {
     responsive: true,
+    streaming: false,
     plugins: {
         legend: {
             position: 'top' as const,
@@ -49,10 +51,27 @@ const PieChart = ({ label, labels, data}) => {
             display: true,
             text: label,
         },
+        datalabels: {
+            display: true,
+            formatter: (value, ctx) => {
+                const data = ctx.chart.data.datasets[0].data;
+                const sum = data.reduce((p, c) => p + c, 0);
+                const percentage = ((value / sum) * 100).toFixed(2) + '%';
+
+                return percentage;
+            },
+        },
+        tooltips: {
+            enabled: true,
+            mode: 'nearest',
+            intersect: false,
+        },
     },
+    
   };
 
   console.log(labels, data);
+  console.log(chartRef.current);
 
   return (
         <Pie 
@@ -62,12 +81,13 @@ const PieChart = ({ label, labels, data}) => {
                   label,
                   data,
                   backgroundColor: backgroundColors,
+                  borderColor: backgroundColors,
+                  hoverOffset: 8,
                   borderWidth: 1,     
                 }],          
             }}
             options={options}
-            ref={chartRef}
-            redraw={true}/>
+            ref={chartRef}/>
     );
 };
 

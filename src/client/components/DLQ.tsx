@@ -96,7 +96,7 @@ const DLQ = (props) => {
 
     // console.log('Data: ', data);
     console.log('Current DLQ: ', dlq);
-    // console.log('DLQ Parent Component order: ', order);
+    console.log('PieChartData: ', pieChartData);
     return (
         <>
             <div>Dead Letter Queue Component</div>
