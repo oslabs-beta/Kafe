@@ -41,16 +41,19 @@ const PieChart = ({ label, labels, data}) => {
   }, [labels]);
   
   console.log('Colors: ', backgroundColors);
+
   return (
-    <Pie data={{
-        labels,
-        datasets: [{
-          label,
-          data,
-          backgroundColor: backgroundColors,
-          borderWidth: 1,
-        }]
-    }}/>
+        <Pie 
+            data={{
+                labels,
+                datasets: [{
+                  label,
+                  data,
+                  backgroundColor: backgroundColors,
+                  borderWidth: 1,     
+                }],          
+            }}
+            redraw={true}/>
     );
 };
 

@@ -3,6 +3,9 @@ import { GET_DLQ_MESSAGES } from '../queries/graphQL';
 import { useQuery } from "@apollo/client";
 import EnhancedTable from './EnhancedTable';
 import PieChart from '../graphs/PieChart';
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
 
 const DLQ = (props) => {
 
@@ -102,11 +105,23 @@ const DLQ = (props) => {
                             reverseOrderHandler={reverseOrderHandler}
                             order={order}
                             setOrder={setOrder}/>}
-            {dlq.length > 0 && <PieChart
+            {dlq.length > 0 &&
+            <Grid container spacing={3} sx={{mb: 3}}>
+                 <Grid item xs={12} md={6}>
+                     <Paper 
+                       sx={{
+                         p: 3,
+                         display: "flex",
+                         flexDirection: "column",
+                       }}
+                       elevation={8}>
+                         <PieChart
                             label={'# of failed messages'}
                             labels={Object.keys(pieChartData)}
-                            data = {Object.values(pieChartData)}
-            />}
+                            data = {Object.values(pieChartData)}/>
+                       </Paper>
+                 </Grid>
+            </Grid>}
         </>
     )
 };
