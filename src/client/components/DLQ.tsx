@@ -3,6 +3,8 @@ import { GET_DLQ_MESSAGES } from '../queries/graphQL';
 import { useQuery } from "@apollo/client";
 import EnhancedTable from './EnhancedTable';
 import PieChart from '../graphs/PieChart';
+import BarChart from '../graphs/BarChart';
+import Summary from '../graphs/Summary';
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -26,7 +28,7 @@ const DLQ = (props) => {
         if (dlqMessages?.length){
             dlqMessages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
             dlqRef.current = dlqMessages;
-            
+
             setDLQ(dlqMessages);
         };
 
@@ -62,8 +64,8 @@ const DLQ = (props) => {
       for (const dlqMessage of dlq) {
         const topic = dlqMessage.value.originalTopic;
         if (newPieChartData[topic]) newPieChartData[topic] += 1;
-        else newPieChartData[topic] = 1;   
-      };       
+        else newPieChartData[topic] = 1;
+      };
       setPieChartData(newPieChartData);
     }, [dlq]);
 
@@ -110,7 +112,7 @@ const DLQ = (props) => {
             {dlq.length > 0 &&
             <Grid container spacing={3} sx={{mb: 3}}>
                  <Grid item xs={12} md={6}>
-                     <Paper 
+                     <Paper
                        sx={{
                          p: 3,
                          display: "flex",
@@ -122,6 +124,21 @@ const DLQ = (props) => {
                             labels={Object.keys(pieChartData)}
                             data = {Object.values(pieChartData)}/>
                        </Paper>
+
+                 </Grid>
+                 <Grid item xs={12} md={6}>
+                    <Paper
+                       sx={{
+                         p: 3,
+                         display: "flex",
+                         flexDirection: "column",
+                       }}
+                       elevation={8}>
+                         <BarChart
+                            dlqData = {dlq}
+                            label={'Messages by Topic Over Time'}
+                         />
+                    </Paper>
                  </Grid>
             </Grid>}
         </>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import sha256 from 'crypto-js/sha256';
 import ChartStreaming from "chartjs-plugin-streaming";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 function djb2(str){
     var hash = 5381;
@@ -11,9 +12,9 @@ function djb2(str){
     }
     return hash;
 };
-  
+
 function hashStringToColor(str) {
-  
+
   const cryptoStr = sha256(str).toString();
 
   const hash = djb2(cryptoStr);
@@ -27,12 +28,12 @@ function hashStringToColor(str) {
 const PieChart = ({ label, labels, data}) => {
   const [backgroundColors, setBackgroundColors] = useState([]);
   const chartRef = useRef(null);
-  ChartJS.register(ArcElement, Tooltip, Legend);
+  ChartJS.register(ArcElement, ChartDataLabels, Tooltip, Legend, Title);
   ChartJS.unregister(ChartStreaming);
 
   useEffect(() => {
     const colors = [];
-    
+
     for (const label of labels) {
         colors.push(hashStringToColor(label))
     };
@@ -58,7 +59,7 @@ const PieChart = ({ label, labels, data}) => {
                 const sum = data.reduce((p, c) => p + c, 0);
                 const percentage = ((value / sum) * 100).toFixed(2) + '%';
 
-                return percentage;
+                return `% of Total: ${percentage}`;
             },
         },
         tooltips: {
@@ -67,14 +68,14 @@ const PieChart = ({ label, labels, data}) => {
             intersect: false,
         },
     },
-    
+
   };
 
-  console.log(labels, data);
-  console.log(chartRef.current);
+  // console.log(labels, data);
+  // console.log(chartRef.current);
 
   return (
-        <Pie 
+        <Pie
             data={{
                 labels,
                 datasets: [{
@@ -83,8 +84,8 @@ const PieChart = ({ label, labels, data}) => {
                   backgroundColor: backgroundColors,
                   borderColor: backgroundColors,
                   hoverOffset: 8,
-                  borderWidth: 1,     
-                }],          
+                  borderWidth: 1,
+                }],
             }}
             options={options}
             ref={chartRef}/>
