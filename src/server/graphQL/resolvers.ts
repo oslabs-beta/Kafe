@@ -336,6 +336,29 @@ const resolvers = {
             };
         },
 
+        bytesOutPerSecOverTime: async(parent, { start, end, step, topics, ids }, { dataSources }) => {
+
+            const now = new Date();
+            try {
+                const allBytesOutPerSec = await dataSources.prometheusAPI.instanceRangeQuery(
+                    BROKER_BYTES_OUT,
+                    start ? start : new Date(+now - 60000 * 10),
+                    end ? end : now,
+                    step ? step : '60s',
+                    ids
+                );
+
+                if (topics) {
+                    let filteredBytesOutPerSec = allBytesOutPerSec.filter(data => topics.includes(data.topic));
+                    return filteredBytesOutPerSec;
+                } else {
+                    return allBytesOutPerSec;
+                }
+            } catch(err) {
+                console.log('Error in bytesInPerSecOverTime query: ', err);
+            };
+        },
+
         topics: async(): Promise<any> => {
             try {
                 const topics = await adminActions.getTopics();

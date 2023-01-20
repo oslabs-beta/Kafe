@@ -73,7 +73,7 @@ export const typeDefs = `#graphql
     err: String
   }
 
-  
+
   type Query {
     cluster(
       start: String,
@@ -91,6 +91,13 @@ export const typeDefs = `#graphql
       step: String,
       id: Int): Broker
     bytesInPerSecOverTime(
+      start: String
+      end: String
+      step: String
+      topics: [String]
+      ids: [Int]
+    ): [DataSeries]
+    bytesOutPerSecOverTime(
       start: String
       end: String
       step: String
