@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
 import { useQuery } from "@apollo/client";
 import ChartStreaming from "chartjs-plugin-streaming";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import "chartjs-adapter-luxon";
 import {
   Chart as ChartJS,
@@ -17,29 +18,28 @@ import {
   ChartOptions
 } from 'chart.js';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale,
-  ChartStreaming
-);
-
 import { BROKERS_CPU_USAGE, BROKER_JVM_MEMORY_USAGE } from '../queries/graphQL';
 
 const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelName, labelId }) => {
-
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    TimeScale,
+    ChartStreaming
+  );
+  ChartJS.unregister(ChartDataLabels);
 // useState hook: declare new variables 'chartData' and 'setChartData', and set the initial state of 'chartData' to the defined object.
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [],
   });
 
-  //Colors are hard coded -- refactor to use MUI definitions 
+  //Colors are hard coded -- refactor to use MUI definitions
   const colors = ["#71ABC5", "#0F1031", "#ffa600", "#58508d", "#2a71d0"];
 
   //Get current time/date for end parameter of Broker CPU query

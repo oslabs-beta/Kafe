@@ -1,5 +1,4 @@
 import React from 'react';
-//  Is useQuery somehow being used here?
 import { useQuery } from "@apollo/client";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
@@ -16,7 +15,7 @@ const ClusterSummary = () => {
             <Container maxWidth="xl" sx={{ mt: 4, mb: 4}}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={6}>
-                    <Paper 
+                    <Paper
                       sx={{
                         p: 3,
                         display: "flex",
@@ -36,7 +35,7 @@ const ClusterSummary = () => {
                   </Grid>
 
                   <Grid item xs={12} md={6}>
-                    <Paper 
+                    <Paper
                       sx={{
                         p: 3,
                         display: "flex",
