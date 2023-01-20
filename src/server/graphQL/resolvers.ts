@@ -47,8 +47,7 @@ const resolvers = {
         underreplicatedPartitionsCount: async(parent, args, {dataSources}): Promise <Number> => {
             try{
                 const underReplicatedPartitions = await dataSources.prometheusAPI.instanceQuery(UNDER_REPLICATED_PARTITIONS_COUNT);
-
-                console.log('Underreplicated partitions resolver result: ', underReplicatedPartitions);
+                // console.log('Underreplicated partitions resolver result: ', underReplicatedPartitions);
                 return underReplicatedPartitions.length ? Number(underReplicatedPartitions[0].value) : 0;
             }catch(err) {
                 console.log('Error occured during cluster resolver underreplicatedPartitionsCount:', err);
@@ -58,8 +57,7 @@ const resolvers = {
         offlinePartitionsCount: async(parent, args, {dataSources}): Promise <Number> => {
             try{
                 const offlinePartitions = await dataSources.prometheusAPI.instanceQuery(OFFLINE_PARTITIONS);
-
-                console.log('Offline partitions resolver result: ', offlinePartitions);
+                // console.log('Offline partitions resolver result: ', offlinePartitions);
                 return offlinePartitions.length ? Number(offlinePartitions[0].value) : 0;
             } catch(err){
                 console.log('Error occured during cluster resolver offlinePartitionsCount:', err);
@@ -68,9 +66,7 @@ const resolvers = {
 
         activeControllersCount: async(parent, args, { dataSources }): Promise<Number> => {
             try {
-                console.log('what is dataSources: ', dataSources.prometheusAPI);
                 const activeControllers = await dataSources.prometheusAPI.instanceQuery(ACTIVE_CONTROLLER_COUNT);
-
                 console.log('Active controllers count resolver result: ', activeControllers);
                 const activeControllersCount = activeControllers.length ? Number(activeControllers[0].value) : 0;
                 return activeControllersCount;
@@ -82,8 +78,7 @@ const resolvers = {
         underMinISRCount: async(parent, args, { dataSources }): Promise<Number> => {
             try {
                 const underMinISRObject = await dataSources.prometheusAPI.instanceQuery(UNDER_MIN_ISR_COUNT);
-
-                console.log('UnderMinISRCount resolver result: ', underMinISRObject);
+                // console.log('UnderMinISRCount resolver result: ', underMinISRObject);
                 const underMinISRCount = underMinISRObject.length ? Number(underMinISRObject[0].value) : 0;
                 return underMinISRCount;
             } catch(err) {
@@ -107,7 +102,6 @@ const resolvers = {
         CPUUsageOverTime: async(parent, args, { dataSources }): Promise<any> => {
             const now = new Date();
             try {
-                console.log('CPUUsage Over Time: ', parent)
                 const cpuUsage = await dataSources.prometheusAPI.instanceRangeQuery(
                     PROCESS_CPU_SECONDS_TOTAL,
                     parent.start ? parent.start : new Date(+now - 60000 * 10),
@@ -115,7 +109,7 @@ const resolvers = {
                     parent.step ? parent.step : '60s',
                     [parent.id]);
 
-                // console.log('cpuUsage resolver result: ', cpuUsage);
+                console.log('cpuUsage resolver result: ', cpuUsage);
                 return cpuUsage[0].values;
             } catch(err){
                 console.log('Error occurred in CPUUsageOverTime resolver: ', err)
@@ -125,14 +119,13 @@ const resolvers = {
         JVMMemoryUsedOverTime: async(parent, args, { dataSources }): Promise<any> => {
             const now = new Date();
             try {
-                console.log('JVM resolver: ', parent);
                 const brokerMemoryUsage = await dataSources.prometheusAPI.instanceRangeQuery(
                     JVM_MEMORY_BYTES_USED,
                     parent.start ? parent.start : new Date(+now - 60000 * 10),
                     parent.end ? parent.end : now,
                     parent.step ? parent.step : '60s',
                     [parent.id]);
-                // console.log('JVM resolver returned result: ', brokerMemoryUsage);
+                console.log('JVM resolver returned result: ', brokerMemoryUsage);
                 return brokerMemoryUsage[0].values;
             } catch(err) {
                 console.log('Error occurred in JVMMemoryUsedOverTime resolver: ', err);
@@ -171,7 +164,7 @@ const resolvers = {
             try {
                 const brokerBytesInOverTime = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_IN,
-                    parent.start ? parent.start : new Date(+now - 60000 * 10),
+                    parent.start ? parent.start : new Date(+now - 60000 * 10).toString(),
                     parent.end ? parent.end : now,
                     parent.step ? parent.step : '60s',
                     [parent.id]);
@@ -189,7 +182,7 @@ const resolvers = {
             try {
                 const brokerBytesOutOverTime = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_OUT,
-                    parent.start ? parent.start : new Date(+now - 60000 * 10),
+                    parent.start ? parent.start : new Date(+now - 60000 * 10).toString(),
                     parent.end ? parent.end : now,
                     parent.step ? parent.step : '60s',
                     [parent.id]);
@@ -295,7 +288,6 @@ const resolvers = {
         broker: async(parent, { start, end, step, id }): Promise<any> => {
             try {
                 const clusterInfo = await adminActions.getClusterInfo();
-                console.log('Broker resolver: ', start, end);
                 const broker = await clusterInfo.brokers.filter(broker => broker.id === id)[0];
                 console.log('Broker query: ', broker);
 
@@ -314,12 +306,18 @@ const resolvers = {
         },
 
         bytesInPerSecOverTime: async(parent, { start, end, step, topics, ids }, { dataSources }) => {
-
             const now = new Date();
+
+            if (isNaN(parseInt(start))) {
+                start = new Date(start).toString();
+            } else {
+                start = new Date(parseInt(start)).toString();
+            };
+
             try {
                 const allBytesInPerSec = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_IN,
-                    start ? start : new Date(+now - 60000 * 10),
+                    start ? new Date(start).toString() : new Date(Date.now() - 60000 * 10).toString(),
                     end ? end : now,
                     step ? step : '60s',
                     ids
@@ -337,12 +335,16 @@ const resolvers = {
         },
 
         bytesOutPerSecOverTime: async(parent, { start, end, step, topics, ids }, { dataSources }) => {
-
             const now = new Date();
+            if (isNaN(parseInt(start))) {
+                start = new Date(start).toString();
+            } else {
+                start = new Date(parseInt(start)).toString();
+            };
             try {
                 const allBytesOutPerSec = await dataSources.prometheusAPI.instanceRangeQuery(
                     BROKER_BYTES_OUT,
-                    start ? start : new Date(+now - 60000 * 10),
+                    start,
                     end ? end : now,
                     step ? step : '60s',
                     ids
