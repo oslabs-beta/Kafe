@@ -4,10 +4,8 @@ import { useQuery } from "@apollo/client";
 import EnhancedTable from './EnhancedTable';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
-import Summary from '../graphs/Summary';
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
 
 const DLQ = (props) => {
 
@@ -97,8 +95,8 @@ const DLQ = (props) => {
     };
 
     // console.log('Data: ', data);
-    console.log('Current DLQ: ', dlq);
-    console.log('PieChartData: ', pieChartData);
+    // console.log('Current DLQ: ', dlq);
+    // console.log('PieChartData: ', pieChartData);
     return (
         <>
             <div>Dead Letter Queue Component</div>
