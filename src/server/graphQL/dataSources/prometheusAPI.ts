@@ -184,7 +184,7 @@ class PrometheusAPI extends RESTDataSource {
         const defaultData = [];
         const datum = {
             values: [],
-            topic: '_consumer__offsets',
+            topic: '__consumer_offsets',
         };
 
         for (let date = start; date <= end; date += parseInt(step)) {
@@ -199,7 +199,7 @@ class PrometheusAPI extends RESTDataSource {
         };
 
         defaultData.push(datum);
-        // console.log('Dummy range data result: ', defaultData);
+        console.log('Dummy range data result: ', defaultData);
         return defaultData;
     };
 };

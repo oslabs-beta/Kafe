@@ -1,20 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from "@apollo/client";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-//We implemented global typography, do we need the below?
 import Typography from "@mui/material/Typography";
-
 import RealTimeChart from '../graphs/RealTimeChart';
+import { useIsFocused } from '@react-navigation/native';
 
 import { BROKER_ALL_TIME_MS, BROKER_BYTES_IN, BROKER_BYTES_OUT } from '../queries/graphQL';
 
 function Brokers(){
     const [brokerInfo, setBrokerInfo] = useState([]);
-
-    // const timeRef = useRef(new Date(Date.now()));
     const { loading, data, refetch } = useQuery(BROKER_ALL_TIME_MS, { pollInterval: 20 * 1000 });
 
     useEffect(() => {
@@ -27,9 +24,10 @@ function Brokers(){
 
     const isLoading = <div>Loading...</div>
     return(
-        <>
+        <>       
             <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
                 <h2>Brokers</h2>
+                 
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
                         <Paper
@@ -39,7 +37,7 @@ function Brokers(){
                             flexDirection: "column",
                           }}
                           elevation={8}>
-                            <RealTimeChart
+                                <RealTimeChart
                                 query={ BROKER_BYTES_IN }
                                 metric = {'bytesIn'}
                                 resources = {'topicsBytesIn'}
@@ -70,6 +68,8 @@ function Brokers(){
                           </Paper>
                     </Grid>
                 </Grid>
+                
+                
 
                 {brokerInfo.length > 0 &&
                 <Grid container spacing={3} sx={{ mt: 1, mb: 4 }}>
@@ -116,7 +116,7 @@ function Brokers(){
                             </Paper>
                         </Grid>)}
                 </Grid> }
-            </Container>
+            </Container> 
         </>
     );
 }

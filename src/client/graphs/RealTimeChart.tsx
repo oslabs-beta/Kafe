@@ -5,6 +5,7 @@ import { useQuery } from "@apollo/client";
 import ChartStreaming from "chartjs-plugin-streaming";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import "chartjs-adapter-luxon";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,8 +18,6 @@ import {
   TimeScale,
   ChartOptions
 } from 'chart.js';
-
-import { BROKERS_CPU_USAGE, BROKER_JVM_MEMORY_USAGE } from '../queries/graphQL';
 
 const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelName, labelId }) => {
   ChartJS.register(
@@ -33,7 +32,7 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
     ChartStreaming
   );
   ChartJS.unregister(ChartDataLabels);
-// useState hook: declare new variables 'chartData' and 'setChartData', and set the initial state of 'chartData' to the defined object.
+
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [],
@@ -46,7 +45,7 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
   const now = useRef(Date.now());
   const loaded = useRef(false);
   const chartRef = useRef(null);
-
+  
   const options = {
     responsive: true,
     elements: {
@@ -64,6 +63,11 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
         delay: 30 * 1000,
         refresh: 30 * 1000,
         onRefresh: (chart) => {
+          if (!chartRef.current) {
+            chart.stop();
+            chart.destroy();
+            return;
+          };
 
           const variables = {
             start: now.current.toString(),
@@ -72,8 +76,9 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
           };
           now.current = new Date(variables.end);
 
-          refetch({...variables})
+          refetch({ ...variables })
             .then(result => {
+
               if (loaded.current) {
                 result.data[resources].forEach((resource, index) => {
                   resource[metric].forEach(series => chart.data.datasets[index].data.push({
@@ -138,11 +143,8 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
   useEffect(() => {
     //make sure initial page load done ss
     if (loading || loaded.current) return;
-    // const labels = data.brokers[0].CPUUsageOverTime[0].values.map(series => series.time);
     const labels = [];
     const datasets = [];
-
-    console.log('Use Effect: ', data);
 
     data[resources].forEach((resource, index) => {
 
@@ -162,11 +164,21 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
     setChartData({ labels, datasets });
 
     //clear up side effect
-    return () => (loaded.current = true);
+    return () => {
+      loaded.current = true;
+    };
   }, [loading]);
 
   useEffect(() => {
     loaded.current = false;
+
+    return () => {
+      console.log('Clean up effect: ', chartRef.current.options);
+      chartRef.current.stop();
+      chartRef.current.destroy();
+      chartRef.current = null;
+    };
+
   }, []);
 
   return (

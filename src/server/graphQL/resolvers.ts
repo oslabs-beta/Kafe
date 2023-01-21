@@ -28,9 +28,8 @@ const kafka = new Kafka({
 });
 
 const consumerMap = new Map();
-const client = new KafeDLQClient(kafka);
 // const consumer = client.consumer({ groupId: 'DLQConsumer' });
-const consumer = kafka.consumer({ groupId: 'DLQConsumer', maxWaitTimeInMs: 7000 });
+
 var i: any;
 for (i = 1; i < 7; i++) {
     consumerMap.set(i, kafka.consumer({ groupId: 'DLQConsumer', maxWaitTimeInMs: 7000}))
@@ -39,7 +38,6 @@ for (i = 1; i < 7; i++) {
 i = 1;
 
 const resolvers = {
-    // underMinISRCount: Int
     Cluster: {
         underreplicatedPartitionsCount: async(parent, args, { dataSources }): Promise <Number> => {
             try{
