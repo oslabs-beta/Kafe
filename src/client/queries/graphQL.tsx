@@ -116,6 +116,52 @@ export const GET_DLQ_MESSAGES = gql`
 //   deleteTopicRecords: Boolean
 // }
 
+<<<<<<< HEAD
+=======
+export const DELETE_TOPIC = gql`
+mutation DeleteTopic($name: String) {
+  deleteTopic(name: $name) {
+    name
+  }
+}
+`;
+
+export const REASSIGN_PARTITIONS = gql`
+mutation DeleteTopic($name: String) {
+  deleteTopic(name: $name) {
+    name
+  }
+}
+`;
+
+// type Query {
+//   cluster(
+//     start: String,
+//     end: String,
+//     step: String
+//     ): Cluster
+//   brokers(
+//     start: String,
+//     end: String,
+//     step: String,
+//     ids: [Int]): [Broker]!
+//   broker(
+//     start: String
+//     end: String,
+//     step: String,
+//     id: Int): Broker
+//   topics(name: [String]): [Topic]
+//   topic(name: String): Topic
+// }
+
+// type Mutation {
+//   createTopic: Topic
+//   deleteTopic: Topic
+//   reassignPartitions: Partition
+//   deleteTopicRecords: Boolean
+// }
+
+>>>>>>> c4eca890f26661a95a31c2d6a3f3438d2ec563ca
 // const tempQuery =   gql`
 // query GetCluster {
 //   cluster {
