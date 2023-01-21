@@ -9,11 +9,11 @@ import Typography from "@mui/material/Typography";
 
 import RealTimeChart from '../graphs/RealTimeChart';
 
-import { BROKER_ALL_TIME_MS, BROKER_BYTES_IN } from '../queries/graphQL';
+import { BROKER_ALL_TIME_MS, BROKER_BYTES_IN, BROKER_BYTES_OUT } from '../queries/graphQL';
 
 function Brokers(){
     const [brokerInfo, setBrokerInfo] = useState([]);
-    
+
     // const timeRef = useRef(new Date(Date.now()));
     const { loading, data, refetch } = useQuery(BROKER_ALL_TIME_MS, { pollInterval: 20 * 1000 });
 
@@ -24,7 +24,7 @@ function Brokers(){
     }, [loading, data]);
 
     console.log('Brokers component: ', brokerInfo);
-    
+
     const isLoading = <div>Loading...</div>
     return(
         <>
@@ -32,7 +32,7 @@ function Brokers(){
                 <h2>Brokers</h2>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
-                        <Paper 
+                        <Paper
                           sx={{
                             p: 3,
                             display: "flex",
@@ -43,8 +43,27 @@ function Brokers(){
                                 query={ BROKER_BYTES_IN }
                                 metric = {'bytesIn'}
                                 resources = {'topicsBytesIn'}
-                                yLabel={'Bytes Used'}
+                                yLabel={'Bytes In'}
                                 title={'Bytes In Over Time'}
+                                step={'30s'}
+                                labelName={'Topic'}
+                                labelId={'topic'}/>
+                          </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Paper
+                          sx={{
+                            p: 3,
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                          elevation={8}>
+                            <RealTimeChart
+                                query={ BROKER_BYTES_OUT }
+                                metric = {'bytesOut'}
+                                resources = {'topicsBytesOut'}
+                                yLabel={'Bytes Out'}
+                                title={'Bytes Out Over Time'}
                                 step={'30s'}
                                 labelName={'Topic'}
                                 labelId={'topic'}/>
@@ -54,9 +73,9 @@ function Brokers(){
 
                 {brokerInfo.length > 0 &&
                 <Grid container spacing={3} sx={{ mt: 1, mb: 4 }}>
-                    {brokerInfo.map(broker => 
+                    {[...brokerInfo].sort((a, b) => a.id - b.id).map(broker =>
                         <Grid key={`$Broker${broker.id}MsMetrics`} item xs={12} md={6}>
-                            <Paper 
+                            <Paper
                                 sx={{
                                   p: 2,
                                   display: "flex",
@@ -79,7 +98,7 @@ function Brokers(){
                                     <Typography color="text.secondary" sx={{ flex: 1 }}>
                                         {'Average time in ms it takes consumers to receive new data'}
                                     </Typography>
-                                </Box>  
+                                </Box>
                                 <Box sx={{p: 2}}>
                                     <Typography component="p" variant="body1">
                                         {`Producer Average Time (ms): ${broker.produceTotalTimeMs ? broker.produceTotalTimeMs.value : 0}`}
@@ -93,11 +112,11 @@ function Brokers(){
                                         {`Time of data: ${broker.produceTotalTimeMs?.time ? broker.produceTotalTimeMs.time : new Date().toLocaleString()}`}
                                     </Typography>
                                 </Box>
-                                
+
                             </Paper>
                         </Grid>)}
                 </Grid> }
-            </Container>   
+            </Container>
         </>
     );
 }
