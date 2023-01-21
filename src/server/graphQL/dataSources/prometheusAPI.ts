@@ -71,18 +71,18 @@ class PrometheusAPI extends RESTDataSource {
         else query.replace(/filter/g, '.*');
 
         query += `&start=${startTime}&end=${endTime}&step=${step}`;
-        // console.log('Instance Range Query: ', query);
 
         try {
             const result = await this.get(`/api/v1/query_range?${query}`);
-            console.log('Instance Range Query Result Before Filter: ', result);
+
             if (!result.data.result || result.data.result.length === 0) {
-                console.log('Generating dummy data');
+                const defaultData = await this.generateRangeResult(startTime, endTime, step);
+                return defaultData;
             }
 
             const formattedResult = await this.formatRangeResponse(result.data.result);
-
             console.log(`Final result for brokerId ${filter}: `, formattedResult);
+
             return formattedResult;
         } catch(err) {
             console.log('Instance Range Query Error: ', err);
@@ -162,8 +162,8 @@ class PrometheusAPI extends RESTDataSource {
             object.values.forEach(value => {
                 datum.values.push({
                     time: new Date(value[0] * 1000).toLocaleString("en-US", {
-                        timeStyle: "long",
-                        dateStyle: "short",
+                        timeStyle: 'long',
+                        dateStyle: 'short',
                         hour12: false,
                       }),
                     value: Number(value[1]).toFixed(2)
@@ -180,8 +180,27 @@ class PrometheusAPI extends RESTDataSource {
         return formattedResult;
     };
 
-    async generateRangeResult() {
-        console.log('Test function for generating dummy range data');
+    async generateRangeResult(start: number, end: number, step: string) {
+        const defaultData = [];
+        const datum = {
+            values: [],
+            topic: '_consumer__offsets',
+        };
+
+        for (let date = start; date <= end; date += parseInt(step)) {
+            datum.values.push({
+                time: new Date(date * 1000).toLocaleString("en-US", {
+                    timeStyle: 'long',
+                    dateStyle: 'short',
+                    hour12: false,
+                }),
+                value: Number('0.00').toFixed(2),
+            });
+        };
+
+        defaultData.push(datum);
+        // console.log('Dummy range data result: ', defaultData);
+        return defaultData;
     };
 };
 

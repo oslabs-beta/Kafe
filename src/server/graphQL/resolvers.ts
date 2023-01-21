@@ -28,12 +28,9 @@ const kafka = new Kafka({
 });
 
 const consumerMap = new Map();
-
-
 const client = new KafeDLQClient(kafka);
 // const consumer = client.consumer({ groupId: 'DLQConsumer' });
 const consumer = kafka.consumer({ groupId: 'DLQConsumer', maxWaitTimeInMs: 7000 });
-// consumer.logger().setLogLevel(logLevel.DEBUG);
 var i: any;
 for (i = 1; i < 7; i++) {
     consumerMap.set(i, kafka.consumer({ groupId: 'DLQConsumer', maxWaitTimeInMs: 7000}))
@@ -44,7 +41,7 @@ i = 1;
 const resolvers = {
     // underMinISRCount: Int
     Cluster: {
-        underreplicatedPartitionsCount: async(parent, args, {dataSources}): Promise <Number> => {
+        underreplicatedPartitionsCount: async(parent, args, { dataSources }): Promise <Number> => {
             try{
                 const underReplicatedPartitions = await dataSources.prometheusAPI.instanceQuery(UNDER_REPLICATED_PARTITIONS_COUNT);
                 // console.log('Underreplicated partitions resolver result: ', underReplicatedPartitions);
@@ -54,7 +51,7 @@ const resolvers = {
             }
         },
 
-        offlinePartitionsCount: async(parent, args, {dataSources}): Promise <Number> => {
+        offlinePartitionsCount: async(parent, args, { dataSources }): Promise <Number> => {
             try{
                 const offlinePartitions = await dataSources.prometheusAPI.instanceQuery(OFFLINE_PARTITIONS);
                 // console.log('Offline partitions resolver result: ', offlinePartitions);
@@ -100,12 +97,11 @@ const resolvers = {
         },
 
         CPUUsageOverTime: async(parent, args, { dataSources }): Promise<any> => {
-            const now = new Date();
             try {
                 const cpuUsage = await dataSources.prometheusAPI.instanceRangeQuery(
                     PROCESS_CPU_SECONDS_TOTAL,
-                    parent.start ? parent.start : new Date(+now - 60000 * 10),
-                    parent.end ? parent.end : now,
+                    parent.start ? parent.start : new Date(Date.now() - 60000 * 10).toString(),
+                    parent.end ? parent.end : new Date().toString(),
                     parent.step ? parent.step : '60s',
                     [parent.id]);
 
@@ -121,8 +117,8 @@ const resolvers = {
             try {
                 const brokerMemoryUsage = await dataSources.prometheusAPI.instanceRangeQuery(
                     JVM_MEMORY_BYTES_USED,
-                    parent.start ? parent.start : new Date(+now - 60000 * 10),
-                    parent.end ? parent.end : now,
+                    parent.start ? parent.start : new Date(Date.now() - 60000 * 10).toString(),
+                    parent.end ? parent.end : new Date().toString(),
                     parent.step ? parent.step : '60s',
                     [parent.id]);
                 console.log('JVM resolver returned result: ', brokerMemoryUsage);
@@ -272,7 +268,7 @@ const resolvers = {
                 console.log('Brokers query: ', start, end, step)
                 if (start) {
                     brokers.map(broker => {
-                        broker['start'] = start;
+                        broker['start'] = isNaN(parseInt(start)) ? start : new Date(parseInt(start)).toString();
                         broker['end'] = end;
                         broker['step'] = step;
                     })
