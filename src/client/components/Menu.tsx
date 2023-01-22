@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Button from '@mui/material/Button';
+// import { constants } from "buffer";
+// import MenuBtn from './common/MenuBtn';
 
 const linkStyle = {
     display: 'flex',
@@ -12,22 +14,30 @@ const linkStyle = {
   };
 
 function Menu(){
+   
+    const menuItems = ["Cluster Overview", "Brokers", "Consumers", "List Topics", "Create Topic", "Delete Topic", "Partitions", "Dead Letter Queue"];
+    const menuRoutes = ["/overview", "/brokers", "/consumers","/listtopics", "/createtopic","/deletetopic", "/partitions", "/dlq"];
 
-    return(
-        <>
-            <div>Cluster</div>
-            <nav className="navbar">
-                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/overview" style={linkStyle}>Cluster Overview</Link></Button><br />
-                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/brokers" style={linkStyle}>Brokers</Link></Button><br />
-                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/consumers" style={linkStyle}>Consumers</Link></Button><br />
-                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/listtopics" style={linkStyle}>List Topics</Link></Button><br />
-                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/createtopic" style={linkStyle}>Create Topic</Link></Button><br />
-                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/deletetopic" style={linkStyle}>Delete Topic</Link></Button><br />
-                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/partitions" style={linkStyle}>Partitions</Link></Button>
-                <Button variant="contained" sx={{minWidth: 170, margin: "5px", background: "#6599CC"}}><Link to="/dlq" style={linkStyle}>Dead Letter Queue</Link></Button>
-            </nav>
-        </>
-    );
+    const menuBtns = menuItems.map((ele, i)=>{
+
+        return(
+            <Button 
+                    variant="outlined" 
+                    sx={{minWidth: 200, 
+                        margin: "5px",
+                        textAlign:"left",
+                        color: 'primary.dark' }}
+                        key={i}>
+                            <Link 
+                            to= {menuRoutes[i]} 
+                            style={linkStyle}>{ele}
+                            </Link></Button>
+        )
+    })
+
+    return (
+      <div>{menuBtns}</div>  
+    )
 }
 
 export default Menu;

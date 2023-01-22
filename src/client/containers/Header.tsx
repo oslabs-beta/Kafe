@@ -11,7 +11,16 @@ const linkStyle = {
 function Header(){
 
 return(
-    <Link to="/" style={linkStyle}> <Button sx= {{ minHeight: 50, minWidth: 120, margin: 2, marginTop: 4}} style= {{backgroundImage:`url(${logo})`}}></Button></Link>
+    <Link to="/" style={linkStyle}> 
+    <Button 
+    sx= {{ 
+      minHeight: 50, 
+      minWidth: 120, 
+      marginTop: 5,
+      marginLeft: 5,
+      marginBottom: 0 }} 
+    style= {{backgroundImage:`url(${logo})`}}>
+    </Button></Link>
   );
 }
 

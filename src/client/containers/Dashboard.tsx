@@ -1,21 +1,26 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
+
+//imported modules
 import Header from './Header';
 import Main from './Main';
-import Sidebar from './Sidebar';
+import Navbar from './Navbar';
+import ClusterSummary from '../components/ClusterSummary'
+// import Sidebar from './Sidebar';
 
 function Dashboard(){
 return(
     <>
-        <Grid container spacing={2} sx={{ minHeight: '100%', borderTop: 8, borderColor: 'white' }}>
-            <Grid item md={12} sx={{bgcolor: 'primary.light', minHeight: '120px', border: 4, borderColor: 'white'}}>
+        <Grid container spacing={2} sx={{ minHeight: '100%'}}>
+            <Grid item md={12} sx={{ minHeight: '120px'}}>
                 <Header />
             </Grid>
-            <Grid item md={2} sx={{ bgcolor: 'primary.light', minHeight: '65%', border: 4, borderColor: 'white'}}>
-                <Sidebar />
+            <Grid item md={12} sx={{ background: 'linear-gradient(to top, #CCE1EB, white)', minHeight: '120px'}}>
+                <Navbar />
             </Grid>
-            <Grid item md={10} sx={{ height: '85%' }}>
+            <Grid item md={12} sx={{ bgcolor: 'primary.light', minheight: 'viewport' }}>
                 <Main />
+                <ClusterSummary />
             </Grid>
         </Grid>
     </>

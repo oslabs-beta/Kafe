@@ -1,37 +1,49 @@
 // import { KafeDLQClient } = require('kafe-dlq');
-const { KafeDLQClient } = require('kafe-dlq');
-const { Kafka } = require('kafkajs');
+const { KafeDLQClient } = require("kafe-dlq");
+const { Kafka } = require("kafkajs");
 
 const kafka = new Kafka({
-    clientId: 'dlq-companion',
-    brokers: ['localhost:9091', 'localhost:9092', 'localhost:9093']
+  clientId: "dlq-companion",
+  brokers: ["localhost:9091", "localhost:9092", "localhost:9093"],
 });
 
-
-const callbackTest = ((message ) => {
+const callbackTest = (message) => {
   return parseInt(message) > 0;
-})
+};
 
 // console.log(dlq);
 const client = new KafeDLQClient(kafka, callbackTest);
 const testProducer = client.producer();
 
-testProducer.connect()
-  .then(() => testProducer.send({
-    topic: 'good',
-    messages: [{key: '1', value: '1'}, {key: '2', value: '2'}, {key: '3', value: '3'}]
-  }))
+testProducer
+  .connect()
+  .then(() =>
+    testProducer.send({
+      topic: "good",
+      messages: [
+        { key: "1", value: "1" },
+        { key: "2", value: "2" },
+        { key: "3", value: "3" },
+      ],
+    })
+  )
   // .then(() => testProducer.send({
   //   topic: 'bad',
   //   messages: [{key: '1', value: '-222'}, {key: '2', value: '-333'}, {key: '3', value: '3'}]
   // }))
-  .then(() => testProducer.send({
-    topic: 'realbad',
-    messages: [{key: '1', value: '-666'}, {key: '2', value: '-333'}, {key: '3', value: '3'}]
-  }))
+  .then(() =>
+    testProducer.send({
+      topic: "realbad",
+      messages: [
+        { key: "1", value: "-666" },
+        { key: "2", value: "-333" },
+        { key: "3", value: "3" },
+      ],
+    })
+  )
   .catch((err) => console.log(err));
 
-const testConsumer = client.consumer({groupId: 'dlq-testt'});
+const testConsumer = client.consumer({ groupId: "dlq-testt" });
 // testConsumer.connect()
 //   .then(() => {
 //     console.log('KAFE CONSUMER CONNECTED')

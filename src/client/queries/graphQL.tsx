@@ -89,35 +89,35 @@ export const GET_DLQ_MESSAGES = gql`
   }
 `;
 
-// type Query {
-//   cluster(
-//     start: String,
-//     end: String,
-//     step: String
-//     ): Cluster
-//   brokers(
-//     start: String,
-//     end: String,
-//     step: String,
-//     ids: [Int]): [Broker]!
-//   broker(
-//     start: String
-//     end: String,
-//     step: String,
-//     id: Int): Broker
-//   topics(name: [String]): [Topic]
-//   topic(name: String): Topic
-// }
+export const LIST_TOPICS = gql`
+query Query {
+  topics {
+    name
+    ISRCount
+    logSize {
+      value
+      time
+    }
+    partitionsCount
+    replicasCount
+    partitions {
+      partitionId
+      replicas {
+        id
+      }
+    }
+  }
+}
+`;
 
-// type Mutation {
-//   createTopic: Topic
-//   deleteTopic: Topic
-//   reassignPartitions: Partition
-//   deleteTopicRecords: Boolean
-// }
+export const CREATE_TOPIC = gql`
+mutation Mutation($name: String, $numPartitions: Int, $replicationFactor: Int) {
+  createTopic(name: $name, numPartitions: $numPartitions, replicationFactor: $replicationFactor) {
+    name
+  }
+}
+`;
 
-<<<<<<< HEAD
-=======
 export const DELETE_TOPIC = gql`
 mutation DeleteTopic($name: String) {
   deleteTopic(name: $name) {
@@ -133,43 +133,3 @@ mutation DeleteTopic($name: String) {
   }
 }
 `;
-
-// type Query {
-//   cluster(
-//     start: String,
-//     end: String,
-//     step: String
-//     ): Cluster
-//   brokers(
-//     start: String,
-//     end: String,
-//     step: String,
-//     ids: [Int]): [Broker]!
-//   broker(
-//     start: String
-//     end: String,
-//     step: String,
-//     id: Int): Broker
-//   topics(name: [String]): [Topic]
-//   topic(name: String): Topic
-// }
-
-// type Mutation {
-//   createTopic: Topic
-//   deleteTopic: Topic
-//   reassignPartitions: Partition
-//   deleteTopicRecords: Boolean
-// }
-
->>>>>>> c4eca890f26661a95a31c2d6a3f3438d2ec563ca
-// const tempQuery =   gql`
-// query GetCluster {
-//   cluster {
-//     brokers {
-//       id
-//       host
-//       port
-//     }
-//   }
-// }
-// ` 

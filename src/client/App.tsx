@@ -10,11 +10,8 @@ import DeleteTopic from './components/DeleteTopic';
 import Partitions from './components/Partitions';
 import ClusterSummary from './components/ClusterSummary';
 import DLQ from './components/DLQ';
-<<<<<<< HEAD
 import { useQuery } from "@apollo/client"
 
-=======
->>>>>>> c4eca890f26661a95a31c2d6a3f3438d2ec563ca
 
 const App = () => {
   //  Refactor based on final UI decisions and make DRY; see Studify for examples; consider conditional rendering of buttons based on confirmed connection to brokers

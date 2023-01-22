@@ -20,17 +20,11 @@ function Sidebar(){
         console.log('status is... ', data);
         connectStatus = 'Connected';
     }
-    // if (error) return `Error! ${error.message}`;
-    // check session if dashboard remounts
-
-//   useEffect(() => {
-//     verifyConnection();
-//   }, []); //Run this once at the beginning
 
 
 return(
     <>
-        <div>System Status<br />{connectStatus}</div>
+        <div><br />{"Kafka Cluster is "}{connectStatus}</div>
         <div style={divStyle}>
             <Menu />
         </div>
