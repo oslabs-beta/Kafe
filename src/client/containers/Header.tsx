@@ -14,8 +14,8 @@ return(
     <Link to="/" style={linkStyle}> 
     <Button 
     sx= {{ 
-      minHeight: 50, 
-      minWidth: 120, 
+      minHeight: 59, 
+      minWidth: 140, 
       marginTop: 5,
       marginLeft: 5,
       marginBottom: 0 }} 

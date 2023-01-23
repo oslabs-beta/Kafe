@@ -13,8 +13,13 @@ const linkStyle = {
     height: '10px',
   };
 
-
-
+const btnStyle = {minWidth: 150, 
+    margin: "0px",
+    fontsize: 18,
+    textAlign:"right",
+    textTransform: 'unset',
+    color: 'palette.primary.dark' };
+ 
 const ButtonBar = () => {
 
     let connectStatus = 'Loading';
@@ -24,29 +29,23 @@ const ButtonBar = () => {
         console.log('status is... ', data);
         connectStatus = 'Connected';
     }
-
     
     const [selected, setSelected] = useState(false);
-    console.log("NavBar", selected);
 
-    const menuItems = [ ` Kafka Cluster is ${connectStatus}`, "Brokers", "Consumers", "List Topics", "Partitions", "Dead Letter Queue"];
-    const menuRoutes = [ "/", "/brokers", "/consumers","/listtopics", "/partitions", "/dlq"];
+    const menuItems = [  "Brokers", "Consumers", "List Topics", "Partitions", "Dead Letter Queue"];
+    const menuRoutes = [ "/brokers", "/consumers","/listtopics", "/partitions", "/dlq"];
 
-    // let filled = selected ? "filled" : "outlined";
+   const handleClick = () => {
+    setSelected(true);
+   }
 
- 
     const menuBtns = menuItems.map((ele, i)=>{
         return( 
             <Button 
-                    onClick={() => setSelected(true)}        
+                    onClick={handleClick}        
                     variant="outlined"
-                    sx={{minWidth: 150, 
-                        margin: "0px",
-                        fontsize: 18,
-                        textAlign:"right",
-                        textTransform: 'unset',
-                        color: 'palette.primary.dark' }}
-                        key={i}
+                    sx={btnStyle}
+                    key={i}
                         >
                             <Link 
                             to= {menuRoutes[i]} 
@@ -59,9 +58,9 @@ const ButtonBar = () => {
         <Stack 
         direction="row" 
         spacing={5} 
-        marginLeft='10px'>
-          
-           {menuBtns}
+        marginLeft='33px'>
+            <Button sx={btnStyle}>Kafka Cluster is {connectStatus}</Button>
+            {menuBtns}
         </Stack>
     )
 }
