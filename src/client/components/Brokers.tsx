@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from "@apollo/client";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
@@ -6,7 +6,6 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import RealTimeChart from '../graphs/RealTimeChart';
-import { useIsFocused } from '@react-navigation/native';
 
 import { BROKER_ALL_TIME_MS, BROKER_BYTES_IN, BROKER_BYTES_OUT } from '../queries/graphQL';
 
@@ -14,11 +13,21 @@ function Brokers(){
     const [brokerInfo, setBrokerInfo] = useState([]);
     const { loading, data, refetch } = useQuery(BROKER_ALL_TIME_MS, { pollInterval: 20 * 1000 });
 
+    const loaded = useRef(null);
+
     useEffect(() => {
-        if (loading) return;
+        if (loading || loaded.current) return;
 
         if (data.brokers) setBrokerInfo(data.brokers);
+
+        return () => {
+            loaded.current = true;
+        };
     }, [loading, data]);
+
+    useEffect(() => {
+        loaded.current = false;
+    }, []);
 
     console.log('Brokers component: ', brokerInfo);
 
@@ -38,6 +47,7 @@ function Brokers(){
                           }}
                           elevation={8}>
                                 <RealTimeChart
+                                key = {'BytesInRTC'}
                                 query={ BROKER_BYTES_IN }
                                 metric = {'bytesIn'}
                                 resources = {'topicsBytesIn'}
@@ -57,6 +67,7 @@ function Brokers(){
                           }}
                           elevation={8}>
                             <RealTimeChart
+                                key = {'BytesOutRTC'}
                                 query={ BROKER_BYTES_OUT }
                                 metric = {'bytesOut'}
                                 resources = {'topicsBytesOut'}

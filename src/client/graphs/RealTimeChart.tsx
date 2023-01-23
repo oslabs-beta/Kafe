@@ -45,6 +45,7 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
   const now = useRef(Date.now());
   const loaded = useRef(false);
   const chartRef = useRef(null);
+  const skip = useRef(false);
   
   const options = {
     responsive: true,
@@ -64,6 +65,7 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
         refresh: 30 * 1000,
         onRefresh: (chart) => {
           if (!chartRef.current) {
+            console.log(yLabel + ' onRefresh stop: ', chart);
             chart.stop();
             chart.destroy();
             return;
@@ -126,9 +128,10 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
           text: yLabel,
       },
     },
-  },
+  }
 
-  //GraphQL query to the backend
+  // GraphQL query to the backend
+  
   const { loading, data, refetch } = useQuery(query, {
     variables: {
       start: new Date(Date.now() - 60000 * 10).toString(),
@@ -136,13 +139,19 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
       step: step ? step : '60s',
     },
     fetchPolicy: "network-only",
+    // fetchPolicy: "cache-and-network",
     nextFetchPolicy: "network-only",
+    // nextFetchPolicy: "cache-first",
     notifyOnNetworkStatusChange: true,
-   });
+    skip: skip.current,
+  });
+  
 
   useEffect(() => {
     //make sure initial page load done ss
+    console.log(`${yLabel} useEffect running...`)
     if (loading || loaded.current) return;
+
     const labels = [];
     const datasets = [];
 
@@ -171,16 +180,19 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
 
   useEffect(() => {
     loaded.current = false;
+    skip.current = false;
 
     return () => {
-      console.log('Clean up effect: ', chartRef.current.options);
+      console.log('Clean up effect: ', chartRef.current);
       chartRef.current.stop();
       chartRef.current.destroy();
-      chartRef.current = null;
+      skip.current = true;
     };
 
   }, []);
 
+  console.log(`${yLabel} chart skip: `, skip.current);
+  console.log(`${yLabel} chart data: `, data);
   return (
     <>
       {useMemo(() => {

@@ -1,6 +1,7 @@
 import * as adminActions from '../kafkaAdmin/adminActions';
 import * as dotenv from 'dotenv';
 import { Kafka, logLevel } from 'kafkajs';
+import { getGraphQLRateLimiter} from 'graphql-rate-limit';
 import { KafeDLQClient } from 'kafe-dlq';
 
 dotenv.config();
@@ -20,6 +21,8 @@ import {
     INSYNC_REPLICAS_COUNT,
     TOPIC_LOG_SIZE
     } from './dataSources/prometheusQueries';
+
+const rateLimiter = getGraphQLRateLimiter({ identifyContext: (ctx) => ctx?.request?.ipAddress })
 
 const kafka = new Kafka({
     clientId: 'KafeDLQ',
@@ -374,79 +377,49 @@ const resolvers = {
             }
         },
 
-        dlq: async(parent, args, context): Promise<any> => {
-            const consumer = consumerMap.get(i);
-            ++i;
-            if (i > 6) i = 1;
-            const consumerNumber = i === 1? 6 : i - 1;
-
-            return new Promise((resolve, reject) => {
-                const DLQMessages = [];
-                consumer.connect()
-                console.log(`dlq resolver consumer${consumerNumber} connected...`);
-                consumer.subscribe({ topics: ['DeadLetterQueue'], fromBeginning: true })
-                consumer.run({
-                    eachMessage: async({ topic, partition, message}) => {
-                        DLQMessages.push({
-                            timestamp: new Date(parseInt(message.timestamp)).toLocaleString('en-US', {
-                                timeStyle: "long",
-                                dateStyle: "short",
-                                hour12: false,
-                            }),
-                            value: JSON.parse(message.value.toString()),
-                        });
-                    },
+        dlq: async(parent, args, context, info): Promise<any> => {
+            try{
+                const errorMessage = await rateLimiter(
+                    { parent, args, context, info },
+                    {max: 1, window: '5s'});
+                
+                if (errorMessage) throw new Error(errorMessage);
+    
+                // const consumer = consumerMap.get(i);
+                const consumer = kafka.consumer({ groupId: 'DLQConsumer', maxWaitTimeInMs: 7000});
+                ++i;
+                if (i > 6) i = 1;
+                const consumerNumber = i === 1? 6 : i - 1;
+    
+                return new Promise((resolve, reject) => {
+                    const DLQMessages = [];
+                    consumer.connect()
+                    console.log(`dlq resolver consumer${consumerNumber} connected...`);
+                    consumer.subscribe({ topics: ['DeadLetterQueue'], fromBeginning: true })
+                    consumer.run({
+                        eachMessage: async({ topic, partition, message}) => {
+                            DLQMessages.push({
+                                timestamp: new Date(parseInt(message.timestamp)).toLocaleString('en-US', {
+                                    timeStyle: "long",
+                                    dateStyle: "short",
+                                    hour12: false,
+                                }),
+                                value: JSON.parse(message.value.toString()),
+                            });
+                        },
+                    });
+                    setTimeout(() => {
+                        console.log(`consumer${consumerNumber} disconnecting...`);
+                        consumer.disconnect();
+                        resolve(DLQMessages);
+                        console.log(DLQMessages);
+                        return DLQMessages.reverse();
+                    }, 5000);
                 });
-                setTimeout(() => {
-                    console.log(`consumer${consumerNumber} disconnecting...`);
-                    consumer.disconnect();
-                    resolve(DLQMessages);
-                    console.log(DLQMessages);
-                    return DLQMessages.reverse();
-                }, 5000);
-            });
-
-            // dlq: async(parent, args, context): Promise<any> => {
-            //     const consumer = consumerMap.get(i);
-            //     ++i;
-            //     if (i > 3) i = 1;
-            //     await consumer.disconnect();
-
-            //     return new Promise((resolve, reject) => {
-
-            //         const DLQMessages = [];
-            //         consumer.connect()
-            //           .then(() => {
-            //             console.log(`dlq resolver consumer${i === 1 ? 3 : i - 1} connected...`);
-            //             consumer.subscribe({ topics: ['DeadLetterQueue'], fromBeginning: true })
-            //           })
-            //           .then(() => {
-            //             consumer.run({
-            //                 eachMessage: async({ topic, partition, message}) => {
-            //                     DLQMessages.push({
-            //                         timestamp: new Date(parseInt(message.timestamp)).toLocaleString('en-US', {
-            //                             timeStyle: "long",
-            //                             dateStyle: "short",
-            //                             hour12: false,
-            //                         }),
-            //                         value: JSON.parse(message.value.toString()),
-            //                     })
-            //                 },
-            //             });
-            //           })
-            //           .catch((err: Error) => {
-            //             console.log(err);
-            //           })
-            //           .finally(() => {
-            //               setTimeout(() => {
-            //                 console.log(`consumer${i === 1 ? 3 : i - 1} disconnecting...`);
-            //                 consumer.disconnect();
-            //                 resolve(DLQMessages);
-            //                 console.log(DLQMessages);
-            //                 return DLQMessages.reverse();
-            //               }, 5000);
-            //           });
-            //     });
+            } catch(err) {
+                console.log(err);
+                return err;
+            }
         },
     },
     Mutation: {

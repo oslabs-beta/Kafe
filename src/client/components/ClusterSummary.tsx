@@ -9,6 +9,7 @@ import { BROKERS_CPU_USAGE, BROKER_JVM_MEMORY_USAGE } from '../queries/graphQL';
 
 
 const ClusterSummary = () => {
+    console.log('Cluster Summary component');
     return (
         <>
             <h4>Cluster Overview</h4>
@@ -23,6 +24,7 @@ const ClusterSummary = () => {
                       }}
                       elevation={8}>
                         <RealTimeChart
+                          key = {'CPUUsageRTC'}
                           query={ BROKERS_CPU_USAGE }
                           metric = {'CPUUsageOverTime'}
                           resources = {'brokers'}
@@ -43,6 +45,7 @@ const ClusterSummary = () => {
                       }}
                       elevation={8}>
                         <RealTimeChart
+                          key = {'JVMUsageRTC'}
                           query = {BROKER_JVM_MEMORY_USAGE}
                           metric = {'JVMMemoryUsedOverTime'}
                           resources = {'brokers'}
