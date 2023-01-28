@@ -4,10 +4,8 @@ import { useQuery } from "@apollo/client";
 import EnhancedTable from './EnhancedTable';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
-import Summary from '../graphs/Summary';
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
 
 const DLQ = (props) => {
 
@@ -16,8 +14,11 @@ const DLQ = (props) => {
     const [order, setOrder] = useState('desc');
     const [pieChartData, setPieChartData] = useState({});
 
+    const skipRef = useRef(false);
+
     const { loading, error, data, refetch } = useQuery(GET_DLQ_MESSAGES, {
-        pollInterval: (pollInterval || 60000)
+        pollInterval: (pollInterval || 60000),
+        skip: skipRef.current
     });
 
     const dlqRef = useRef(null)
@@ -34,6 +35,7 @@ const DLQ = (props) => {
 
     }, []);
 
+
     useEffect(() => {
         if (error || loading) return;
         if (data) {
@@ -41,7 +43,6 @@ const DLQ = (props) => {
             setDLQ((dlq) => {
                 if (order === 'desc') {
                     // console.log('new dlq msg:', data.dlqMessages);
-                    // console.log('old dlq msg:', dlq);
                     dlqRef.current = [...data.dlqMessages, ...dlq];
                     sessionStorage.setItem('DLQMessages', JSON.stringify(dlqRef.current));
                     return [...data.dlqMessages, ...dlq];
@@ -68,6 +69,14 @@ const DLQ = (props) => {
       };
       setPieChartData(newPieChartData);
     }, [dlq]);
+
+    useEffect(() => {
+        skipRef.current = false;
+
+        return () => {
+            skipRef.current = true;
+        }
+    }, []);
 
     const removeMessageHandler = (indices: number[]) => {
         if (!indices.length) return;
@@ -97,8 +106,8 @@ const DLQ = (props) => {
     };
 
     // console.log('Data: ', data);
-    console.log('Current DLQ: ', dlq);
-    console.log('PieChartData: ', pieChartData);
+    // console.log('Current DLQ: ', dlq);
+    // console.log('PieChartData: ', pieChartData);
     return (
         <>
             <div>Dead Letter Queue Component</div>

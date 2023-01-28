@@ -22,7 +22,7 @@ const ApolloServerStart = async() => {
     //create httpServer to handle requests to Express app
     const httpServer = http.createServer(app);
 
-    //create apolo server by passing in schema and resolver
+    //create apollo server by passing in schema and resolver
     const server = new ApolloServer({
         typeDefs,
         resolvers,
