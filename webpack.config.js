@@ -10,6 +10,9 @@ module.exports = {
         publicPath: '/'
     },
     mode: process.env.NODE_ENV,
+    externals: {
+      "react-native": true,
+  },
     module: {
       rules: [
         {

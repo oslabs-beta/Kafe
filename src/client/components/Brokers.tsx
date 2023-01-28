@@ -4,35 +4,62 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-//We implemented global typography, do we need the below?
 import Typography from "@mui/material/Typography";
-
 import RealTimeChart from '../graphs/RealTimeChart';
 
-import { BROKER_ALL_TIME_MS, BROKER_BYTES_IN } from '../queries/graphQL';
+import { BROKER_ALL_TIME_MS, BROKER_BYTES_IN, BROKER_BYTES_OUT } from '../queries/graphQL';
 
 function Brokers(){
     const [brokerInfo, setBrokerInfo] = useState([]);
-    
-    // const timeRef = useRef(new Date(Date.now()));
     const { loading, data, refetch } = useQuery(BROKER_ALL_TIME_MS, { pollInterval: 20 * 1000 });
 
+    const loaded = useRef(null);
+
     useEffect(() => {
-        if (loading) return;
+        if (loading || loaded.current) return;
 
         if (data.brokers) setBrokerInfo(data.brokers);
+
+        return () => {
+            loaded.current = true;
+        };
     }, [loading, data]);
 
+    useEffect(() => {
+        loaded.current = false;
+    }, []);
+
     console.log('Brokers component: ', brokerInfo);
-    
+
     const isLoading = <div>Loading...</div>
     return(
-        <>
+        <>       
             <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
                 <h2>Brokers</h2>
+                 
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
-                        <Paper 
+                        <Paper
+                          sx={{
+                            p: 3,
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                          elevation={8}>
+                                <RealTimeChart
+                                key = {'BytesInRTC'}
+                                query={ BROKER_BYTES_IN }
+                                metric = {'bytesIn'}
+                                resources = {'topicsBytesIn'}
+                                yLabel={'Bytes In'}
+                                title={'Bytes In Over Time'}
+                                step={'30s'}
+                                labelName={'Topic'}
+                                labelId={'topic'}/>
+                          </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Paper
                           sx={{
                             p: 3,
                             display: "flex",
@@ -40,23 +67,26 @@ function Brokers(){
                           }}
                           elevation={8}>
                             <RealTimeChart
-                                query={ BROKER_BYTES_IN }
-                                metric = {'bytesIn'}
-                                resources = {'topicsBytesIn'}
-                                yLabel={'Bytes Used'}
-                                title={'Bytes In Over Time'}
+                                key = {'BytesOutRTC'}
+                                query={ BROKER_BYTES_OUT }
+                                metric = {'bytesOut'}
+                                resources = {'topicsBytesOut'}
+                                yLabel={'Bytes Out'}
+                                title={'Bytes Out Over Time'}
                                 step={'30s'}
                                 labelName={'Topic'}
                                 labelId={'topic'}/>
                           </Paper>
                     </Grid>
                 </Grid>
+                
+                
 
                 {brokerInfo.length > 0 &&
                 <Grid container spacing={3} sx={{ mt: 1, mb: 4 }}>
-                    {brokerInfo.map(broker => 
+                    {[...brokerInfo].sort((a, b) => a.id - b.id).map(broker =>
                         <Grid key={`$Broker${broker.id}MsMetrics`} item xs={12} md={6}>
-                            <Paper 
+                            <Paper
                                 sx={{
                                   p: 2,
                                   display: "flex",
@@ -79,7 +109,7 @@ function Brokers(){
                                     <Typography color="text.secondary" sx={{ flex: 1 }}>
                                         {'Average time in ms it takes consumers to receive new data'}
                                     </Typography>
-                                </Box>  
+                                </Box>
                                 <Box sx={{p: 2}}>
                                     <Typography component="p" variant="body1">
                                         {`Producer Average Time (ms): ${broker.produceTotalTimeMs ? broker.produceTotalTimeMs.value : 0}`}
@@ -93,11 +123,11 @@ function Brokers(){
                                         {`Time of data: ${broker.produceTotalTimeMs?.time ? broker.produceTotalTimeMs.time : new Date().toLocaleString()}`}
                                     </Typography>
                                 </Box>
-                                
+
                             </Paper>
                         </Grid>)}
                 </Grid> }
-            </Container>   
+            </Container> 
         </>
     );
 }

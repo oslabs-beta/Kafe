@@ -75,6 +75,18 @@ export const BROKER_BYTES_IN = gql`
   }
 `;
 
+export const BROKER_BYTES_OUT = gql`
+  query BytesOutOverTime ($start: String, $end: String, $step: String, $ids: [Int]) {
+    topicsBytesOut: bytesOutPerSecOverTime (start: $start, end: $end, step: $step, ids: $ids) {
+      topic
+      bytesOut: values {
+        time
+        value
+      }
+    }
+  }
+`;
+
 export const GET_DLQ_MESSAGES = gql`
   query getDLQMessages {
     dlqMessages: dlq {
@@ -171,4 +183,4 @@ mutation DeleteTopic($name: String) {
 //     }
 //   }
 // }
-// ` 
+// `
