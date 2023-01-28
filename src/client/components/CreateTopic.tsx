@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { useMutation } from "@apollo/client";
 import { CREATE_TOPIC } from '../queries/graphQL';
 
-function CreateTopic(props) {
+function CreateTopic() {
   const [createTopic, { loading, error, data }] = useMutation(CREATE_TOPIC);
 
-  const onSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit = (e) => {
+    e.preventDefault();
 
     createTopic({
       variables: {
-        name: event.target.name.value,
-        numPartitions: Number(event.target.numPartitions.value),
-        replicationFactor: Number(event.target.replicationFactor.value),
+        name: e.target.name.value,
+        numPartitions: Number(e.target.numPartitions.value),
+        replicationFactor: Number(e.target.replicationFactor.value),
       },
     });
     console.log(data);

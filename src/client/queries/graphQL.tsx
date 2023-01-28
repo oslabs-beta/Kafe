@@ -126,11 +126,9 @@ mutation DeleteTopic($name: String) {
 }
 `;
 
-export const REASSIGN_PARTITIONS = gql`
-mutation DeleteTopic($name: String) {
-  deleteTopic(name: $name) {
-    name
-  }
+export const DELETE_TOPIC_RECORDS = gql`
+mutation Mutation($topic: String) {
+  deleteTopicRecords(topic: $topic)
 }
 `;
 
