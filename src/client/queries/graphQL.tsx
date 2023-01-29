@@ -144,6 +144,7 @@ mutation DeleteTopic($name: String) {
     name
   }
 }
+<<<<<<< HEAD
 `;
 
 // type Query {
@@ -184,3 +185,6 @@ mutation DeleteTopic($name: String) {
 //   }
 // }
 // `
+=======
+`;
+>>>>>>> b8680c6099995c95c6c5b95d04ab85b51d554dd7

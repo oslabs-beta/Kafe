@@ -12,7 +12,6 @@ const ClusterSummary = () => {
     console.log('Cluster Summary component');
     return (
         <>
-            <h4>Cluster Overview</h4>
             <Container maxWidth="xl" sx={{ mt: 4, mb: 4}}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={6}>
