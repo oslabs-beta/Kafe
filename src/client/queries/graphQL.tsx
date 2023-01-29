@@ -144,47 +144,4 @@ mutation DeleteTopic($name: String) {
     name
   }
 }
-<<<<<<< HEAD
 `;
-
-// type Query {
-//   cluster(
-//     start: String,
-//     end: String,
-//     step: String
-//     ): Cluster
-//   brokers(
-//     start: String,
-//     end: String,
-//     step: String,
-//     ids: [Int]): [Broker]!
-//   broker(
-//     start: String
-//     end: String,
-//     step: String,
-//     id: Int): Broker
-//   topics(name: [String]): [Topic]
-//   topic(name: String): Topic
-// }
-
-// type Mutation {
-//   createTopic: Topic
-//   deleteTopic: Topic
-//   reassignPartitions: Partition
-//   deleteTopicRecords: Boolean
-// }
-
-// const tempQuery =   gql`
-// query GetCluster {
-//   cluster {
-//     brokers {
-//       id
-//       host
-//       port
-//     }
-//   }
-// }
-// `
-=======
-`;
->>>>>>> b8680c6099995c95c6c5b95d04ab85b51d554dd7
