@@ -3,7 +3,7 @@ const { Kafka } = require('kafkajs');
 
 const kafka = new Kafka({
     clientId: 'dlq-companion',
-    brokers: ['localhost:9091', 'localhost:9092', 'localhost:9093']
+    brokers: process.env.KAFKA_BROKERS.split(','),
 });
 
 const callbackTest = ((message ) => {

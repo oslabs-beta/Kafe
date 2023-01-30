@@ -380,6 +380,7 @@ const resolvers = {
 
                     consumer.run({
                         eachMessage: async({ topic, partition, message}) => {
+                            console.log('Each messsage callback');
                             DLQMessages.push({
                                 timestamp: new Date(parseInt(message.timestamp)).toLocaleString('en-US', {
                                     timeStyle: "long",
@@ -396,7 +397,7 @@ const resolvers = {
 
                         console.log(DLQMessages);
                         return DLQMessages.reverse();
-                    }, 3000);
+                    }, 5000);
                 });
             } catch(err) {
                 console.log(err);
