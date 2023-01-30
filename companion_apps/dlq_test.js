@@ -1,4 +1,3 @@
-// import { KafeDLQClient } = require('kafe-dlq');
 const { KafeDLQClient } = require('kafe-dlq');
 const { Kafka } = require('kafkajs');
 
@@ -7,12 +6,10 @@ const kafka = new Kafka({
     brokers: ['localhost:9091', 'localhost:9092', 'localhost:9093']
 });
 
-
 const callbackTest = ((message ) => {
   return parseInt(message) > 0;
-})
+});
 
-// console.log(dlq);
 const client = new KafeDLQClient(kafka, callbackTest);
 const testProducer = client.producer();
 
