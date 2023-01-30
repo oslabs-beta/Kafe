@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -44,7 +44,6 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
             };
         });
 
-        // console.log('Row info: ', newRows);
         setRows(newRows);
         setTopics(dlqTopics);
     }, [data]);
@@ -94,7 +93,6 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
         setPage(0);
     };
 
-    console.log(`Filtered row data: `, filteredRows);
     return(
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '99%', mb: 2 }}>
@@ -138,7 +136,6 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
                 />
             </Paper>
         </Box>
-
     );
 };
 
