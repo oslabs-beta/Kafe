@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -94,8 +94,6 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
         setPage(0);
     };
 
-    // console.log('Enhanced table rows: ', rows);
-    // console.log('Enhanced table topics: ', topics);
     console.log(`Filtered row data: `, filteredRows);
     return(
         <Box sx={{ width: '100%' }}>
