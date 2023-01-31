@@ -68,7 +68,7 @@ export const BROKER_BYTES_IN: PromQuery = {
 
 //Broker bytes in over time
 export const BROKER_BYTES_OUT: PromQuery = {
-    name: 'Broker Bytes in Over Time',
+    name: 'Broker Bytes Out Over Time',
     query: 'sum(rate(kafka_server_brokertopicmetrics_bytesoutpersec{topic!="", instance=~"filter"}[60s]))by(topic)',
     type: 'broker'
 };

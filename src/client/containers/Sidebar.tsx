@@ -1,33 +1,37 @@
-import React from 'react';
-import Status from '../components/Status';
+import React, { useState, useEffect } from 'react';
+import { useQuery } from "@apollo/client";
 import Menu from '../components/Menu';
-import { Link } from "react-router-dom";
-import Button from '@mui/material/Button';
+import { CLUSTER_SUMMARY } from '../queries/graphQL'; 
+// For use with logo and icons; yet to be implemented
 import { SvgIcon } from '@mui/material';
 
-const linkStyle = {
-    margin: "5px",
-    padding: "0px 0px 20px 0px",
-    textDecoration: "none",
-    color: 'white',
-    height: '5px'
-  };
-
+//Refactor inline styling
 const divStyle = {
     height: "100vh",
     margin: "0px 0px 0px 10px"
 };
 
-const buttonStyle = {
-    height: "50px"
-};
-
 function Sidebar(){
+
+    let connectStatus = 'Loading';
+    const { loading, data } = useQuery(CLUSTER_SUMMARY);
+    
+    if(!loading) {
+        console.log('status is... ', data);
+        connectStatus = 'Connected';
+    }
+    // if (error) return `Error! ${error.message}`;
+    // check session if dashboard remounts
+
+//   useEffect(() => {
+//     verifyConnection();
+//   }, []); //Run this once at the beginning
+
 
 return(
     <>
+        <div>System Status<br />{connectStatus}</div>
         <div style={divStyle}>
-            <Status />
             <Menu />
         </div>
     </>
@@ -35,5 +39,3 @@ return(
 }
 
 export default Sidebar;
-
-//<Button  variant="contained" sx={{minWidth: 170, maxHeight: 30, margin: "5px", background: "#6599CC"}}><Link to="/" style={linkStyle}>Home</Link></Button>

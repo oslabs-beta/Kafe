@@ -61,6 +61,19 @@ export const typeDefs = `#graphql
     high: String
   }
 
+  type DLQMessage {
+    timestamp: String
+    value: DLQMessageValue
+  }
+
+  type DLQMessageValue {
+    originalTopic: String
+    originalMessage: String
+    clientType: String
+    err: String
+  }
+
+
   type Query {
     cluster(
       start: String,
@@ -84,14 +97,55 @@ export const typeDefs = `#graphql
       topics: [String]
       ids: [Int]
     ): [DataSeries]
-    topics(name: [String]): [Topic]
+    bytesOutPerSecOverTime(
+      start: String
+      end: String
+      step: String
+      topics: [String]
+      ids: [Int]
+    ): [DataSeries]
+    topics: [Topic]
     topic(name: String): Topic
+    dlq: [DLQMessage]
+  }
+
+  type OngoingTopicReassignment {
+    name: String
+    partitions: [OngoingPartitionReassignment]
+  }
+
+  type OngoingPartitionReassignment {
+    partition: Int,
+    replicas: [Int],
+    addingReplicas: [Int]
+    removingReplicas: [Int]
+  }
+
+  input ConfigEntry {
+    name: String!
+    value: String!
+  }
+
+  input PartitionReplicas {
+    partition: Int,
+    replicas: [Int]
+  }
+
+  input PartitionReassignment {
+    topic: String!,
+    partitionAssignment: [PartitionReplicas]
+  }
+
+  input partitionOffset {
+    partition: Int,
+    offset: Int
   }
 
   type Mutation {
-    createTopic: Topic
-    deleteTopic: Topic
-    reassignPartitions: Partition
-    deleteTopicRecords: Boolean
+    createTopic (name: String, numPartitions: Int, replicationFactor: Int, configEntries: [ConfigEntry]): Topic
+    deleteTopic (name: String): Topic
+    reassignPartitions(topics: [PartitionReassignment]): [OngoingTopicReassignment]
+    deleteTopicRecords(topic: String, partitions: [partitionOffset] ): Boolean
   }
 `;
+

@@ -22,7 +22,7 @@ const ApolloServerStart = async() => {
     //create httpServer to handle requests to Express app
     const httpServer = http.createServer(app);
 
-    //create apolo server by passing in schema and resolver
+    //create apollo server by passing in schema and resolver
     const server = new ApolloServer({
         typeDefs,
         resolvers,
@@ -45,6 +45,13 @@ const ApolloServerStart = async() => {
             }
         })
     );
+    // app.get('/*', (req: express.Request, res: express.Response) => {
+    //     res.status(200).sendFile(path.resolve(__dirname, '../client/index.html'));
+    // });
+
+    app.use('*', (req: express.Request, res: express.Response) => {
+        res.status(404).send('Sorry, nothing found at this route...');
+    });
 
     await new Promise<void>((resolve => httpServer.listen({port: PORT}, resolve)));
     console.log(`Server running at port: ${PORT}`);
@@ -55,7 +62,7 @@ const ApolloServerStart = async() => {
     return server;
 }
 
-ApolloServerStart();
+export default ApolloServerStart();
 
 
 

@@ -1,13 +1,15 @@
 import { admin } from './admin';
-import { 
-    ITopicMetadata, 
+import {
+    ITopicMetadata,
     SeekEntry,
-    AssignerProtocol, 
+    AssignerProtocol,
     GroupDescription,
     ITopicConfig,
     ITopicPartitionConfig,
     PartitionReassignment,
-    OngoingTopicReassignment
+    OngoingTopicReassignment,
+    ConfigEntries,
+    ConfigResourceTypes
     } from 'kafkajs';
 
 //CLUSTER ADMIN ACTIONS//
@@ -40,16 +42,16 @@ export const getTopics = async (): Promise<ITopicMetadata[] | undefined> => {
     try {
         const topics = await admin.listTopics();
         const topicData = await admin.fetchTopicMetadata({ topics });
-        
-        console.log('TopicData Before: ', topicData);
-        
+
+        console.log('getTopics action TopicData Before: ', topicData);
+
         for await (const topic of topicData.topics) {
             topic['partitionsCount'] = topic.partitions.length;
             const topicOffsets = await admin.fetchTopicOffsets(topic.name);
             topic['offsets'] = topicOffsets;
         };
 
-        console.log('TopicData After: ', topicData);
+        console.log('getTopics action TopicData After: ', topicData);
         return topicData.topics;
     } catch(err) {
         console.log(err);
@@ -76,21 +78,67 @@ export const getTopic = async (topicName: String) => {
 //   partitions: <array>
 // }
 
-export const createTopics = async (topic: ITopicConfig) => {
+export const createTopic = async (name: string, replicationFactor: number, numPartitions: number, configEntries: ConfigEntries[]) => {
     try {
+        const newTopicOptions = {
+            topic: name,
+            replicationFactor,
+            numPartitions,
+        };
+
+        if (configEntries) newTopicOptions['configEntries'] = configEntries;
+
         const newTopic = await admin.createTopics({
-            topics: [topic]
+            topics: [newTopicOptions]
         });
-        return newTopic;
+
+        if (newTopic) {
+            const newTopicInfo = await admin.fetchTopicMetadata({ topics: [name] });
+            return newTopicInfo.topics[0];
+        };
     } catch(err) {
         console.log(err);
     }
 };
 
-export const deleteTopics = async (topics: string[]): Promise<void> => {
-    await admin.deleteTopics({
-        topics
-    });
+//set server config to enable topic deletion
+export const enableTopicDeletion = async() => {
+    const cluster = await admin.describeCluster();
+    console.log('Enable Topic Deletion ', cluster);
+  await admin.alterConfigs({
+            validateOnly: false,
+            resources: [
+            {
+                type: ConfigResourceTypes.TOPIC,
+                name: cluster.brokers[0].nodeId.toString(),
+                configEntries: [{name: 'delete.topic.enable',  value: 'true'}]
+            }
+            ]});
+//   deleteTopic.resources[0].configEntries[0].configValue === 'true';
+  console.log('which nodeId are we trying to delete from:', cluster.brokers[0].nodeId.toString());
+  return;
+}
+
+export const deleteTopics = async (topics: string[]): Promise<any> => {
+    //enable deletion config
+    
+    try{
+        console.log('List of topics to be deleted: ', topics)
+        const existingtopics = await admin.listTopics();
+        const deletedTopics = await admin.fetchTopicMetadata({ topics: topics });
+
+        console.log('Existing topics: ', existingtopics);
+        console.log('Topics to be deleted: ',  deletedTopics.topics[0]);
+        await admin.deleteTopics({
+            topics
+        });
+
+        return deletedTopics.topics[0];
+
+    } catch(err) {
+        console.log('Delete topics error: ', err)
+    }
+
 };
 
 export const deleteAllTopicRecords = async (topic: string, partitions: SeekEntry[]): Promise<void> => {
@@ -123,6 +171,8 @@ export const reassignPartitions = async (topics: PartitionReassignment[]): Promi
             topics
         });
         const result = await admin.listPartitionReassignments({});
+
+        console.log('Admin reassignPartitions result: ', result);
         return result.topics;
     } catch(err) {
         console.log(err);
@@ -157,3 +207,4 @@ export const deleteConsumers = async (consumer: string[]): Promise<void> => {
         console.log('Groups that failed deletion: ', err.groups);
     }
 }
+
