@@ -30,16 +30,6 @@ const kafka = new Kafka({
     logLevel: logLevel.ERROR
 });
 
-const consumerMap = new Map();
-// const consumer = client.consumer({ groupId: 'DLQConsumer' });
-
-var i: any;
-for (i = 1; i < 7; i++) {
-    consumerMap.set(i, kafka.consumer({ groupId: 'DLQConsumer', maxWaitTimeInMs: 7000}))
-};
-
-i = 1;
-
 const resolvers = {
     Cluster: {
         underreplicatedPartitionsCount: async(parent, args, { dataSources }): Promise <Number> => {
@@ -65,7 +55,7 @@ const resolvers = {
         activeControllersCount: async(parent, args, { dataSources }): Promise<Number> => {
             try {
                 const activeControllers = await dataSources.prometheusAPI.instanceQuery(ACTIVE_CONTROLLER_COUNT);
-                console.log('Active controllers count resolver result: ', activeControllers);
+                // console.log('Active controllers count resolver result: ', activeControllers);
                 const activeControllersCount = activeControllers.length ? Number(activeControllers[0].value) : 0;
                 return activeControllersCount;
             } catch(err) {
@@ -90,7 +80,6 @@ const resolvers = {
             try {
                 const data = await dataSources.prometheusAPI.instanceQuery(UNDER_REPLICATED_PARTITIONS_COUNT, [parent.id]);
 
-                console.log('underreplicatedPartitionsCount resolver result: ', data);
                 return Number(data[0].value);
             } catch(err) {
                 console.log('Error occurred in underreplicatedPartitiionsCount resolver: ', err);
@@ -106,7 +95,6 @@ const resolvers = {
                     parent.step ? parent.step : '60s',
                     [parent.id]);
 
-                console.log('cpuUsage resolver result: ', cpuUsage);
                 return cpuUsage[0].values;
             } catch(err){
                 console.log('Error occurred in CPUUsageOverTime resolver: ', err)
@@ -122,7 +110,7 @@ const resolvers = {
                     parent.end ? parent.end : new Date().toString(),
                     parent.step ? parent.step : '60s',
                     [parent.id]);
-                console.log('JVM resolver returned result: ', brokerMemoryUsage);
+
                 return brokerMemoryUsage[0].values;
             } catch(err) {
                 console.log('Error occurred in JVMMemoryUsedOverTime resolver: ', err);
@@ -166,7 +154,6 @@ const resolvers = {
                     parent.step ? parent.step : '60s',
                     [parent.id]);
 
-                console.log('bytesInPerSecOverTime Resolver Result', brokerBytesInOverTime);
                 return brokerBytesInOverTime;
 
             } catch(err) {
@@ -256,8 +243,8 @@ const resolvers = {
                     broker['end'] = end;
                     broker['step'] = step;
                 });
-            }
-            console.log('Cluster query: ', cluster)
+            };
+            // console.log('Cluster query: ', cluster);
             return cluster;
         },
 
@@ -273,7 +260,7 @@ const resolvers = {
                         broker['end'] = end;
                         broker['step'] = step;
                     })
-                }
+                };
 
                 if (ids) brokers = brokers.filter(broker => ids.includes(broker.id));
                 return brokers;
@@ -286,7 +273,7 @@ const resolvers = {
             try {
                 const clusterInfo = await adminActions.getClusterInfo();
                 const broker = await clusterInfo.brokers.filter(broker => broker.id === id)[0];
-                console.log('Broker query: ', broker);
+                // console.log('Broker query: ', broker);
 
                 if (!broker) throw new Error('No broker with that found');
 
@@ -361,7 +348,6 @@ const resolvers = {
         topics: async(): Promise<any> => {
             try {
                 const topics = await adminActions.getTopics();
-
                 return topics;
             } catch(err) {
                 console.log(err);
@@ -385,19 +371,16 @@ const resolvers = {
                 
                 if (errorMessage) throw new Error(errorMessage);
     
-                // const consumer = consumerMap.get(i);
                 const consumer = kafka.consumer({ groupId: 'DLQConsumer', maxWaitTimeInMs: 7000});
-                ++i;
-                if (i > 6) i = 1;
-                const consumerNumber = i === 1? 6 : i - 1;
     
                 return new Promise((resolve, reject) => {
                     const DLQMessages = [];
                     consumer.connect()
-                    console.log(`dlq resolver consumer${consumerNumber} connected...`);
-                    consumer.subscribe({ topics: ['DeadLetterQueue'], fromBeginning: true })
+                    consumer.subscribe({ topics: ['DeadLetterQueue'], fromBeginning: true });
+
                     consumer.run({
                         eachMessage: async({ topic, partition, message}) => {
+                            console.log('Each messsage callback');
                             DLQMessages.push({
                                 timestamp: new Date(parseInt(message.timestamp)).toLocaleString('en-US', {
                                     timeStyle: "long",
@@ -409,9 +392,9 @@ const resolvers = {
                         },
                     });
                     setTimeout(() => {
-                        console.log(`consumer${consumerNumber} disconnecting...`);
                         consumer.disconnect();
                         resolve(DLQMessages);
+
                         console.log(DLQMessages);
                         return DLQMessages.reverse();
                     }, 5000);

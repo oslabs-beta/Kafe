@@ -89,7 +89,6 @@ const BarChart = ({ dlqData, label }) => {
     setBackgroundColor(colors);
   }, [validDLQ])
 
-  console.log('validDLQ', validDLQ);
 return(
     <>
       <div>

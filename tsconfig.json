@@ -1,12 +1,18 @@
 {
     "compilerOptions": {
-      "target": "es2016",
+      "target": "es2018",
+      "module": "esnext",
       "lib": ["dom", "dom.iterable", "esnext", "ES2021.String"],
       "esModuleInterop": true,
       "moduleResolution": "node",
       "allowSyntheticDefaultImports": true,
       "jsx": "react",
       "outDir": "build"
+    },
+    "ts-node": {
+      "compilerOptions": {
+        "module": "commonjs",
+      },
     },
     "include": ["src", "/**/*.ts"],
     "exclude": ["node_modules", "./lib/__tests__"]

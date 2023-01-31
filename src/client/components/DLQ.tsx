@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { GET_DLQ_MESSAGES } from '../queries/graphQL';
 import { useQuery } from "@apollo/client";
 import EnhancedTable from './EnhancedTable';
@@ -80,7 +80,7 @@ const DLQ = (props) => {
 
     const removeMessageHandler = (indices: number[]) => {
         if (!indices.length) return;
-        console.log('selected row/rows:', indices);
+        
         indices.sort((a, b) => b - a);
 
         setDLQ((dlq) => {
@@ -90,7 +90,7 @@ const DLQ = (props) => {
             };
             //delete functionality
             dlqRef.current = newDLQ;
-            console.log('newDLQ after splice',newDLQ);
+            
             sessionStorage.setItem('DLQMessages', JSON.stringify(newDLQ));
             return newDLQ;
         });
@@ -105,9 +105,6 @@ const DLQ = (props) => {
         });
     };
 
-    // console.log('Data: ', data);
-    // console.log('Current DLQ: ', dlq);
-    // console.log('PieChartData: ', pieChartData);
     return (
         <>
             <div>Dead Letter Queue Component</div>

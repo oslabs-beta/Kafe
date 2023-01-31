@@ -44,7 +44,6 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
             };
         });
 
-        // console.log('Row info: ', newRows);
         setRows(newRows);
         setTopics(dlqTopics);
     }, [data]);
@@ -94,9 +93,6 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
         setPage(0);
     };
 
-    // console.log('Enhanced table rows: ', rows);
-    // console.log('Enhanced table topics: ', topics);
-    console.log(`Filtered row data: `, filteredRows);
     return(
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '99%', mb: 2 }}>
@@ -140,7 +136,6 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
                 />
             </Paper>
         </Box>
-
     );
 };
 
