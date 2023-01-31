@@ -35,7 +35,6 @@ function Brokers(){
     return(
         <>       
             <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
-                <h2>Brokers</h2>
                  
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
