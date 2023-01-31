@@ -31,7 +31,8 @@
     "style-loader": "^3.3.1",
     "supertest": "^6.3.3",
     "ts-loader": "^9.4.1",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "webpack-bundle-analyzer": "^4.7.0"
   },
   "dependencies": {
     "@apollo/client": "^3.7.1",

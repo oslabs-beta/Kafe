@@ -1,6 +1,12 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 import { LIST_TOPICS } from '../queries/graphQL';
+import CreateTopic from './CreateTopic';
+import DeleteTopic from './DeleteTopic';
+
+import PaperStyles from "./common/Paper";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 function ListTopics() {
   const { loading, data } = useQuery(LIST_TOPICS, { pollInterval: 20 * 1000 });
@@ -14,17 +20,20 @@ function ListTopics() {
 
   return (
     <div>
-      <div>Topics</div>
-      {data.topics.map((el) => (
-        <>
-          <ul>
-            <li>{el.name}, {el.partitionsCount}</li>
-          </ul>
-        </>
-      ))}
+      <h4>Topics</h4>
+      <CreateTopic />
+      <DeleteTopic />
     </div>
   );
 }
 
 
 export default ListTopics;
+
+// {data.topics.map((el) => (
+//         <>
+//           <ul>
+//             <li>{el.name}, {el.partitionsCount}</li>
+//           </ul>
+//         </>
+//       ))}
