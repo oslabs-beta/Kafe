@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './containers/Dashboard';
-import Main from './containers/Main';
 import Brokers from './components/Brokers';
 import Consumers from './components/Consumers';
 import ListTopics from './components/ListTopics';
@@ -18,19 +17,19 @@ const App = () => {
 
     return (
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Dashboard />}>
-              <Route index element={<Main />}></Route>
-              <Route path="overview" element={<ClusterSummary/>}></Route>
-              <Route path="brokers" element={<Brokers />}></Route>
-              <Route path="consumers" element={<Consumers />}></Route>
-              <Route path="listtopics" element={<ListTopics />}></Route>
-              <Route path="createtopic" element={<CreateTopic />}></Route>
-              <Route path="deletetopic" element={<DeleteTopic />}></Route>
-              <Route path="partitions" element={<Partitions />}></Route>
-              <Route path="dlq" element={<DLQ />}></Route>
-            </Route>
-          </Routes>
+            <Routes>
+              <Route path="/" element={<Dashboard />}>
+                {/* <Route index element={<Main />}></Route> */}
+                <Route path="overview" element={<ClusterSummary/>}></Route>
+                <Route path="brokers" element={<Brokers />}></Route>
+                <Route path="consumers" element={<Consumers />}></Route>
+                <Route path="listtopics" element={<ListTopics />}></Route>
+                <Route path="createtopic" element={<CreateTopic />}></Route>
+                <Route path="deletetopic" element={<DeleteTopic />}></Route>
+                <Route path="partitions" element={<Partitions />}></Route>
+                <Route path="dlq" element={<DLQ />}></Route>
+              </Route>
+            </Routes>
         </BrowserRouter>
     )
 };
