@@ -19,7 +19,7 @@ testProducer.connect()
     messages: [{key: '1', value: '1'}, {key: '2', value: '2'}, {key: '3', value: '3'}]
   }))
   .then(() => testProducer.send({
-    topic: 'goodmonkey1',
+    topic: 'goodmonkey',
     messages: [{key: '1', value: '-666'}, {key: '2', value: '-666'}, {key: '3', value: '3'}]
   }))
   // .then(() => testProducer.send({

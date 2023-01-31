@@ -121,7 +121,7 @@ export const enableTopicDeletion = async() => {
 
 export const deleteTopics = async (topics: string[]): Promise<any> => {
     //enable deletion config
-    
+
     try{
         console.log('List of topics to be deleted: ', topics)
         const existingtopics = await admin.listTopics();
@@ -195,7 +195,6 @@ export const getConsumerGroups = async (): Promise<GroupDescription[]> => {
         });
         consumerGroupsDecoded.push(group);
     });
-
     return consumerGroupsDecoded;
 };
 

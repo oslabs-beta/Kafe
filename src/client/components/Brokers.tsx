@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useQuery } from "@apollo/client";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import RealTimeChart from '../graphs/RealTimeChart';
+
+const RealTimeChart = React.lazy(() => import('../graphs/RealTimeChart'));
+// import RealTimeChart from '../graphs/RealTimeChart';
 
 import { BROKER_ALL_TIME_MS, BROKER_BYTES_IN, BROKER_BYTES_OUT } from '../queries/graphQL';
 
@@ -33,9 +35,9 @@ function Brokers(){
 
     const isLoading = <div>Loading...</div>
     return(
-        <>       
+        <>
             <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
-                 
+
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
                         <Paper
@@ -45,6 +47,7 @@ function Brokers(){
                             flexDirection: "column",
                           }}
                           elevation={8}>
+                             <Suspense fallback={<div>Loading...</div>}>
                                 <RealTimeChart
                                 key = {'BytesInRTC'}
                                 query={ BROKER_BYTES_IN }
@@ -55,6 +58,7 @@ function Brokers(){
                                 step={'30s'}
                                 labelName={'Topic'}
                                 labelId={'topic'}/>
+                             </Suspense>
                           </Paper>
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -65,21 +69,23 @@ function Brokers(){
                             flexDirection: "column",
                           }}
                           elevation={8}>
-                            <RealTimeChart
-                                key = {'BytesOutRTC'}
-                                query={ BROKER_BYTES_OUT }
-                                metric = {'bytesOut'}
-                                resources = {'topicsBytesOut'}
-                                yLabel={'Bytes Out'}
-                                title={'Bytes Out Over Time'}
-                                step={'30s'}
-                                labelName={'Topic'}
-                                labelId={'topic'}/>
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <RealTimeChart
+                                    key = {'BytesOutRTC'}
+                                    query={ BROKER_BYTES_OUT }
+                                    metric = {'bytesOut'}
+                                    resources = {'topicsBytesOut'}
+                                    yLabel={'Bytes Out'}
+                                    title={'Bytes Out Over Time'}
+                                    step={'30s'}
+                                    labelName={'Topic'}
+                                    labelId={'topic'}/>
+                            </Suspense>
                           </Paper>
                     </Grid>
                 </Grid>
-                
-                
+
+
 
                 {brokerInfo.length > 0 &&
                 <Grid container spacing={3} sx={{ mt: 1, mb: 4 }}>
@@ -126,7 +132,7 @@ function Brokers(){
                             </Paper>
                         </Grid>)}
                 </Grid> }
-            </Container> 
+            </Container>
         </>
     );
 }
