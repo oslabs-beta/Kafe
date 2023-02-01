@@ -62,7 +62,7 @@ function KafkaTree() {
   return (
     <>
        <Container maxWidth="xl" sx={{ mt: 2, mb: 4 , height: '100vh'}}>
-        <Grid container spacing={3} sx={{height: '100%'}} ref={containerRef}>
+        <Grid container spacing={3} sx={{height: '100%'}} ref={containerRef} className="rd3t-wrapper">
           <Tree 
             data = {treeData} 
             orientation = "vertical"
