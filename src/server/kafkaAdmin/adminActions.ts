@@ -49,6 +49,7 @@ export const getTopics = async (): Promise<ITopicMetadata[] | undefined> => {
             topic['partitionsCount'] = topic.partitions.length;
             const topicOffsets = await admin.fetchTopicOffsets(topic.name);
             topic['offsets'] = topicOffsets;
+            console.log(topic.partitions);
         };
 
         console.log('getTopics action TopicData After: ', topicData);

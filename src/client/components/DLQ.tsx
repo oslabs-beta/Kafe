@@ -31,7 +31,6 @@ const DLQ = (props) => {
         if (dlqMessages?.length){
             dlqMessages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
             dlqRef.current = dlqMessages;
-
             setDLQ(dlqMessages);
         };
 
