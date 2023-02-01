@@ -1,0 +1,14 @@
+.node__root > circle {
+    fill: red;
+};
+  
+g.rd3t-node node__branch > circle {
+    fill: rgb(0, 140, 255) !important;
+};
+  
+g.node__leaf > circle {
+    fill: rgb(255, 255, 255);
+    stroke: #10e256;
+}
+
+.rd3t-label { translate: -10px 10px !important; font-size: 13px; }

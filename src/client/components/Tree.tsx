@@ -6,7 +6,7 @@ import Tree from 'react-d3-tree';
 import { useQuery } from "@apollo/client";
 import { TREE_DATA } from '../queries/graphQL';
 import { useCenteredTree } from '../utils/treeHelper';
-
+import './tree.css';
 
 //attributes rendered as a list of secondary labels
 function KafkaTree() {
@@ -23,7 +23,11 @@ function KafkaTree() {
   }, [loading, data])
 
   function generateTree(brokerData) {
-    const treeData = { name: 'Cluster', children: [] };
+    const treeData = { 
+      name: 'Cluster', 
+      children: [],
+    };
+
     const { brokerCount }  = brokerData.cluster;
 
     if (brokerCount === 0) return treeData;
@@ -63,6 +67,9 @@ function KafkaTree() {
             data = {treeData} 
             orientation = "vertical"
             translate={translate}
+            rootNodeClassName="node__root"
+            branchNodeClassName="node__branch"
+            leafNodeClassName="node__leaf"
             />
         </Grid>
        </Container>
