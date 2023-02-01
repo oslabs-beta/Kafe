@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import { LIST_TOPICS } from '../queries/graphQL';
 import CreateTopic from './CreateTopic';
 import DeleteTopic from './DeleteTopic';
+import TopicRecordDelete from './TopicRecordDelete';
 
 import PaperStyles from "./common/Paper";
 import Box from "@mui/material/Box";
@@ -21,8 +22,16 @@ function ListTopics() {
   return (
     <div>
       <h4>Topics</h4>
+      {data.topics.map((el) => (
+        <>
+          <ul>
+            <li>{el.name}, {el.partitionsCount}</li>
+          </ul>
+        </>
+      ))}
       <CreateTopic />
       <DeleteTopic />
+      <TopicRecordDelete />
     </div>
   );
 }
@@ -30,10 +39,3 @@ function ListTopics() {
 
 export default ListTopics;
 
-// {data.topics.map((el) => (
-//         <>
-//           <ul>
-//             <li>{el.name}, {el.partitionsCount}</li>
-//           </ul>
-//         </>
-//       ))}
