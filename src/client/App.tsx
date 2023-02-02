@@ -10,13 +10,13 @@ import TopicRecordDelete from './components/TopicRecordDelete';
 import Partitions from './components/Partitions';
 import ClusterSummary from './components/ClusterSummary';
 import DLQ from './components/DLQ';
-import { useQuery } from "@apollo/client"
 
 
 const App = () => {
   //  Refactor based on final UI decisions and make DRY; see Studify for examples; consider conditional rendering of buttons based on confirmed connection to brokers
 
     return (
+      <div>
         <BrowserRouter>
             <Routes>
               <Route path="/" element={<Dashboard />}>
@@ -32,6 +32,7 @@ const App = () => {
               </Route>
             </Routes>
         </BrowserRouter>
+        </div>
     )
 };
 

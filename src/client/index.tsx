@@ -44,15 +44,24 @@ const theme = createTheme({
         '"Apple Color Emoji"',
         '"Segoe UI Emoji"',
       ].join(','),
+      allVariants: {
+        color: "palette.primary.main"
+      },
     },
   });
 
+// const containerStyle = {
+//     height: 100%
+//  }
+
 root.render(
+  <div id='containerStyle'>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <ApolloProvider client={client}>
-        <App />
+        <App/>
       </ApolloProvider>
     </ThemeProvider>
+    </div>
 )
 

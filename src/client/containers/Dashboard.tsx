@@ -11,16 +11,15 @@ import ClusterSummary from '../components/ClusterSummary'
 function Dashboard(){
 return(
     <>
-        <Grid container spacing={2} sx={{ minHeight: '100%'}}>
+        <Grid container spacing={2} sx={{ minHeight:'100%'}}>
             <Grid item md={12} sx={{ minHeight: '120px'}}>
                 <Header />
             </Grid>
             <Grid item md={12} sx={{ background: 'linear-gradient(to top, #CCE1EB, white)', minHeight: '120px'}}>
                 <Navbar />
             </Grid>
-            <Grid item md={12} sx={{ bgcolor: 'primary.light', minheight: 'viewport' }}>
+            <Grid item md={12} sx={{ bgcolor: 'primary.light', minheight: '800px' }}>
                 <Main />
-                <ClusterSummary />
             </Grid>
         </Grid>
     </>

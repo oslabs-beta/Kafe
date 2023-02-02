@@ -4,23 +4,26 @@ import { Link } from "react-router-dom";
 import Button, { buttonClasses } from '@mui/material/Button';
 import { useQuery } from "@apollo/client";
 import { CLUSTER_SUMMARY } from '../queries/graphQL'; 
+import Grid from '@mui/material/Grid';
+
 
 const linkStyle = {
     display: 'flex',
     padding: "0px 0px 20px 0px",
     textDecoration: "none",
-    color: '#71ABC5',
-    height: '10px',
+    height: '20px',
+    backgroundColor: 'none'
   };
 
-const btnStyle = {minWidth: 150, 
+  // '#71ABC5'
+const btnStyle = {
+    minWidth: 150, 
+    size: 'large',
     margin: "0px",
     textAlign:"right",
     textTransform: 'unset',
-    color: 'palette.primary.dark',
+    color: 'primary.main',
     };
-
-    //btnStyle[backgroundColor] = 'palette.primary.dark'
  
 const ButtonBar = () => {
 
@@ -34,8 +37,8 @@ const ButtonBar = () => {
     
     const [selected, setSelected] = useState(false);
 
-    const menuItems = [  "Brokers", "Consumers", "List Topics", "Partitions", "Dead Letter Queue"];
-    const menuRoutes = [ "/brokers", "/consumers","/listtopics", "/partitions", "/dlq"];
+    const menuItems = [ "Overview", "Brokers", "Consumers", "List Topics", "Partitions", "Dead Letter Queue"];
+    const menuRoutes = ["/overview", "/brokers", "/consumers","/listtopics", "/partitions", "/dlq"];
 
    const handleClick = () => {
     setSelected(true);
@@ -44,12 +47,12 @@ const ButtonBar = () => {
     let selectedBorder = (selected)=>{
         let fill = selected
         if(fill) {
-            const btnStyle = {minWidth: 150, 
+            const btnStyle = {
+                minWidth: 150, 
                 margin: "0px",
+                border: 5,
                 textAlign:"right",
                 textTransform: 'unset',
-                color: 'palette.primary.dark',
-                border: 5
                 };
         }
 }
@@ -77,6 +80,7 @@ const ButtonBar = () => {
     })
 
     return (
+        <Grid>
         <Stack 
         direction="row" 
         spacing={5} 
@@ -84,6 +88,7 @@ const ButtonBar = () => {
             <Button sx={btnStyle}>Kafka Cluster is {connectStatus}</Button>
             {menuBtns}
         </Stack>
+        </Grid>
     )
 }
  
