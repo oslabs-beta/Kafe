@@ -1,6 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@mui/material/styles';
 import { Card, CardActions, CardContent, Button, Paper } from '@material-ui/core';
+import { useMutation } from "@apollo/client";
+import { DELETE_TOPIC } from '../queries/graphQL';
 
 const useStyles = makeStyles({
   root: {
@@ -11,9 +13,17 @@ const useStyles = makeStyles({
 
 const TopicActions = () => {
   const classes = useStyles();
+  const [deleteTopic, { loading, error, data }] = useMutation(DELETE_TOPIC);
 
-  const handleDeleteTopic = () => {
-    // handle delete topic action
+  const handleDeleteTopic = (e) => {
+    e.preventDefault();
+
+    deleteTopic({
+      variables: {
+        name: e.target.name.value,
+      },
+    });
+    console.log(data);
   };
 
   const handleDeleteMessages = () => {
@@ -31,9 +41,9 @@ const TopicActions = () => {
           <p>Choose an action for this topic:</p>
         </CardContent>
         <CardActions>
-          <Button size="small" color="secondary">Delete Topic</Button>
-          <Button size="small" color="secondary">Delete Messages</Button>
-          <Button size="small">Reassign Partitions</Button>
+        <Button size="small" color="secondary" onClick={handleDeleteTopic}>Delete Topic</Button>
+          <Button size="small" color="secondary" onClick={handleDeleteMessages}>Delete Messages</Button>
+          <Button size="small" onClick={handleReassignPartitions}>Reassign Partitions</Button>
         </CardActions>
       </Card>
     </Paper>
