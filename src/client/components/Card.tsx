@@ -1,26 +1,31 @@
 import React from 'react';
 import { makeStyles } from '@mui/material/styles';
-import { Card, CardActions, CardContent, Button, Paper } from '@material-ui/core';
+import { Card, CardActions, CardContent, Button, Paper } from '@mui/material';
 import { useMutation } from "@apollo/client";
 import { DELETE_TOPIC } from '../queries/graphQL';
+import { ALTER_PARTITION_REASSIGNMENTS } from '../queries/graphQL';
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    margin: '10px 0',
-  },
-});
+// const useStyles = makeStyles({
+//   root: {
+//     width: '100%',
+//     margin: '10px 0',
+//   },
+// });
 
-const TopicActions = () => {
-  const classes = useStyles();
+const CardComponent = (props) => {
+  // const classes = makeStyles();
+
+  const topic = props.topic;
+
   const [deleteTopic, { loading, error, data }] = useMutation(DELETE_TOPIC);
+  const [alterPartitionReassignments] = useMutation(ALTER_PARTITION_REASSIGNMENTS);
 
   const handleDeleteTopic = (e) => {
     e.preventDefault();
 
     deleteTopic({
       variables: {
-        name: e.target.name.value,
+        name: topic,
       },
     });
     console.log(data);
@@ -31,14 +36,22 @@ const TopicActions = () => {
   };
 
   const handleReassignPartitions = () => {
-    // handle reassign partitions action
+    alterPartitionReassignments({
+      variables: {
+        topics: [{ topic }],
+        timeout: 60000
+      }
+    });
   };
 
   return (
-    <Paper className={classes.root}>
+    <Paper>
       <Card>
         <CardContent>
           <p>Choose an action for this topic:</p>
+          {loading && <p>Loading...</p>}
+          {error && <p>Error: {error.message}</p>}
+          {data && <p>Processed!</p>}
         </CardContent>
         <CardActions>
         <Button size="small" color="secondary" onClick={handleDeleteTopic}>Delete Topic</Button>
@@ -50,4 +63,4 @@ const TopicActions = () => {
   );
 };
 
-export default TopicActions;
+export default CardComponent;
