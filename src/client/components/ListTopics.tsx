@@ -13,7 +13,7 @@ function ListTopics() {
   const { loading, data } = useQuery(LIST_TOPICS, { pollInterval: 20 * 1000 });
   
 
-  console.log('data is: ', data);
+  // console.log('data is: ', data);
 
   if (loading) {
     return <div>Loading...</div>;

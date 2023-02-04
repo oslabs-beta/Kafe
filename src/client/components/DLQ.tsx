@@ -2,10 +2,9 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { GET_DLQ_MESSAGES } from '../queries/graphQL';
 import { useQuery } from "@apollo/client";
 import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import EnhancedTable from './EnhancedTable';
-// import PieChart from '../graphs/PieChart';
-// import BarChart from '../graphs/BarChart';
 const PieChart = React.lazy(() => import('../graphs/PieChart'));
 const BarChart = React.lazy(() => import('../graphs/BarChart'));
 
@@ -109,48 +108,53 @@ const DLQ = (props) => {
     return (
         <>
             <div>Dead Letter Queue Component</div>
-            {dlq.length > 0 && <EnhancedTable
+            {dlq.length > 0 && 
+            <EnhancedTable 
                             data={dlq}
                             headers={['Time of Error', 'Original Message', 'Original Topic', 'Client Type', 'Error Message']}
                             removeMessageHandler={removeMessageHandler}
                             reverseOrderHandler={reverseOrderHandler}
                             order={order}
-                            setOrder={setOrder}/>}
+                            setOrder={setOrder}/>
+            }
             {dlq.length > 0 &&
-            <Grid container spacing={3} sx={{mb: 3}}>
-                 <Grid item xs={12} md={6}>
-                     <Paper
-                       sx={{
-                         p: 3,
-                         display: "flex",
-                         flexDirection: "column",
-                       }}
-                       elevation={8}>
+            <Container maxWidth="xl" sx={{ mt: 4, mb: 4}}> 
+                <Grid container spacing={3} sx={{mb: 3}}>
+                     <Grid item xs={12} md={6}>
+                         <Paper
+                           sx={{
+                             p: 3,
+                             display: "flex",
+                             flexDirection: "column",
+                           }}
+                           elevation={8}>
                             <Suspense fallback={<div>Loading...</div>}>
                                 <PieChart
                                    label={'Failed Messages by Original Topic'}
                                    labels={Object.keys(pieChartData)}
                                    data = {Object.values(pieChartData)}/>
                             </Suspense>
+                        </Paper>   
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                       <Paper
+                          sx={{
+                            p: 3,
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                          elevation={8}
+                          style={{height: '100%'}}
+                          >
+                           <Suspense fallback = {<div>Loading...</div>}>
+                               <BarChart
+                                   dlqData = {dlq}
+                                   label={'Messages by Topic Over Time'}/>
+                           </Suspense>
                        </Paper>
-
-                 </Grid>
-                 <Grid item xs={12} md={6}>
-                    <Paper
-                       sx={{
-                         p: 3,
-                         display: "flex",
-                         flexDirection: "column",
-                       }}
-                       elevation={8}>
-                        <Suspense fallback = {<div>Loading...</div>}>
-                            <BarChart
-                                dlqData = {dlq}
-                                label={'Messages by Topic Over Time'}/>
-                        </Suspense>
-                    </Paper>
-                 </Grid>
-            </Grid>}
+                    </Grid>
+                </Grid>
+            </Container>}
         </>
     )
 };

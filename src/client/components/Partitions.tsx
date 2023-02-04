@@ -1,27 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { ALTER_PARTITION_REASSIGNMENTS, LIST_TOPICS } from '../queries/graphQL';
 
 const ReassignPartitions = () => {
   const [selectedTopic, setSelectedTopic] = useState(null);
-  const [timeout, setTimeout] = useState(null);
+  const [targetPartition, setTargetPartition] = useState(null);
+  const [targetReplicas, setTargetReplicas] = useState(null);
 
-  const { data, loading, error } = useQuery(LIST_TOPICS);
-  const [alterPartitionReassignments] = useMutation(
+  const { data: listData, loading: listLoading, error: listError } = useQuery(LIST_TOPICS);
+  const [alterPartitionReassignments, { data: alterData, loading: alterLoading, error: alterError }] = useMutation(
     ALTER_PARTITION_REASSIGNMENTS
   );
 
   const handleSubmit = (e) => {
     e.preventDefault();
     alterPartitionReassignments({
-      variables: { topics: [selectedTopic], timeout },
+      variables: { 
+        topics: [{ topic: selectedTopic, partitionAssignment: [{ partition: targetPartition, replicas: [{targetReplicas}] }] }]
+      },
     });
+    console.log("alterData is...", alterData, 'background: #222; color: #bada55');
   };
+  
 
-  console.log(data);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  if (listLoading) return <p>Loading...</p>;
+  if (listError) return <p>Error :(</p>;
 
   return (
     <div>
@@ -34,21 +37,31 @@ const ReassignPartitions = () => {
           onChange={(e) => setSelectedTopic(e.target.value)}
         >
           <option value="">Select a topic...</option>
-          {data &&
-            data.topics.map((topic) => (
+          {listData &&
+            listData.topics.map((topic) => (
               <option key={topic.name} value={topic.name}>
                 {topic.name}
               </option>
             ))}
         </select>
-        <label htmlFor="timeout">Timeout:</label>
+        <label htmlFor="targetPartition">Target Partition:</label>
         <input
           type="number"
-          id="timeout"
-          value={timeout}
-          onChange={(e) => setTimeout(e.target.value)}
+          id="targetPartition"
+          value={targetPartition}
+          onChange={(e) => setTargetPartition(e.target.value)}
+        />
+        <label htmlFor="targetReplicas">Target Replicas:</label>
+        <input
+          type="number"
+          id="targetReplicas"
+          value={targetReplicas}
+          onChange={(e) => setTargetReplicas(e.target.value)}
         />
         <button type="submit">Reassign Partitions</button>
+        {alterLoading && <p>Loading...</p>}
+        {alterError && <p>Error: {alterError.message}</p>}
+        {alterData && <p>Partitions/Replicas Reassigned!</p>}
       </form>
     </div>
   );

@@ -6,6 +6,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Card from './Card';
+import ReassignPartitions from './Partitions';
 
 function TopicManager() {
     const { loading: loadingListTopics, data: dataListTopics } = useQuery(LIST_TOPICS, { pollInterval: 60 * 1000 });
@@ -14,6 +15,8 @@ function TopicManager() {
   if (loadingListTopics) {
     return <div>Loading...</div>;
   }
+
+  // console.log("  IN TOPICMANAGER: TOPIC DATA IS:  ",dataListTopics);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -58,6 +61,9 @@ function TopicManager() {
               </Grid>
             </Grid>
       </Container>
+      <ReassignPartitions />
+      <br />
+      <br />
     </div>
   );
 }

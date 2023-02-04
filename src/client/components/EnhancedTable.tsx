@@ -133,6 +133,7 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
                     rowsPerPage={rowsPerPage}
                     onPageChange={pageChangeHandler}
                     onRowsPerPageChange={rowsPerPageChangeHandler}
+                    sx={{mr: 13}}
                 />
             </Paper>
         </Box>

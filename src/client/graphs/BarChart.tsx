@@ -109,7 +109,6 @@ return(
             <MenuItem value={10}>Ten</MenuItem>
           </Select>
         </FormControl>
-        Bar Chart
       </div>
       {Object.keys(validDLQ).length > 0 ?
         <Bar
@@ -122,7 +121,7 @@ return(
               borderColor: backgroundColor,
               borderWidth: 1,
             }],
-        }}
+          }}
         /> :
         <div>{`Nice, no failed messages in the last ${timeInput} minute(s)!`}</div>}
     </>

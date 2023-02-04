@@ -11,24 +11,23 @@ import { CLUSTER_SUMMARY, BROKERS_CPU_USAGE, BROKER_JVM_MEMORY_USAGE } from '../
 
 const ClusterSummary = () => {
     console.log('Cluster Summary component');
-    const [cluster, setCluster] = useState([]);
     const [brokerCount, setBrokerCount] = useState(0);
-    const[underreplicatedPartitionsCount, setUnderreplicatedPartitionsCount] = useState(0);
+    const [underreplicatedPartitionsCount, setUnderreplicatedPartitionsCount] = useState(0);
     const [offlinePartitionsCount, setOfflinePartitionsCount] = useState(0);
     const [underMinISRCount, setUnderMinISRCount] = useState(0);
-    const [activeControllerCount, setActiveControllerCount] = useState(0);
+    const [activeControllersCount, setActiveControllersCount] = useState(0);
     const { loading, data, refetch } = useQuery(CLUSTER_SUMMARY, { pollInterval: 60 * 1000 });
    
     useEffect(()=> {
       if (loading) return;
       if (data.cluster) {
-        const { brokerCount, activeControllerCount, underreplicatedPartitionsCount, offlinePartitionsCount, underMinISRCount } = data.cluster;
+        const { brokerCount, activeControllersCount, underreplicatedPartitionsCount, offlinePartitionsCount, underMinISRCount } = data.cluster;
         
         if (brokerCount !== null) setBrokerCount(brokerCount);
         if (underreplicatedPartitionsCount !== null) setUnderreplicatedPartitionsCount(underreplicatedPartitionsCount);
-        // if (activeControllerCount !== null) setBrokerCount(activeControllerCount);
-        // if (brokerCount) setBrokerCount(brokerCount);
-        // if (brokerCount) setBrokerCount(brokerCount);
+        if (activeControllersCount !== null) setActiveControllersCount(activeControllersCount);
+        if (underMinISRCount !== null) setUnderMinISRCount(underMinISRCount);
+        if (offlinePartitionsCount) setOfflinePartitionsCount(brokerCount);
       }
 
     },[loading, data]);
@@ -86,7 +85,7 @@ const ClusterSummary = () => {
             
           <Container maxWidth="xl" sx={{ mt: 4, mb: 4}}>
             <Grid container spacing={3} sx={{ mt: 1, mb: 4 }}>
-                <Grid item xs={12} md={6}>
+                <Grid item>
                   <Paper
                     sx={{
                       p: 2,
@@ -94,38 +93,42 @@ const ClusterSummary = () => {
                       flexDirection: "column",
                     }}
                     elevation={8}>
-                    <Typography component="p" variant="h6">{`Broker`}</Typography>
+                    <Typography component="p" variant="h6" sx={{p: 2}}>Cluster Information</Typography>
                     <Box sx={{p: 2}}>
                         <Typography component="p" variant="body1">
-                            {`Follower Average Time (ms):`}
+                            {`Active Controller Count: ${activeControllersCount}`}
                         </Typography>
                         <Typography color="text.secondary" sx={{ flex: 1 }}>
-                        {'Average time in ms it takes replicate partitions to receive new data'}
+                        Should never be greater than 1. If it is, then there was an error during controller election.
                         </Typography>
                     </Box>
                     <Box sx={{p: 2}}>
                         <Typography component="p" variant="body1">
-                            {`Consumer Average Time (ms):`}
+                            {`Number of Underreplicated Partitions: ${underreplicatedPartitionsCount}`}
                         </Typography>
                         <Typography color="text.secondary" sx={{ flex: 1 }}>
-                            {'Average time in ms it takes consumers to receive new data'}
+                          Number of partitions that do not have enough replicas to match the replication factor. A healthy Kafka cluster should not have any.
                         </Typography>
                     </Box>
                     <Box sx={{p: 2}}>
                         <Typography component="p" variant="body1">
-                            {`Producer Average Time (ms):}`}
+                            {`Number of Offline Partitions: ${offlinePartitionsCount}`}
                         </Typography>
                         <Typography color="text.secondary" sx={{ flex: 1 }}>
-                            {'Average time in ms it takes producers to send new data to the broker'}
+                            Number of partitions that are unavailable. Indicates that a broker is offline and there was a server failure/restart.
                         </Typography>
                     </Box>
                     <Box sx={{p: 2}}>
                         <Typography component="p" variant="body1">
-                            {`Time of data:`}
+                            {`Number of Partitions that are under ISR Threshold: ${underMinISRCount}`}                        
                         </Typography>
-                    </Box>
+                        <Typography color="text.secondary" sx={{ flex: 1 }}>
+                          Number of partitions, where the number of In-Sync Replicas (ISR) is less than the minimum number of in-sync replicas specified. If value greater than 0, cluster is experiencing performance issue or one or more brokers are falling behind.
+                        </Typography>
+                    </Box>                  
                 </Paper>
               </Grid>
+              
             </Grid>
           </Container>
         </>
