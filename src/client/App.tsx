@@ -1,16 +1,24 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './containers/Dashboard';
-import Brokers from './components/Brokers';
-import Consumers from './components/Consumers';
-import ListTopics from './components/ListTopics';
-import CreateTopic from './components/CreateTopic';
-import DeleteTopic from './components/DeleteTopic';
 import TopicRecordDelete from './components/TopicRecordDelete';
-import Partitions from './components/Partitions';
-import ClusterSummary from './components/ClusterSummary';
-import DLQ from './components/DLQ';
-import { useQuery } from "@apollo/client"
+const KafkaTree = React.lazy(() => import('./components/Tree'));
+const ClusterSummary = React.lazy(() => import('./components/ClusterSummary'));
+const Brokers = React.lazy(() => import('./components/Brokers'));
+const Consumers = React.lazy(() => import('./components/Consumers'));
+const ListTopics = React.lazy(() => import('./components/ListTopics'));
+const CreateTopic = React.lazy(() => import('./components/CreateTopic'));
+const DeleteTopic = React.lazy(() => import('./components/DeleteTopic'));
+const Partitions = React.lazy(() => import('./components/Partitions'));
+const DLQ = React.lazy(() => import('./components/DLQ'));
+// import DLQ from './components/DLQ';
+// import ClusterSummary from './components/ClusterSummary';
+// import Brokers from './components/Brokers';
+// import Consumers from './components/Consumers';
+// import ListTopics from './components/ListTopics';
+// import CreateTopic from './components/CreateTopic';
+// import DeleteTopic from './components/DeleteTopic';
+// import Partitions from './components/Partitions';
 
 
 const App = () => {
@@ -19,16 +27,36 @@ const App = () => {
     return (
         <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Dashboard />}>
-                {/* <Route index element={<Main />}></Route> */}
-                <Route path="overview" element={<ClusterSummary/>}></Route>
-                <Route path="brokers" element={<Brokers />}></Route>
-                <Route path="consumers" element={<Consumers />}></Route>
-                <Route path="listtopics" element={<ListTopics />}></Route>
+                <Route path="/" element={<Dashboard />}>
+                <Route
+                  path="overview"
+                  element={<Suspense fallback={<div>Loading...</div>}><KafkaTree/></Suspense>}>
+                </Route>
+                {/* <Route
+                  path="overview"
+                  element={<Suspense fallback={<div>Loading...</div>}><ClusterSummary/></Suspense>}>
+                </Route> */}
+                <Route
+                  path="brokers"
+                  element={<Suspense fallback={<div>Loading...</div>}><Brokers/></Suspense>}>
+                </Route>
+                <Route
+                  path="consumers"
+                  element={<Suspense fallback={<div>Loading...</div>}><Consumers/></Suspense>}>
+                </Route>
+                <Route
+                  path="listtopics"
+                  element={<Suspense fallback={<div>Loading...</div>}><ListTopics/></Suspense>}>
+                </Route>
                 <Route path="createtopic" element={<CreateTopic />}></Route>
                 <Route path="deletetopic" element={<DeleteTopic />}></Route>
-                <Route path="partitions" element={<Partitions />}></Route>
-                <Route path="dlq" element={<DLQ />}></Route>
+                <Route
+                  path="partitions"
+                  element={<Suspense fallback={<div>Loading...</div>}><Partitions/></Suspense>}></Route>
+                <Route
+                  path="dlq"
+                  element={<Suspense fallback={<div>Loading...</div>}><DLQ/></Suspense>}>
+                </Route>
               </Route>
             </Routes>
         </BrowserRouter>

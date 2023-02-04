@@ -37,7 +37,7 @@ export const typeDefs = `#graphql
 
   type Partition {
     partitionId: Int!
-    leader: Broker
+    leader: Int
     replicas: [Broker]!
     isr: [Broker]!
   }
@@ -148,4 +148,5 @@ export const typeDefs = `#graphql
     deleteTopicRecords(topic: String, partitions: [partitionOffset] ): Boolean
   }
 `;
+
 

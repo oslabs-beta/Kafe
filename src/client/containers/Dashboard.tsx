@@ -18,9 +18,9 @@ return(
             <Grid item md={12} sx={{ background: 'linear-gradient(to top, #CCE1EB, white)', minHeight: '120px'}}>
                 <Navbar />
             </Grid>
-            <Grid item md={12} sx={{ bgcolor: 'primary.light', minheight: 'viewport' }}>
+            <Grid item md={12} sx={{ bgcolor: 'primary.light', minHeight: '100vh' }}>
                 <Main />
-                <ClusterSummary />
+                {/* <ClusterSummary /> */}
             </Grid>
         </Grid>
     </>

@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { GET_DLQ_MESSAGES } from '../queries/graphQL';
 import { useQuery } from "@apollo/client";
-import EnhancedTable from './EnhancedTable';
-import PieChart from '../graphs/PieChart';
-import BarChart from '../graphs/BarChart';
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import EnhancedTable from './EnhancedTable';
+// import PieChart from '../graphs/PieChart';
+// import BarChart from '../graphs/BarChart';
+const PieChart = React.lazy(() => import('../graphs/PieChart'));
+const BarChart = React.lazy(() => import('../graphs/BarChart'));
 
 const DLQ = (props) => {
 
@@ -29,7 +31,6 @@ const DLQ = (props) => {
         if (dlqMessages?.length){
             dlqMessages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
             dlqRef.current = dlqMessages;
-
             setDLQ(dlqMessages);
         };
 
@@ -80,7 +81,7 @@ const DLQ = (props) => {
 
     const removeMessageHandler = (indices: number[]) => {
         if (!indices.length) return;
-        
+
         indices.sort((a, b) => b - a);
 
         setDLQ((dlq) => {
@@ -90,7 +91,7 @@ const DLQ = (props) => {
             };
             //delete functionality
             dlqRef.current = newDLQ;
-            
+
             sessionStorage.setItem('DLQMessages', JSON.stringify(newDLQ));
             return newDLQ;
         });
@@ -125,10 +126,12 @@ const DLQ = (props) => {
                          flexDirection: "column",
                        }}
                        elevation={8}>
-                         <PieChart
-                            label={'Failed Messages by Original Topic'}
-                            labels={Object.keys(pieChartData)}
-                            data = {Object.values(pieChartData)}/>
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <PieChart
+                                   label={'Failed Messages by Original Topic'}
+                                   labels={Object.keys(pieChartData)}
+                                   data = {Object.values(pieChartData)}/>
+                            </Suspense>
                        </Paper>
 
                  </Grid>
@@ -140,10 +143,11 @@ const DLQ = (props) => {
                          flexDirection: "column",
                        }}
                        elevation={8}>
-                         <BarChart
-                            dlqData = {dlq}
-                            label={'Messages by Topic Over Time'}
-                         />
+                        <Suspense fallback = {<div>Loading...</div>}>
+                            <BarChart
+                                dlqData = {dlq}
+                                label={'Messages by Topic Over Time'}/>
+                        </Suspense>
                     </Paper>
                  </Grid>
             </Grid>}
