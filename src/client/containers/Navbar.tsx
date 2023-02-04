@@ -34,8 +34,8 @@ const ButtonBar = () => {
     
     const [selected, setSelected] = useState(false);
 
-    const menuItems = [  "Brokers", "Topics", "Partitions", "Dead Letter Queue"];
-    const menuRoutes = [ "/brokers", "/listtopics", "/partitions", "/dlq"];
+    const menuItems = [  "Brokers", "Topics", "Partitions", "Dead Letter Queue", "Topic Manager"];
+    const menuRoutes = [ "/brokers", "/listtopics", "/partitions", "/dlq", "/topicmanager"];
 
    const handleClick = () => {
     setSelected(true);
