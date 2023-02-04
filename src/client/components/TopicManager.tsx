@@ -8,7 +8,7 @@ import Paper from "@mui/material/Paper";
 import Card from './Card';
 
 function TopicManager() {
-    const { loading: loadingListTopics, data: dataListTopics } = useQuery(LIST_TOPICS, { pollInterval: 20 * 1000 });
+    const { loading: loadingListTopics, data: dataListTopics } = useQuery(LIST_TOPICS, { pollInterval: 60 * 1000 });
     const [createTopic, { loading: loadingCreateTopic, error: errorCreateTopic, data: dataCreateTopic }] = useMutation(CREATE_TOPIC);    
 
   if (loadingListTopics) {
@@ -49,7 +49,7 @@ function TopicManager() {
         <Grid container spacing={3}>
              <Grid>
                     {dataListTopics.topics.map((topic) => (
-                        <Card key={topic.name} topic={topic}                           sx={{
+                        <Card key={topic.name} topic={topic} sx={{
                             p: 3,
                             display: "flex",
                             flexDirection: "row",

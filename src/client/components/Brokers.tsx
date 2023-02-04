@@ -7,8 +7,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 const RealTimeChart = React.lazy(() => import('../graphs/RealTimeChart'));
-// import RealTimeChart from '../graphs/RealTimeChart';
-
 import { BROKER_ALL_TIME_MS, BROKER_BYTES_IN, BROKER_BYTES_OUT } from '../queries/graphQL';
 
 function Brokers(){

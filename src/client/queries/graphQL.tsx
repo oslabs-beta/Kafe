@@ -4,7 +4,6 @@ export const CLUSTER_SUMMARY = gql`
   query getClusterInfo {
     cluster {
       brokerCount
-      activeControllers
       activeControllersCount
       underreplicatedPartitionsCount
       offlinePartitionsCount
@@ -139,19 +138,32 @@ export const DELETE_TOPIC = gql`
 `;
 
 export const DELETE_TOPIC_RECORDS = gql`
-mutation Mutation($topic: String, $partitions: [Int]) {
-  deleteTopicRecords(topic: $topic, partitions: $partitions)
+mutation Mutation($topic: String) {
+  deleteTopicRecords(topic: $topic)
 }
 `;
 
 export const ALTER_PARTITION_REASSIGNMENTS = gql`
-mutation Mutation($topics: [PartitionReassignment], $timeout: Int) {
-  alterPartitionReassignments(topics: $topics, timeout: $timeout) {
-    topic
-    partitionAssignment
-  }
+mutation Mutation($topic: String) {
+  deleteTopicRecords(topic: $topic)
 }
 `;
+
+// export const ALTER_PARTITION_REASSIGNMENTS = gql`
+// mutation ReassignPartitions($topics: [PartitionReassignment]) {
+//   alterPartitionReassignments(topics: $topics) {
+//     {
+//       topics: [
+//         {
+//           partitionAssignment
+//           topic
+//         }
+//       ]
+//     }
+//   }
+// }
+// `;
+
 export const TREE_DATA = gql`
   query Treedata {
     cluster {
@@ -165,4 +177,4 @@ export const TREE_DATA = gql`
       }
     }
   }
-  `
+  `;

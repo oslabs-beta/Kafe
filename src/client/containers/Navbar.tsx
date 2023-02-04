@@ -30,16 +30,16 @@ const ButtonBar = () => {
     if(!loading) {
         console.log('status is... ', data);
         connectStatus = 'Connected';
-    }
+    };
     
     const [selected, setSelected] = useState(false);
 
-    const menuItems = [  "Brokers", "Cluster Manager", "Dead Letter Queue" ];
-    const menuRoutes = [ "/brokers", "/clustermanager", "/dlq" ];
+    const menuItems = ["Home", "Cluster Summary", "Brokers", "Cluster Manager", "Dead Letter Queue" ];
+    const menuRoutes = ["/overview", "/summary", "/brokers", "/clustermanager", "/dlq" ];
 
    const handleClick = () => {
     setSelected(true);
-   }
+   };
    
     let selectedBorder = (selected)=>{
         let fill = selected
@@ -51,15 +51,8 @@ const ButtonBar = () => {
                 color: 'palette.primary.dark',
                 border: 5
                 };
-        }
-}
-
-//    useEffect(() => {
-//     console.log('entered useEffect Hook');
-//     if (selected){
-//         console.log('selected is true');
-//         // btnStyle.border= 10;
-//     }}, [selected]);
+        };
+    };
 
     const menuBtns = menuItems.map((ele, i)=>{
         return( 

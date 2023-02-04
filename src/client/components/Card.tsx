@@ -20,29 +20,35 @@ const CardComponent = (props) => {
       variables: {
         name: topic.name,
       },
-    })
+    });
   };
 
   const handleDeleteMessages = () => {
     deleteTopicRecords({
       variables: {
-        name: topic.name, 
+        name: topic.name
       },
     })
   };
 
-  const handleReassignPartitions = () => {
-    alterPartitionReassignments({
+  const handleReassignPartitions = async () => {
+    const result = await alterPartitionReassignments({
       variables: {
-        topics: [{ topic }],
-        timeout: 60000
+        topics: [
+          {
+            topic,
+            partitionAssignment: null
+          }
+        ]
       }
     });
+  
+    console.log('Reassign Partitions topics: ', result.data.alterPartitionReassignments.topics);
   };
+  
+  
 
   return (
-    <Paper>
-      <Card>
         <Paper
             sx={{
                 p: 3,
@@ -51,6 +57,7 @@ const CardComponent = (props) => {
                 flexWrap: "wrap",
             }}
             elevation={8}>
+          <Card>
           <CardContent>
             <h2>{topic.name}</h2>
             <p style={{ fontSize: '12px', margin: '0' }}>Partition Count: {topic.partitionsCount}</p>
@@ -71,9 +78,8 @@ const CardComponent = (props) => {
             <Button size="medium" color="primary" onClick={handleDeleteMessages}>Delete Messages</Button>
             <Button size="medium" color="primary" onClick={handleReassignPartitions}>Reassign Partitions</Button>
           </CardActions>
+          </Card>
         </Paper>
-      </Card>
-    </Paper>
   );
 };
 
