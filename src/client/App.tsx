@@ -10,6 +10,7 @@ const ListTopics = React.lazy(() => import('./components/ListTopics'));
 const CreateTopic = React.lazy(() => import('./components/CreateTopic'));
 const DeleteTopic = React.lazy(() => import('./components/DeleteTopic'));
 const Partitions = React.lazy(() => import('./components/Partitions'));
+const TopicManager = React.lazy(() => import('./components/TopicManager'));
 const DLQ = React.lazy(() => import('./components/DLQ'));
 // import DLQ from './components/DLQ';
 // import ClusterSummary from './components/ClusterSummary';
@@ -47,6 +48,10 @@ const App = () => {
                 <Route
                   path="listtopics"
                   element={<Suspense fallback={<div>Loading...</div>}><ListTopics/></Suspense>}>
+                </Route>
+                <Route
+                  path="clustermanager"
+                  element={<Suspense fallback={<div>Loading...</div>}><TopicManager/></Suspense>}>
                 </Route>
                 <Route path="createtopic" element={<CreateTopic />}></Route>
                 <Route path="deletetopic" element={<DeleteTopic />}></Route>
