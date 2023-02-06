@@ -1,17 +1,36 @@
-import React from 'react';
-import { Card, CardActions, CardContent, Button, Paper } from '@mui/material';
+import React, { useState } from 'react';
+import { Card, CardActions, CardContent, Button, Paper, Box, Typography, Container, Modal } from '@mui/material';
 import { useMutation } from "@apollo/client";
 import { DELETE_TOPIC } from '../queries/graphQL';
 import { DELETE_TOPIC_RECORDS } from '../queries/graphQL';
 import { ALTER_PARTITION_REASSIGNMENTS } from '../queries/graphQL';
+import ReassignPartitions from './ReassignPartitions';
 
-const CardComponent = (props) => {
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 800,
+  minHeight: 400,
+  bgcolor: 'background.paper',
+  border: '1px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
-  const topic = props.topic;
 
+const CardComponent = ({ topic, refetch, partitions }) => {
+
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
+ 
   const [deleteTopic, { loading: deleteTopicLoading, error: deleteTopicError, data: deleteTopicData }] = useMutation(DELETE_TOPIC);
   const [alterPartitionReassignments, { loading: alterPartitionReassignmentsLoading, error: alterPartitionReassignmentsError, data: alterPartitionReassignmentsData }] = useMutation(ALTER_PARTITION_REASSIGNMENTS);
   const [deleteTopicRecords, { loading: deleteTopicRecordsLoading, error: deleteTopicRecordsError, data: deleteTopicRecordsData }] = useMutation(DELETE_TOPIC_RECORDS);  
+  
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleDeleteTopic = (e) => {
     e.preventDefault();
@@ -21,6 +40,7 @@ const CardComponent = (props) => {
         name: topic.name,
       },
     });
+    refetch();
   };
 
   const handleDeleteMessages = () => {
@@ -28,26 +48,33 @@ const CardComponent = (props) => {
       variables: {
         name: topic.name
       },
-    })
-  };
-
-  const handleReassignPartitions = async () => {
-    const result = await alterPartitionReassignments({
-      variables: {
-        topics: [
-          {
-            topic,
-            partitionAssignment: null
-          }
-        ]
-      }
     });
-  
-    console.log('Reassign Partitions topics: ', result.data.alterPartitionReassignments.topics);
-  };
-  
-  
 
+    if (!deleteTopicRecordsLoading && !deleteTopicRecordsError) {
+      setTimeout(() => {
+        setDeleteSuccess(true);
+      }, 500);
+    
+      setTimeout(() => {
+        setDeleteSuccess(false);
+      }, 2000)
+    }
+  };
+
+  // const handleReassignPartitions = async () => {
+  //   const result = await alterPartitionReassignments({
+  //     variables: {
+  //       topics: [
+  //         {
+  //           topic,
+  //           partitionAssignment: null
+  //         }
+  //       ]
+  //     }
+  //   });
+  //   refetch();
+  // };
+  
   return (
         <Paper
             sx={{
@@ -69,15 +96,49 @@ const CardComponent = (props) => {
             {alterPartitionReassignmentsLoading && <p>Loading...</p>}
             {alterPartitionReassignmentsError && <p>Error: {alterPartitionReassignmentsError.message}</p>}
             {alterPartitionReassignmentsData && <p>Partitions Reassigned!</p>}
-            {deleteTopicRecordsLoading && <p>Loading...</p>}
+            {deleteTopicRecordsLoading && <p>Deleting...</p>}
             {deleteTopicRecordsError && <p>Error: {deleteTopicRecordsError.message}</p>}
-            {deleteTopicRecordsData && <p>Records Deleted!</p>}
+            {deleteSuccess && <p>Records Deleted!</p>}
           </CardContent>
           <CardActions>
-            <Button size="medium" color="primary" onClick={handleDeleteTopic}>Delete Topic</Button>
-            <Button size="medium" color="primary" onClick={handleDeleteMessages}>Delete Messages</Button>
-            <Button size="medium" color="primary" onClick={handleReassignPartitions}>Reassign Partitions</Button>
-          </CardActions>
+            <Button 
+              size="medium" 
+              color="primary" 
+              onClick={handleDeleteTopic}>Delete Topic</Button>
+            <Button 
+              size="medium" 
+              color="primary" 
+              onClick={handleDeleteMessages}>Delete All Messages</Button>
+            <Button 
+              size="medium" 
+              color="primary" 
+              onClick={handleOpen}>Reassign Partitions</Button>
+            <Modal 
+              open={open}
+              onClose={handleClose}>
+              <Container sx={style}>
+                <Typography component="p" variant="h6">{`Partition Manager for ${topic.name}`}</Typography>
+                {partitions?.map((partition, i) => 
+                  <Box 
+                    key={`${topic}${i}`} 
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start"
+                      }}>
+                    <Typography sx={{mr: 4}}>{`Partition id: ${partition.partitionId}`}</Typography>
+                    <Typography sx={{mr: 4}}>{`Replicas: ${partition.replicas.map(replica => replica.id).join(', ')}`}</Typography>
+                    <div style={{alignSelf: "flex-end"}}>
+                      <ReassignPartitions 
+                        topic={topic.name}
+                        partition={partition.partitionId}
+                        refetch={refetch}
+                      />
+                    </div>
+                    
+                  </Box>)}
+              </Container>
+            </Modal>   
+            </CardActions>
           </Card>
         </Paper>
   );

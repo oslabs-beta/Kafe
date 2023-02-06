@@ -12,6 +12,14 @@ export const CLUSTER_SUMMARY = gql`
   }
 `;
 
+export const GET_BROKER_COUNT = gql`
+  query getBrokers {
+    cluster {
+      brokerCount
+    }
+  }
+`;
+
 export const BROKERS_CPU_USAGE = gql`
   query BrokersCPUUsage ($start: String, $end: String, $step: String) {
       brokers (start: $start, end: $end, step: $step) {
@@ -144,8 +152,16 @@ mutation Mutation($topic: String) {
 `;
 
 export const ALTER_PARTITION_REASSIGNMENTS = gql`
-mutation Mutation($topic: String) {
-  deleteTopicRecords(topic: $topic)
+mutation ReassignPartitions($topics: [PartitionReassignment]) {
+  reassignPartitions(topics: $topics){
+      name
+      partitions{
+          partition
+          replicas
+          addingReplicas
+          removingReplicas
+      }
+  }
 }
 `;
 

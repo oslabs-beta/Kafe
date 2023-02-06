@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { ALTER_PARTITION_REASSIGNMENTS, LIST_TOPICS } from '../queries/graphQL';
 
-const ReassignPartitions = () => {
-  const [selectedTopic, setSelectedTopic] = useState(null);
-  const [targetPartition, setTargetPartition] = useState(null);
-  const [targetReplicas, setTargetReplicas] = useState(null);
+const ReassignPartitions = (props) => {
+  const [selectedTopic, setSelectedTopic] = useState('');
+  const [targetPartition, setTargetPartition] = useState('');
+  const [targetReplicas, setTargetReplicas] = useState('');
 
   const { data: listData, loading: listLoading, error: listError } = useQuery(LIST_TOPICS);
   const [alterPartitionReassignments, { data: alterData, loading: alterLoading, error: alterError }] = useMutation(
@@ -24,13 +24,13 @@ const ReassignPartitions = () => {
   
 
   if (listLoading) return <p>Loading...</p>;
-  if (listError) return <p>Error :(</p>;
+  if (listError) return <p>Error </p>;
 
   return (
     <div>
       <h2>Reassign Partitions</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="topic">Topic:</label>
+        {/* <label htmlFor="topic">Topic:</label>
         <select
           id="topic"
           value={selectedTopic || ""}
@@ -43,7 +43,7 @@ const ReassignPartitions = () => {
                 {topic.name}
               </option>
             ))}
-        </select>
+        </select> */}
         <label htmlFor="targetPartition">Target Partition:</label>
         <input
           type="number"
