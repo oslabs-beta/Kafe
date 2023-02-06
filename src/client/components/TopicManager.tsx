@@ -58,16 +58,16 @@ function TopicManager() {
         </Paper><br></br>
       <Container maxWidth="lg" sx={{ mt: 2, mb: 4 }}>
         <Grid container spacing={3}>
-             <Grid>
-                {dataListTopics?.topics?.filter(topic => topic.name !== '__consumer_offsets').map((topic) => (
-                    <Card 
-                      key={topic.name} 
-                      topic={topic}
-                      refetch={refetchTopics} 
-                      partitions={topic.partitions}></Card>
-                ))}
-              </Grid>
-            </Grid>
+          <Grid>
+             {dataListTopics?.topics?.filter(topic => topic.name !== '__consumer_offsets').map((topic) => (
+                 <Card 
+                   key={topic.name} 
+                   topic={topic}
+                   refetch={refetchTopics} 
+                   partitions={topic.partitions}></Card>
+             ))}
+          </Grid>
+        </Grid>
       </Container>
       <br />
       <br />
