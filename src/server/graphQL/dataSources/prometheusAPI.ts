@@ -38,13 +38,10 @@ class PrometheusAPI extends RESTDataSource {
         }
         else query = query.replace(/filter/g, '.*');
 
-        // console.log('Instance query: ', query);
-
         try {
             const result = await this.get(`/api/v1/query?${query}`);
+            const formattedResult = await this.formatResponse(result.data.result);
 
-            // console.log('Instance query result: ', result);
-            const formattedResult = await this.formatResponse(result.data.result)
             return formattedResult;
         } catch (err) {
             console.log(`Error occurred with query: ${query}: ${err}`);
@@ -59,7 +56,6 @@ class PrometheusAPI extends RESTDataSource {
         const endTime = this.getUnixTimeStamp(end);
 
         if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) {
-            console.log(`Incorrect date format. startTime send: ${startTime}, endTime send: ${endTime}`);
             throw "Incorrect date inputs";
         };
 
@@ -81,7 +77,6 @@ class PrometheusAPI extends RESTDataSource {
             }
 
             const formattedResult = await this.formatRangeResponse(result.data.result);
-            console.log(`Final result for brokerId ${filter}: `, formattedResult);
 
             return formattedResult;
         } catch(err) {
@@ -103,7 +98,6 @@ class PrometheusAPI extends RESTDataSource {
         const result = await this.get(`/api/v1/query?${query}`);
         const formattedResult = await this.formatResponse(result.data.result);
 
-        // console.log('TotalMsQuery result: ', formattedResult);
         return formattedResult;
     };
 
@@ -115,7 +109,6 @@ class PrometheusAPI extends RESTDataSource {
 
         try {
             const result = await this.get(`/api/v1/query?${query}`);
-
             const formattedResult = await this.formatResponse(result.data.result);
             return formattedResult;
         } catch (err) {
@@ -124,7 +117,6 @@ class PrometheusAPI extends RESTDataSource {
     };
 
     async mapInstanceFilter(brokerIds: number[]): Promise<string> {
-        console.log('Checking mapped: ', Object.keys(this.brokerIdtoInstance));
         if (this.mapped() === false) await this.generateMaps();
 
         let filterString = '';
@@ -199,7 +191,6 @@ class PrometheusAPI extends RESTDataSource {
         };
 
         defaultData.push(datum);
-        console.log('Dummy range data result: ', defaultData);
         return defaultData;
     };
 };
