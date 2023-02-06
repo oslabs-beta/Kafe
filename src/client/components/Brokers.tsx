@@ -17,7 +17,6 @@ function Brokers(){
 
     useEffect(() => {
         if (loading || loaded.current) return;
-
         if (data.brokers) setBrokerInfo(data.brokers);
 
         return () => {
@@ -94,7 +93,7 @@ function Brokers(){
                                   flexDirection: "column",
                                 }}
                                 elevation={8}>
-                                <Typography component="p" variant="h6">{`Broker ${broker.id}`}</Typography>
+                                <Typography component="p" variant="h6" sx={{p: 2}}>{`Broker ${broker.id}`}</Typography>
                                 <Box sx={{p: 2}}>
                                     <Typography component="p" variant="body1">
                                         {`Follower Average Time (ms): ${broker.fetchFollowerTotalTimeMs ? broker.fetchFollowerTotalTimeMs.value : 0}`}

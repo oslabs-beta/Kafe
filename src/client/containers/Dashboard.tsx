@@ -12,7 +12,6 @@ function Dashboard({ toggleTheme }){
     const theme = useTheme();
     const { palette } = theme;
 
-    console.log('Dashboard theme: ', palette);
     return(
         <>
             <Grid container spacing={2} sx={{ minHeight: '100%'}}>

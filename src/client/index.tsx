@@ -4,8 +4,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import 'regenerator-runtime/runtime';
-
 import App from './App';
+
+import './global.css';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);

@@ -1,0 +1,11 @@
+.good-metric {
+    color: rgb(20, 178, 20);
+}
+
+.bad-metric {
+    color: red;
+}
+
+.ok-metric {
+    color: orange;
+}

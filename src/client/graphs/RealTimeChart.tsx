@@ -36,7 +36,6 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
   
   const theme = useTheme();
   const  { palette } = theme;
-  console.log('Chart palette: ', palette.primary.dark);
 
   const [chartData, setChartData] = useState({
     labels: [],
