@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { Card, CardActions, CardContent, Button, Paper, Box, Typography, Container, Modal } from '@mui/material';
 import { useMutation } from "@apollo/client";
-import { ALTER_PARTITION_REASSIGNMENTS, GET_BROKER_COUNT } from '../queries/graphQL';
+import { ALTER_PARTITION_REASSIGNMENTS } from '../queries/graphQL';
 
 const ReassignPartitions = ({ topic, partition, refetch }) => {
-    const [targetPartition, setTargetPartition] = useState('');
     const [targetReplicas, setTargetReplicas] = useState('');
-    const [alterPartitionReassignments, { data: alterData, loading: alterLoading, error: alterError }] = useMutation(
+    let [alterPartitionReassignments, { data: alterData, loading: alterLoading, error: alterError }] = useMutation<any>(
         ALTER_PARTITION_REASSIGNMENTS
-      );
+    );
     
     const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
     const letters = new Set();
@@ -16,26 +15,26 @@ const ReassignPartitions = ({ topic, partition, refetch }) => {
       letters.add(alphabet[i]);
     };
       
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
       e.preventDefault();
 
       const currentReplicas = e.target[0].value.replaceAll(' ', '').split(',');
-      const newReplicas = [];
+      const newReplicas: Number[] = [];
 
-      currentReplicas.forEach(replica => {
+      currentReplicas.forEach((replica: String) => {
         if (letters.has(replica)) return e.target[0].value = '';
         
         newReplicas.push(Number(replica));
       });
   
-      alterPartitionReassignments({
+      await alterPartitionReassignments({
         variables: { 
           topics: [{ topic, partitionAssignment: [{ partition, replicas: newReplicas }] }]
         },
       });
 
-      refetch();
-      window.location.reload();
+      if (alterData) await refetch();
+      // window.location.reload();
     };
 
       return (

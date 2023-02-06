@@ -25,7 +25,7 @@ const CardComponent = ({ topic, refetch, partitions }) => {
   const [deleteSuccess, setDeleteSuccess] = useState(false);
  
   const [deleteTopic, { loading: deleteTopicLoading, error: deleteTopicError, data: deleteTopicData }] = useMutation(DELETE_TOPIC);
-  const [alterPartitionReassignments, { loading: alterPartitionReassignmentsLoading, error: alterPartitionReassignmentsError, data: alterPartitionReassignmentsData }] = useMutation(ALTER_PARTITION_REASSIGNMENTS);
+  // const [alterPartitionReassignments, { loading: alterPartitionReassignmentsLoading, error: alterPartitionReassignmentsError, data: alterPartitionReassignmentsData }] = useMutation(ALTER_PARTITION_REASSIGNMENTS);
   const [deleteTopicRecords, { loading: deleteTopicRecordsLoading, error: deleteTopicRecordsError, data: deleteTopicRecordsData }] = useMutation(DELETE_TOPIC_RECORDS);  
   
   const [open, setOpen] = useState(false);
@@ -63,13 +63,13 @@ const CardComponent = ({ topic, refetch, partitions }) => {
   
   return (
         <Paper
-            sx={{
-                p: 3,
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-            }}
-            elevation={8}>
+          sx={{
+              p: 3,
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+          }}
+          elevation={8}>
           <Card>
           <CardContent>
             <h2>{topic.name}</h2>
@@ -79,9 +79,6 @@ const CardComponent = ({ topic, refetch, partitions }) => {
             {deleteTopicLoading && <p>Loading...</p>}
             {deleteTopicError && <p>Error: {deleteTopicError.message}</p>}
             {deleteTopicData && <p>Topic Deleted! Refreshing...</p>}
-            {alterPartitionReassignmentsLoading && <p>Loading...</p>}
-            {alterPartitionReassignmentsError && <p>Error: {alterPartitionReassignmentsError.message}</p>}
-            {alterPartitionReassignmentsData && <p>Partitions Reassigned!</p>}
             {deleteTopicRecordsLoading && <p>Deleting...</p>}
             {deleteTopicRecordsError && <p>Error: {deleteTopicRecordsError.message}</p>}
             {deleteSuccess && <p>Records Deleted!</p>}
