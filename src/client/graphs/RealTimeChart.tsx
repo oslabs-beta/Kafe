@@ -62,7 +62,7 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
       title: {
         display: title ? true : false,
         text: title,
-        color: palette.mode !== 'light' ? 'white' : palette.primary.main,
+        color: palette.primary.main,
       },
       streaming: {
         duration: 5 * 60000,
