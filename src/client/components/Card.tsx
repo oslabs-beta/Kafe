@@ -19,19 +19,16 @@ const style = {
   p: 4,
 };
 
-
 const CardComponent = ({ topic, refetch, partitions }) => {
 
   const [deleteSuccess, setDeleteSuccess] = useState(false);
- 
-  const [deleteTopic, { loading: deleteTopicLoading, error: deleteTopicError, data: deleteTopicData }] = useMutation(DELETE_TOPIC);
-  // const [alterPartitionReassignments, { loading: alterPartitionReassignmentsLoading, error: alterPartitionReassignmentsError, data: alterPartitionReassignmentsData }] = useMutation(ALTER_PARTITION_REASSIGNMENTS);
-  const [deleteTopicRecords, { loading: deleteTopicRecordsLoading, error: deleteTopicRecordsError, data: deleteTopicRecordsData }] = useMutation(DELETE_TOPIC_RECORDS);  
-  
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+ 
+  const [deleteTopic, { loading: deleteTopicLoading, error: deleteTopicError, data: deleteTopicData }] = useMutation(DELETE_TOPIC);
+  const [deleteTopicRecords, { loading: deleteTopicRecordsLoading, error: deleteTopicRecordsError, data: deleteTopicRecordsData }] = useMutation(DELETE_TOPIC_RECORDS);  
+  
   const handleDeleteTopic = async(e) => {
     e.preventDefault();
 

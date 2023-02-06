@@ -65,7 +65,6 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
         refresh: 30 * 1000,
         onRefresh: (chart) => {
           if (!chartRef.current) {
-            console.log(yLabel + ' onRefresh stop: ', chart);
             chart.stop();
             chart.destroy();
             return;
@@ -93,8 +92,6 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
               chart.update('quiet')
             })
             .catch(err => console.log(err));
-
-          console.log('Updated data from refetch: ', chart.data.datasets)
         },
       },
     },
@@ -131,7 +128,6 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
   }
 
   // GraphQL query to the backend
-  
   const { loading, data, refetch } = useQuery(query, {
     variables: {
       start: new Date(Date.now() - 60000 * 10).toString(),
@@ -169,7 +165,6 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
 
     setChartData({ labels, datasets });
 
-    //clear up side effect
     return () => {
       loaded.current = true;
     };
