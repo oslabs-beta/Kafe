@@ -60,20 +60,6 @@ const CardComponent = ({ topic, refetch, partitions }) => {
       }, 2000)
     }
   };
-
-  // const handleReassignPartitions = async () => {
-  //   const result = await alterPartitionReassignments({
-  //     variables: {
-  //       topics: [
-  //         {
-  //           topic,
-  //           partitionAssignment: null
-  //         }
-  //       ]
-  //     }
-  //   });
-  //   refetch();
-  // };
   
   return (
         <Paper

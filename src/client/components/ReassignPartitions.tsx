@@ -34,7 +34,7 @@ const ReassignPartitions = ({ topic, partition, refetch }) => {
         },
       });
 
-    //   refetch();
+      refetch();
       window.location.reload();
     };
 

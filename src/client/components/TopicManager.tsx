@@ -9,16 +9,10 @@ import ReassignPartitions from './Partitions';
 
 function TopicManager() {
   const [newTopic, setNewTopic] = useState('');
-  const [topicData, setTopicData] = useState([]);
 
   const { loading: loadingListTopics, data: dataListTopics, refetch: refetchTopics } = useQuery(LIST_TOPICS, { pollInterval: 60 * 1000 });
   const [createTopic, { loading: loadingCreateTopic, error: errorCreateTopic, data: dataCreateTopic }] = useMutation(CREATE_TOPIC);    
 
-  if (loadingListTopics) {
-    return <div>Loading...</div>;
-  };
-
-  // console.log("IN TOPICMANAGER: TOPIC DATA IS:  ", dataListTopics);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -27,7 +21,7 @@ function TopicManager() {
       variables: {
         name: e.target[0].value,
       },
-    })
+    });
 
     setNewTopic('');
     e.target[0].value = '';
@@ -37,6 +31,10 @@ function TopicManager() {
 
   const handleChangeTopic = (e) => {
     setNewTopic(e.target.value);
+  };
+
+  if (loadingListTopics) {
+    return <div>Loading...</div>;
   };
 
   return (
@@ -61,7 +59,7 @@ function TopicManager() {
       <Container maxWidth="lg" sx={{ mt: 2, mb: 4 }}>
         <Grid container spacing={3}>
              <Grid>
-                    {dataListTopics.topics.filter(topic => topic.name !== '__consumer_offsets').map((topic) => (
+                    {dataListTopics?.topics?.filter(topic => topic.name !== '__consumer_offsets').map((topic) => (
                         <Card 
                           key={topic.name} 
                           topic={topic}
