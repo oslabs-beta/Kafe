@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { LIST_TOPICS, CREATE_TOPIC} from '../queries/graphQL';
 import Container from "@mui/material/Container";
@@ -12,7 +12,12 @@ function TopicManager() {
   const [creatingTopic, setCreatingTopic] = useState(false);
   const [topicData, setTopicData] = useState<any>([]);
 
-  let { loading: loadingListTopics, data: dataListTopics, refetch: refetchTopics } = useQuery(LIST_TOPICS, { pollInterval: 60 * 1000 });
+  const skipRef = useRef(false);
+
+  let { loading: loadingListTopics, data: dataListTopics, refetch: refetchTopics } = useQuery(LIST_TOPICS, { 
+    pollInterval: 60 * 1000,
+    skip: skipRef.current,
+  });
   const [createTopic, { loading: loadingCreateTopic, error: errorCreateTopic, data: dataCreateTopic }] = useMutation(CREATE_TOPIC);    
 
   useEffect(() => {
@@ -29,6 +34,14 @@ function TopicManager() {
     setTopicData(newTopicData);
 
   }, [loadingListTopics, dataListTopics]);
+
+  useEffect(() => {
+    skipRef.current = false;
+
+    return () => {
+      skipRef.current = true;
+    };
+  }, [])
 
   const refetchHandler = async() => {
     const test = await refetchTopics();
