@@ -10,7 +10,7 @@ import { CLUSTER_SUMMARY, BROKERS_CPU_USAGE, BROKER_JVM_MEMORY_USAGE } from '../
 
 
 const ClusterSummary = () => {
-    console.log('Cluster Summary component');
+    
     const [brokerCount, setBrokerCount] = useState(0);
     const [underreplicatedPartitionsCount, setUnderreplicatedPartitionsCount] = useState(0);
     const [offlinePartitionsCount, setOfflinePartitionsCount] = useState(0);
@@ -29,7 +29,6 @@ const ClusterSummary = () => {
         if (underMinISRCount !== null) setUnderMinISRCount(underMinISRCount);
         if (offlinePartitionsCount) setOfflinePartitionsCount(brokerCount);
       }
-
     },[loading, data]);
     
     return (

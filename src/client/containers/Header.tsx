@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import logo from '../assets/Logo2.png';
 import { Button } from '@mui/material'
+import logo from '../assets/Logo2.png';
 
 const linkStyle = {
   textDecoration: "none",
@@ -11,7 +11,7 @@ const linkStyle = {
 function Header(){
 
   return(
-    <Link to="/" style={linkStyle}> 
+    <Link to="/overview" style={linkStyle}> 
       <Button 
         sx= {{ 
           minHeight: 59, 

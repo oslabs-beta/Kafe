@@ -8,12 +8,12 @@ const Brokers = React.lazy(() => import('./components/Brokers'));
 const TopicManager = React.lazy(() => import('./components/TopicManager'));
 const DLQ = React.lazy(() => import('./components/DLQ'));
 
-const App = () => {
+const App = ({ toggleTheme }) => {
 
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Dashboard />}>
+                <Route path="/" element={<Dashboard toggleTheme={toggleTheme}/>}>
                 <Route
                   path="overview"
                   element={<Suspense fallback={<div>Loading...</div>}><KafkaTree/></Suspense>}>

@@ -29,8 +29,6 @@ function Brokers(){
         loaded.current = false;
     }, []);
 
-    console.log('Brokers component: ', brokerInfo);
-
     const isLoading = <div>Loading...</div>
     return(
         <>
