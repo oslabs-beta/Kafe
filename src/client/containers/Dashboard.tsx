@@ -5,8 +5,6 @@ import Grid from '@mui/material/Grid';
 import Header from './Header';
 import Main from './Main';
 import Navbar from './Navbar';
-import ClusterSummary from '../components/ClusterSummary'
-// import Sidebar from './Sidebar';
 
 function Dashboard(){
 return(
@@ -20,7 +18,6 @@ return(
             </Grid>
             <Grid item md={12} sx={{ bgcolor: 'primary.light', minHeight: '100vh' }}>
                 <Main />
-                {/* <ClusterSummary /> */}
             </Grid>
         </Grid>
     </>

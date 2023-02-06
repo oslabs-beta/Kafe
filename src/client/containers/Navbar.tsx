@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Stack } from "@mui/system";
 import { Link } from "react-router-dom";
-import Button, { buttonClasses } from '@mui/material/Button';
+import Button from '@mui/material/Button';
 import { useQuery } from "@apollo/client";
 import { CLUSTER_SUMMARY } from '../queries/graphQL'; 
 
@@ -19,8 +19,6 @@ const btnStyle = {minWidth: 150,
     textTransform: 'unset',
     color: 'palette.primary.dark',
     };
-
-    //btnStyle[backgroundColor] = 'palette.primary.dark'
  
 const ButtonBar = () => {
 

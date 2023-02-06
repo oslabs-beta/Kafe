@@ -13,7 +13,6 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 800,
   minHeight: 400,
-  bgcolor: 'background.paper',
   border: '1px solid #000',
   boxShadow: 24,
   p: 4,
@@ -60,22 +59,21 @@ const CardComponent = ({ topic, refetch, partitions }) => {
       }, 2000)
     }
   };
+
+  const btnStyle = {minWidth: 150, 
+    margin: "0px",
+    textAlign:"right",
+    textTransform: 'unset',
+    color: 'palette.primary.dark',
+    };
   
   return (
-        <Paper
-            sx={{
-                p: 3,
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-            }}
-            elevation={8}>
-          <Card>
+          <Card sx={{margin: 2}}>
           <CardContent>
             <h2>{topic.name}</h2>
-            <p style={{ fontSize: '12px', margin: '0' }}>Partition Count: {topic.partitionsCount}</p>
-            <p style={{ fontSize: '12px', margin: '0' }}>Replicas Count: {topic.replicasCount}</p>
-            <p style={{ fontSize: '12px', margin: '0' }}>ISR Count: {topic.ISRCount}</p>
+            <p style={{ fontSize: '14px', margin: '0' }}>Partition Count: {topic.partitionsCount}</p>
+            <p style={{ fontSize: '14px', margin: '0' }}>Replicas Count: {topic.replicasCount}</p>
+            <p style={{ fontSize: '14px', margin: '0' }}>ISR Count: {topic.ISRCount}</p>
             {deleteTopicLoading && <p>Loading...</p>}
             {deleteTopicError && <p>Error: {deleteTopicError.message}</p>}
             {deleteTopicData && <p>Topic Deleted! Refreshing...</p>}
@@ -90,14 +88,17 @@ const CardComponent = ({ topic, refetch, partitions }) => {
             <Button 
               size="medium" 
               color="primary" 
+              sx={btnStyle}
               onClick={handleDeleteTopic}>Delete Topic</Button>
             <Button 
               size="medium" 
-              color="primary" 
+              color="primary"
+              sx={btnStyle} 
               onClick={handleDeleteMessages}>Delete All Messages</Button>
             <Button 
               size="medium" 
-              color="primary" 
+              color="primary"
+              sx={btnStyle} 
               onClick={handleOpen}>Reassign Partitions</Button>
             <Modal 
               open={open}
@@ -126,7 +127,6 @@ const CardComponent = ({ topic, refetch, partitions }) => {
             </Modal>   
             </CardActions>
           </Card>
-        </Paper>
   );
 };
 

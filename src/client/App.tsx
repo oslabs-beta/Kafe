@@ -13,10 +13,7 @@ const Partitions = React.lazy(() => import('./components/Partitions'));
 const TopicManager = React.lazy(() => import('./components/TopicManager'));
 const DLQ = React.lazy(() => import('./components/DLQ'));
 
-
-
 const App = () => {
-  //  Refactor based on final UI decisions and make DRY; see Studify for examples; consider conditional rendering of buttons based on confirmed connection to brokers
 
     return (
         <BrowserRouter>
