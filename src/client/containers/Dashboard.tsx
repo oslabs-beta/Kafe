@@ -10,7 +10,7 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 function Dashboard({ toggleTheme }){
 
     const theme = useTheme();
-    const palette = { theme };
+    const { palette } = theme;
 
     console.log('Dashboard theme: ', palette);
     return(
@@ -18,7 +18,9 @@ function Dashboard({ toggleTheme }){
             <Grid container spacing={2} sx={{ minHeight: '100%'}}>
                 <Grid item md={12} sx={{ minHeight: '120px', minWidth: '800px'}} style={{justifyContent: "space-between"}}>
                     <Header />
-                    {palette.theme.palette.mode === 'light' ? <Brightness3Icon/> : <Brightness7Icon/>}
+                    {palette.mode === 'light' ? 
+                        <Brightness3Icon onClick={toggleTheme}/> : 
+                        <Brightness7Icon onClick={toggleTheme}/>}
                 </Grid>
                 <Grid item md={12} sx={{ background: 'linear-gradient(to top, #CCE1EB, white)', minHeight: '120px'}}>
                     <Navbar />

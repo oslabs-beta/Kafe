@@ -4,6 +4,7 @@ import { Line } from 'react-chartjs-2';
 import { useQuery } from "@apollo/client";
 import ChartStreaming from "chartjs-plugin-streaming";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { useTheme } from '@mui/material/styles';
 import "chartjs-adapter-luxon";
 
 import {
@@ -32,6 +33,10 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
     ChartStreaming
   );
   ChartJS.unregister(ChartDataLabels);
+  
+  const theme = useTheme();
+  const  { palette } = theme;
+  console.log('Chart palette: ', palette.primary.dark);
 
   const [chartData, setChartData] = useState({
     labels: [],
@@ -58,6 +63,7 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
       title: {
         display: title ? true : false,
         text: title,
+        color: palette.mode !== 'light' ? 'white' : palette.primary.main,
       },
       streaming: {
         duration: 5 * 60000,
@@ -118,11 +124,12 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
           minRotation: 45,
         },
       },
-    },
       y: {
         title: {
           display: true,
           text: yLabel,
+          color: palette.mode === 'dark' ? palette.primary.light : palette.primary.main,
+        },
       },
     },
   }

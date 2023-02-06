@@ -49,7 +49,7 @@ const ClusterSummary = () => {
                           query={ BROKERS_CPU_USAGE }
                           metric = {'CPUUsageOverTime'}
                           resources = {'brokers'}
-                          yLabel={'CPU Usage'}
+                          yLabel={'CPU Usage (% of Total)'}
                           title={'CPU Usage Over Time'}
                           step={'30s'}
                           labelName={'Broker'}
@@ -71,7 +71,7 @@ const ClusterSummary = () => {
                           query = {BROKER_JVM_MEMORY_USAGE}
                           metric = {'JVMMemoryUsedOverTime'}
                           resources = {'brokers'}
-                          yLabel={'Memory Usage'}
+                          yLabel={'Memory Usage (Bytes/Sec)'}
                           title = {'Memory Usage Over Time'}
                           step={'30s'}
                           labelName={'Broker'}
