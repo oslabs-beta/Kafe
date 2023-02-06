@@ -65,7 +65,6 @@ function TopicManager() {
     e.target[0].value = '';
 
     while (loadingCreateTopic) continue
-
     await refetchHandler();
     
     setCreatingTopic(false);
