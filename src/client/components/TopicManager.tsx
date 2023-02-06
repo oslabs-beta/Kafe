@@ -30,10 +30,14 @@ function TopicManager() {
   }, [loadingListTopics, dataListTopics]);
 
   const refetchHandler = async() => {
-    dataListTopics = await refetchTopics(); 
+    const test = await refetchTopics();
+    console.log('Refetch Handler data: ', test);
+
+    const newTopics = await refetchTopics();
+    dataListTopics = newTopics.data; 
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async(e) => {
     e.preventDefault();
 
     createTopic({
@@ -45,7 +49,14 @@ function TopicManager() {
     setNewTopic('');
     e.target[0].value = '';
 
-    // window.location.reload();
+    while (loadingCreateTopic) continue;
+
+    if (dataCreateTopic) {
+      const newData = await refetchTopics();
+      console.log(newData);
+
+      dataListTopics = newData.data
+    };
   };
 
   const handleChangeTopic = (e) => {

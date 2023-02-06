@@ -32,15 +32,16 @@ const CardComponent = ({ topic, refetch, partitions }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleDeleteTopic = (e) => {
+  const handleDeleteTopic = async(e) => {
     e.preventDefault();
 
-    deleteTopic({
+    await deleteTopic({
       variables: {
         name: topic.name,
       },
     });
-    refetch();
+    
+    await refetch();
   };
 
   const handleDeleteMessages = () => {
