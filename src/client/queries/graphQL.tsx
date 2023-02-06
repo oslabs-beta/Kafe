@@ -165,21 +165,6 @@ mutation ReassignPartitions($topics: [PartitionReassignment]) {
 }
 `;
 
-// export const ALTER_PARTITION_REASSIGNMENTS = gql`
-// mutation ReassignPartitions($topics: [PartitionReassignment]) {
-//   alterPartitionReassignments(topics: $topics) {
-//     {
-//       topics: [
-//         {
-//           partitionAssignment
-//           topic
-//         }
-//       ]
-//     }
-//   }
-// }
-// `;
-
 export const TREE_DATA = gql`
   query Treedata {
     cluster {

@@ -3,7 +3,6 @@ import { Card, CardActions, CardContent, Button, Paper, Box, Typography, Contain
 import { useMutation } from "@apollo/client";
 import { DELETE_TOPIC } from '../queries/graphQL';
 import { DELETE_TOPIC_RECORDS } from '../queries/graphQL';
-import { ALTER_PARTITION_REASSIGNMENTS } from '../queries/graphQL';
 import ReassignPartitions from './ReassignPartitions';
 
 const style = {

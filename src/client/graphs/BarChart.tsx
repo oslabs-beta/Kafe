@@ -52,9 +52,8 @@ const BarChart = ({ dlqData, label }) => {
   const [backgroundColor, setBackgroundColor] = useState([]);
 
   const handleTimeChange = (event: SelectChangeEvent) => {
-    console.log('Setting time to: ', typeof (event.target.value));
     setTimeInput(event.target.value);
-  }
+  };
 
   useEffect(()=> {
     const newBarChartData = {};
