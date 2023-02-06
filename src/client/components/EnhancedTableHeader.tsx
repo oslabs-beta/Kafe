@@ -60,7 +60,9 @@ const EnhancedTableHeader = ({ headers, setSelected, numRows, order, setOrder, r
                     (header === 'Client Type' || header === 'Original Topic') ?
                         <TableCell
                             key={`header${i}`}
-                            align="center">
+                            align="center"
+                            sx={{pl: 5}}
+                            >
                                 {header}
                             <EnhancedTableFilter
                                 title={header}
@@ -68,7 +70,7 @@ const EnhancedTableHeader = ({ headers, setSelected, numRows, order, setOrder, r
                                 setFilterHandler={header === 'Original Topic' ? setTopic : setClient}
                                 />
                         </TableCell> :
-                    <TableCell key={`header${i}`} align={i === headers.length - 1 ? "right" : "center"}>{header}</TableCell>
+                    <TableCell key={`header${i}`} align={"center"}>{header}</TableCell>
                 ))}
             </TableRow>
         </TableHead>

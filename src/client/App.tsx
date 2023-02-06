@@ -6,20 +6,13 @@ const KafkaTree = React.lazy(() => import('./components/Tree'));
 const ClusterSummary = React.lazy(() => import('./components/ClusterSummary'));
 const Brokers = React.lazy(() => import('./components/Brokers'));
 const Consumers = React.lazy(() => import('./components/Consumers'));
-const ListTopics = React.lazy(() => import('./components/ListTopics'));
+// const ListTopics = React.lazy(() => import('./components/ListTopics'));
 const CreateTopic = React.lazy(() => import('./components/CreateTopic'));
 const DeleteTopic = React.lazy(() => import('./components/DeleteTopic'));
 const Partitions = React.lazy(() => import('./components/Partitions'));
 const TopicManager = React.lazy(() => import('./components/TopicManager'));
 const DLQ = React.lazy(() => import('./components/DLQ'));
-// import DLQ from './components/DLQ';
-// import ClusterSummary from './components/ClusterSummary';
-// import Brokers from './components/Brokers';
-// import Consumers from './components/Consumers';
-// import ListTopics from './components/ListTopics';
-// import CreateTopic from './components/CreateTopic';
-// import DeleteTopic from './components/DeleteTopic';
-// import Partitions from './components/Partitions';
+
 
 
 const App = () => {
@@ -33,10 +26,10 @@ const App = () => {
                   path="overview"
                   element={<Suspense fallback={<div>Loading...</div>}><KafkaTree/></Suspense>}>
                 </Route>
-                {/* <Route
-                  path="overview"
+                <Route
+                  path="summary"
                   element={<Suspense fallback={<div>Loading...</div>}><ClusterSummary/></Suspense>}>
-                </Route> */}
+                </Route>
                 <Route
                   path="brokers"
                   element={<Suspense fallback={<div>Loading...</div>}><Brokers/></Suspense>}>
@@ -45,10 +38,10 @@ const App = () => {
                   path="consumers"
                   element={<Suspense fallback={<div>Loading...</div>}><Consumers/></Suspense>}>
                 </Route>
-                <Route
+                {/* <Route
                   path="listtopics"
                   element={<Suspense fallback={<div>Loading...</div>}><ListTopics/></Suspense>}>
-                </Route>
+                </Route> */}
                 <Route
                   path="clustermanager"
                   element={<Suspense fallback={<div>Loading...</div>}><TopicManager/></Suspense>}>
