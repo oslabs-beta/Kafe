@@ -4,18 +4,7 @@ import { useMutation } from "@apollo/client";
 import { DELETE_TOPIC } from '../queries/graphQL';
 import { DELETE_TOPIC_RECORDS } from '../queries/graphQL';
 import ReassignPartitions from './ReassignPartitions';
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 800,
-  minHeight: 400,
-  border: '1px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+import { useTheme } from '@mui/material/styles';
 
 const CardComponent = ({ topic, refetch, partitions }) => {
 
@@ -27,6 +16,9 @@ const CardComponent = ({ topic, refetch, partitions }) => {
   const [deleteTopic, { loading: deleteTopicLoading, error: deleteTopicError, data: deleteTopicData }] = useMutation(DELETE_TOPIC);
   const [deleteTopicRecords, { loading: deleteTopicRecordsLoading, error: deleteTopicRecordsError, data: deleteTopicRecordsData }] = useMutation(DELETE_TOPIC_RECORDS);  
   
+  const theme = useTheme();
+  const { palette } = theme;
+
   const handleDeleteTopic = async(e) => {
     e.preventDefault();
 
@@ -62,7 +54,20 @@ const CardComponent = ({ topic, refetch, partitions }) => {
     textAlign:"right",
     textTransform: 'unset',
     color: 'palette.primary.dark',
-    };
+  };
+
+  const style = {
+    position: 'absolute' as 'absolute',
+    background: palette.mode === 'light' ? 'white' : '#121212',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 800,
+    minHeight: 400,
+    border: '1px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
   
   return (
           <Card sx={{margin: 2}}>

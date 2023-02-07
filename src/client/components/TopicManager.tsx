@@ -2,10 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { LIST_TOPICS, CREATE_TOPIC} from '../queries/graphQL';
 import Grid from "@mui/material/Grid";
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import Card from './Card';
-
-import { TextField, Button } from '@mui/material';
-import ReassignPartitions from './ReassignPartitions';
 
 function TopicManager() {
   const [newTopic, setNewTopic] = useState('');
@@ -52,19 +51,19 @@ function TopicManager() {
   };
 
   const onSubmit = async(e) => {
+    if (newTopic === '') return;
     e.preventDefault();
     setCreatingTopic(true);
 
     await createTopic({
       variables: {
-        name: e.target[0].value,
+        name: newTopic,
       },
     });
 
     setNewTopic('');
-    e.target[0].value = '';
 
-    while (loadingCreateTopic) continue
+    while (loadingCreateTopic) continue;
     await refetchHandler();
     
     setCreatingTopic(false);
@@ -85,39 +84,37 @@ function TopicManager() {
     textTransform: 'unset',
     marginLeft: 6,
     };
-
+  
   return (
     <div>
         <>
-            {/* <form onSubmit={onSubmit}>
-                <label htmlFor="name">New Topic Name:</label>&nbsp;&nbsp;
-                <input type="text" 
-                name="name" 
-                onChange={handleChangeTopic} 
-                value={newTopic}/>&nbsp;&nbsp;
-
-                <button type="submit">Create Topic</button>
-                {loadingCreateTopic && <p>Loading...</p>}
-                {errorCreateTopic && <p>Error: {errorCreateTopic.message}</p>}
-                {creatingTopic && <p>Topic Created! Refreshing...</p>}
-            </form> */}
-            <TextField id="topic form" label="Enter new topic name" variant="standard" sx= {{ marginLeft: 5 }}onSubmit={onSubmit}/>
-            <Button variant="contained" sx={btnStyle} onClick={onSubmit}> Create Topic</Button>
-              {loadingCreateTopic && <p>Loading...</p>}
-              {errorCreateTopic && <p>Error: {errorCreateTopic.message}</p>}
-              {dataCreateTopic && <p>Topic Created! Refreshing...</p>} 
-              </><br></br>
+          <form
+            onSubmit={onSubmit}
+            style={{display: "flex", width: "400px", flexWrap: "nowrap", flexDirection: "row"}}>
+            <TextField 
+              id="topic form" 
+              label="Enter new topic name" 
+              variant="standard" 
+              sx= {{ marginLeft: 5 }}
+              value={newTopic}
+              onChange={handleChangeTopic}
+              />
+            <Button variant="contained" sx={btnStyle} type="submit">Create Topic</Button>
+          </form>
+          
+          {loadingCreateTopic && <p>Loading...</p>}
+          {errorCreateTopic && <p>Error: {errorCreateTopic.message}</p>}
+          {creatingTopic && <p>Topic Created! Refreshing...</p>} 
+          </><br></br>
 
         <Grid container spacing={2} sx={{ minHeight: '100%', margin: 2}}>
-          
               {topicData.map((topic) => (
-                  <Grid><Card 
-                    key={topic.name} 
-                    topic={topic}
-                    refetch={refetchHandler} 
-                    partitions={topic.partitions}></Card></Grid>
-              ))}
-          
+                  <Grid key={topic.name}>
+                    <Card
+                      topic={topic}
+                      refetch={refetchHandler} 
+                      partitions={topic.partitions}/>
+                  </Grid>))}
         </Grid>
     </div>
   );
