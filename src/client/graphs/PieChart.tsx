@@ -71,24 +71,22 @@ const PieChart = ({ label, labels, data}) => {
 
   };
 
-  // console.log(labels, data);
-  // console.log(chartRef.current);
-
   return (
         <Pie
-            data={{
-                labels,
-                datasets: [{
-                  label,
-                  data,
-                  backgroundColor: backgroundColors,
-                  borderColor: backgroundColors,
-                  hoverOffset: 8,
-                  borderWidth: 1,
-                }],
-            }}
-            options={options}
-            ref={chartRef}/>
+          data={{
+              labels,
+              datasets: [{
+                label,
+                data,
+                backgroundColor: backgroundColors,
+                borderColor: backgroundColors,
+                hoverOffset: 8,
+                borderWidth: 1,
+              }],
+          }}
+          options={options}
+          ref={chartRef}
+        />
     );
 };
 

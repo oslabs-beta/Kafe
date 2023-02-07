@@ -4,6 +4,7 @@ import { Line } from 'react-chartjs-2';
 import { useQuery } from "@apollo/client";
 import ChartStreaming from "chartjs-plugin-streaming";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { useTheme } from '@mui/material/styles';
 import "chartjs-adapter-luxon";
 
 import {
@@ -32,6 +33,9 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
     ChartStreaming
   );
   ChartJS.unregister(ChartDataLabels);
+  
+  const theme = useTheme();
+  const  { palette } = theme;
 
   const [chartData, setChartData] = useState({
     labels: [],
@@ -58,6 +62,7 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
       title: {
         display: title ? true : false,
         text: title,
+        color: palette.primary.main,
       },
       streaming: {
         duration: 5 * 60000,
@@ -65,7 +70,6 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
         refresh: 30 * 1000,
         onRefresh: (chart) => {
           if (!chartRef.current) {
-            console.log(yLabel + ' onRefresh stop: ', chart);
             chart.stop();
             chart.destroy();
             return;
@@ -93,8 +97,6 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
               chart.update('quiet')
             })
             .catch(err => console.log(err));
-
-          console.log('Updated data from refetch: ', chart.data.datasets)
         },
       },
     },
@@ -121,17 +123,17 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
           minRotation: 45,
         },
       },
-    },
       y: {
         title: {
           display: true,
           text: yLabel,
+          color: palette.mode === 'dark' ? palette.primary.light : palette.primary.main,
+        },
       },
     },
   }
 
   // GraphQL query to the backend
-  
   const { loading, data, refetch } = useQuery(query, {
     variables: {
       start: new Date(Date.now() - 60000 * 10).toString(),
@@ -169,7 +171,6 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
 
     setChartData({ labels, datasets });
 
-    //clear up side effect
     return () => {
       loaded.current = true;
     };

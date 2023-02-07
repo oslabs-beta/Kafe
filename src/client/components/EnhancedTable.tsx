@@ -49,7 +49,6 @@ const EnhancedTable = ({ data, headers, removeMessageHandler, reverseOrderHandle
     }, [data]);
 
     useEffect(() => {
-        console.log('Setting filtered rows from : ', rows);
         //Filtered row data
         let filtered = [];
         if (topicFilter && clientFilter) {

@@ -26,23 +26,20 @@ const DLQ = (props) => {
 
     useEffect(() => {
         const dlqMessages = JSON.parse(sessionStorage.getItem('DLQMessages'));
-        console.log('DLQMessages from localStorage: ', dlqMessages)
+        
         if (dlqMessages?.length){
             dlqMessages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
             dlqRef.current = dlqMessages;
             setDLQ(dlqMessages);
         };
-
     }, []);
-
 
     useEffect(() => {
         if (error || loading) return;
         if (data) {
-            // console.log('querydata:', data)
             setDLQ((dlq) => {
                 if (order === 'desc') {
-                    // console.log('new dlq msg:', data.dlqMessages);
+                    
                     dlqRef.current = [...data.dlqMessages, ...dlq];
                     sessionStorage.setItem('DLQMessages', JSON.stringify(dlqRef.current));
                     return [...data.dlqMessages, ...dlq];
@@ -56,7 +53,6 @@ const DLQ = (props) => {
 
         return () => {
             sessionStorage.setItem('DLQMessages', JSON.stringify(dlqRef.current));
-            console.log('localStorage DLQ:',JSON.stringify(dlqRef.current))
         };
     }, [loading, data]);
 
@@ -75,7 +71,7 @@ const DLQ = (props) => {
 
         return () => {
             skipRef.current = true;
-        }
+        };
     }, []);
 
     const removeMessageHandler = (indices: number[]) => {

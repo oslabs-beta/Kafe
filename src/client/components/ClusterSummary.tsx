@@ -10,7 +10,7 @@ import { CLUSTER_SUMMARY, BROKERS_CPU_USAGE, BROKER_JVM_MEMORY_USAGE } from '../
 
 
 const ClusterSummary = () => {
-    console.log('Cluster Summary component');
+    
     const [brokerCount, setBrokerCount] = useState(0);
     const [underreplicatedPartitionsCount, setUnderreplicatedPartitionsCount] = useState(0);
     const [offlinePartitionsCount, setOfflinePartitionsCount] = useState(0);
@@ -29,7 +29,6 @@ const ClusterSummary = () => {
         if (underMinISRCount !== null) setUnderMinISRCount(underMinISRCount);
         if (offlinePartitionsCount) setOfflinePartitionsCount(brokerCount);
       }
-
     },[loading, data]);
     
     return (
@@ -50,7 +49,7 @@ const ClusterSummary = () => {
                           query={ BROKERS_CPU_USAGE }
                           metric = {'CPUUsageOverTime'}
                           resources = {'brokers'}
-                          yLabel={'CPU Usage'}
+                          yLabel={'CPU Usage (% of Total)'}
                           title={'CPU Usage Over Time'}
                           step={'30s'}
                           labelName={'Broker'}
@@ -72,7 +71,7 @@ const ClusterSummary = () => {
                           query = {BROKER_JVM_MEMORY_USAGE}
                           metric = {'JVMMemoryUsedOverTime'}
                           resources = {'brokers'}
-                          yLabel={'Memory Usage'}
+                          yLabel={'Memory Usage (Bytes/Sec)'}
                           title = {'Memory Usage Over Time'}
                           step={'30s'}
                           labelName={'Broker'}
@@ -96,15 +95,21 @@ const ClusterSummary = () => {
                     <Typography component="p" variant="h6" sx={{p: 2}}>Cluster Information</Typography>
                     <Box sx={{p: 2}}>
                         <Typography component="p" variant="body1">
-                            {`Active Controller Count: ${activeControllersCount}`}
+                          Active Controller Count:&nbsp;&nbsp;&nbsp;&nbsp;
+                          <span className={activeControllersCount > 1 ? 'bad-metric' : 'good-metric'}>
+                            {activeControllersCount}
+                          </span>
                         </Typography>
                         <Typography color="text.secondary" sx={{ flex: 1 }}>
-                        Should never be greater than 1. If it is, then there was an error during controller election.
+                          Should never be greater than 1. If it is, then there was an error during controller election.
                         </Typography>
                     </Box>
                     <Box sx={{p: 2}}>
                         <Typography component="p" variant="body1">
-                            {`Number of Underreplicated Partitions: ${underreplicatedPartitionsCount}`}
+                            Number of Underreplicated Partitions:&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span className={underreplicatedPartitionsCount > 0 ? 'bad-metric' : 'good-metric'}>
+                              {underreplicatedPartitionsCount}
+                            </span>
                         </Typography>
                         <Typography color="text.secondary" sx={{ flex: 1 }}>
                           Number of partitions that do not have enough replicas to match the replication factor. A healthy Kafka cluster should not have any.
@@ -112,7 +117,10 @@ const ClusterSummary = () => {
                     </Box>
                     <Box sx={{p: 2}}>
                         <Typography component="p" variant="body1">
-                            {`Number of Offline Partitions: ${offlinePartitionsCount}`}
+                            Number of Offline Partitions:&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span className={offlinePartitionsCount > 0 ? 'bad-metric' : 'good-metric'}>
+                              {offlinePartitionsCount}
+                            </span>
                         </Typography>
                         <Typography color="text.secondary" sx={{ flex: 1 }}>
                             Number of partitions that are unavailable. Indicates that a broker is offline and there was a server failure/restart.
@@ -120,7 +128,10 @@ const ClusterSummary = () => {
                     </Box>
                     <Box sx={{p: 2}}>
                         <Typography component="p" variant="body1">
-                            {`Number of Partitions that are under ISR Threshold: ${underMinISRCount}`}                        
+                            Number of Partitions that are Under ISR Threshold:&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span className={underMinISRCount > 0 ? 'bad-metric' : 'good-metric'}>
+                              {underMinISRCount}
+                            </span>                        
                         </Typography>
                         <Typography color="text.secondary" sx={{ flex: 1 }}>
                           Number of partitions, where the number of In-Sync Replicas (ISR) is less than the minimum number of in-sync replicas specified. If value greater than 0, cluster is experiencing performance issue or one or more brokers are falling behind.
