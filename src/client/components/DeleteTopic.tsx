@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { useMutation } from "@apollo/client";
 import { DELETE_TOPIC } from '../queries/graphQL';
 
-function DeleteTopic(props) {
+function DeleteTopic() {
   const [deleteTopic, { loading, error, data }] = useMutation(DELETE_TOPIC);
 
-  const onSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit = (e) => {
+    e.preventDefault();
 
     deleteTopic({
       variables: {
-        name: event.target.name.value,
+        name: e.target.name.value,
       },
     });
     console.log(data);

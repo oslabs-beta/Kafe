@@ -8,3 +8,11 @@ scrape_configs:
       - kafka1:8081
       - kafka2:8081
       - kafka3:8081
+alerting:
+  alertmanagers:
+    - scheme: https
+      static_configs:
+        - targets:
+             - kafka1:8081
+             - kafka2:8081
+             - kafka3:8081

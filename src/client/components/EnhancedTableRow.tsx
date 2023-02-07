@@ -44,7 +44,7 @@ const EnhancedTableRow = ({ row, index, setSelected, checked }) => {
                 <TableCell align="center">
                     {row.clientType}
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="center">
                     {row.error}
                 </TableCell>
         </TableRow>

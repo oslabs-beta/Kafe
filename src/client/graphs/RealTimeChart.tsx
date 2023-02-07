@@ -139,16 +139,13 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
       step: step ? step : '60s',
     },
     fetchPolicy: "network-only",
-    // fetchPolicy: "cache-and-network",
     nextFetchPolicy: "network-only",
-    // nextFetchPolicy: "cache-first",
     notifyOnNetworkStatusChange: true,
     skip: skip.current,
   });
   
 
   useEffect(() => {
-    //make sure initial page load done ss
     console.log(`${yLabel} useEffect running...`)
     if (loading || loaded.current) return;
 
@@ -166,8 +163,8 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
         showLine: true,
         data: resource[metric].map(series => series = {'x': series.time, 'y': series.value})
       };
+
       datasets.push(dataSet);
-      console.log('Datasets after pushing:', datasets);
     });
 
     setChartData({ labels, datasets });
@@ -183,7 +180,6 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
     skip.current = false;
 
     return () => {
-      console.log('Clean up effect: ', chartRef.current);
       chartRef.current.stop();
       chartRef.current.destroy();
       skip.current = true;
@@ -191,8 +187,6 @@ const RealTimeChart = ({ query, metric, resources, yLabel, title, step, labelNam
 
   }, []);
 
-  console.log(`${yLabel} chart skip: `, skip.current);
-  console.log(`${yLabel} chart data: `, data);
   return (
     <>
       {useMemo(() => {

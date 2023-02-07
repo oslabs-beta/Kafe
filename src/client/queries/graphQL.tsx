@@ -4,11 +4,18 @@ export const CLUSTER_SUMMARY = gql`
   query getClusterInfo {
     cluster {
       brokerCount
-      activeControllers
       activeControllersCount
       underreplicatedPartitionsCount
       offlinePartitionsCount
       underMinISRCount
+    }
+  }
+`;
+
+export const GET_BROKER_COUNT = gql`
+  query getBrokers {
+    cluster {
+      brokerCount
     }
   }
 `;
@@ -102,85 +109,88 @@ export const GET_DLQ_MESSAGES = gql`
 `;
 
 export const LIST_TOPICS = gql`
-query Query {
-  topics {
-    name
-    ISRCount
-    logSize {
-      value
-      time
-    }
-    partitionsCount
-    replicasCount
-    partitions {
-      partitionId
-      replicas {
-        id
+  query Query {
+    topics {
+      name
+      ISRCount
+      logSize {
+        value
+        time
+      }
+      partitionsCount
+      replicasCount
+      partitions {
+        partitionId
+        replicas {
+          id
+        }
       }
     }
   }
-}
 `;
 
 export const CREATE_TOPIC = gql`
-mutation Mutation($name: String, $numPartitions: Int, $replicationFactor: Int) {
-  createTopic(name: $name, numPartitions: $numPartitions, replicationFactor: $replicationFactor) {
-    name
+  mutation Mutation($name: String, $numPartitions: Int, $replicationFactor: Int) {
+    createTopic(name: $name, numPartitions: $numPartitions, replicationFactor: $replicationFactor) {
+      name
+    }
   }
-}
 `;
 
 export const DELETE_TOPIC = gql`
-mutation DeleteTopic($name: String) {
-  deleteTopic(name: $name) {
-    name
+  mutation DeleteTopic($name: String) {
+    deleteTopic(name: $name) {
+      name
+    }
+  }
+`;
+
+export const DELETE_TOPIC_RECORDS = gql`
+mutation Mutation($topic: String) {
+  deleteTopicRecords(topic: $topic)
+}
+`;
+
+export const ALTER_PARTITION_REASSIGNMENTS = gql`
+mutation ReassignPartitions($topics: [PartitionReassignment]) {
+  reassignPartitions(topics: $topics){
+      name
+      partitions{
+          partition
+          replicas
+          addingReplicas
+          removingReplicas
+      }
   }
 }
 `;
 
-export const REASSIGN_PARTITIONS = gql`
-mutation DeleteTopic($name: String) {
-  deleteTopic(name: $name) {
-    name
-  }
-}
-`;
-
-// type Query {
-//   cluster(
-//     start: String,
-//     end: String,
-//     step: String
-//     ): Cluster
-//   brokers(
-//     start: String,
-//     end: String,
-//     step: String,
-//     ids: [Int]): [Broker]!
-//   broker(
-//     start: String
-//     end: String,
-//     step: String,
-//     id: Int): Broker
-//   topics(name: [String]): [Topic]
-//   topic(name: String): Topic
-// }
-
-// type Mutation {
-//   createTopic: Topic
-//   deleteTopic: Topic
-//   reassignPartitions: Partition
-//   deleteTopicRecords: Boolean
-// }
-
-// const tempQuery =   gql`
-// query GetCluster {
-//   cluster {
-//     brokers {
-//       id
-//       host
-//       port
+// export const ALTER_PARTITION_REASSIGNMENTS = gql`
+// mutation ReassignPartitions($topics: [PartitionReassignment]) {
+//   alterPartitionReassignments(topics: $topics) {
+//     {
+//       topics: [
+//         {
+//           partitionAssignment
+//           topic
+//         }
+//       ]
 //     }
 //   }
 // }
-// `
+// `;
+
+export const TREE_DATA = gql`
+  query Treedata {
+    cluster {
+      brokerCount
+    }
+    topics{
+      name,
+      partitions {
+         partitionId,
+         leader
+      }
+    }
+  }
+  `;

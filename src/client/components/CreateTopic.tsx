@@ -2,17 +2,15 @@ import React, { useState } from 'react';
 import { useMutation } from "@apollo/client";
 import { CREATE_TOPIC } from '../queries/graphQL';
 
-function CreateTopic(props) {
+function CreateTopic() {
   const [createTopic, { loading, error, data }] = useMutation(CREATE_TOPIC);
 
-  const onSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit = (e) => {
+    e.preventDefault();
 
     createTopic({
       variables: {
-        name: event.target.name.value,
-        numPartitions: Number(event.target.numPartitions.value),
-        replicationFactor: Number(event.target.replicationFactor.value),
+        name: e.target.name.value
       },
     });
     console.log(data);
@@ -22,12 +20,6 @@ function CreateTopic(props) {
     <form onSubmit={onSubmit}>
       <label htmlFor="name">Name:</label>
       <input type="text" name="name" />
-      <br />
-      <label htmlFor="numPartitions">Number of partitions:</label>
-      <input type="number" name="numPartitions" />
-      <br />
-      <label htmlFor="replicationFactor">Replication factor:</label>
-      <input type="number" name="replicationFactor" />
       <br />
       <button type="submit">Create topic</button>
       {loading && <p>Loading...</p>}

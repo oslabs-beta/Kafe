@@ -1,90 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { LIST_TOPICS } from '../queries/graphQL';
+import { ALTER_PARTITION_REASSIGNMENTS, LIST_TOPICS } from '../queries/graphQL';
 
-//  Static list of topics; placeholder for GQL query
-const topics = {
-  topic1: 8,
-  topic2: 4,
-  topic3: 6,
-  topic4: 10,
-};
-
-function Partitions() {
-  //  Create variables and setters for dropdown and inc/dec buttons
+const ReassignPartitions = (props) => {
   const [selectedTopic, setSelectedTopic] = useState('');
-  const [partitionCount, setPartitionCount] = useState(0);
-  const [error, setError] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [targetPartition, setTargetPartition] = useState('');
+  const [targetReplicas, setTargetReplicas] = useState('');
 
-  //  Handler for changing topics
-  const handleTopicChange = (e) => {
-    setSelectedTopic(e.target.value);
-    setPartitionCount(topics[e.target.value]);
-  };
-
-  //  Handlers for inc/dec
-  const handleIncrement = () => {
-    setPartitionCount(partitionCount + 1);
-  };
-
-  const handleDecrement = () => {
-    setPartitionCount(partitionCount - 1);
-  };
+  const { data: listData, loading: listLoading, error: listError } = useQuery(LIST_TOPICS);
+  const [alterPartitionReassignments, { data: alterData, loading: alterLoading, error: alterError }] = useMutation(
+    ALTER_PARTITION_REASSIGNMENTS
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (!selectedTopic) {
-      setError(true);
-      return;
-    }
-
-    setError(false);
-    setSubmitted(true);
+    alterPartitionReassignments({
+      variables: { 
+        topics: [{ topic: selectedTopic, partitionAssignment: [{ partition: targetPartition, replicas: [{targetReplicas}] }] }]
+      },
+    });
+    console.log("alterData is...", alterData, 'background: #222; color: #bada55');
   };
+  
 
-  const { loading, data } = useQuery(LIST_TOPICS);
+  if (listLoading) return <p>Loading...</p>;
+  if (listError) return <p>Error </p>;
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="topic-select">Existing Topics</label><br />
-      <select
-        id="topic-select"
-        value={selectedTopic}
-        onChange={handleTopicChange}
-      >
-        {data?.topics.map((data) => (
-          <option key={data.name} value={data.name}>
-            {data.name}
-          </option>
-        ))}
-      </select>
-      {error && <p>Please select a topic</p>}
-      <div>
-      <label htmlFor="partition-count">Partitions:</label><br />
-        <button type="button" onClick={handleDecrement}>
-          -
-        </button>
-
+    <div>
+      <h2>Reassign Partitions</h2>
+      <form onSubmit={handleSubmit}>
+        {/* <label htmlFor="topic">Topic:</label>
+        <select
+          id="topic"
+          value={selectedTopic || ""}
+          onChange={(e) => setSelectedTopic(e.target.value)}
+        >
+          <option value="">Select a topic...</option>
+          {listData &&
+            listData.topics.map((topic) => (
+              <option key={topic.name} value={topic.name}>
+                {topic.name}
+              </option>
+            ))}
+        </select> */}
+        <label htmlFor="targetPartition">Target Partition:</label>
         <input
-          id="partition-count"
           type="number"
-          value={partitionCount}
-          onChange={(e) => setPartitionCount(parseInt(e.target.value, 10))}
+          id="targetPartition"
+          value={targetPartition}
+          onChange={(e) => setTargetPartition(e.target.value)}
         />
-        <button type="button" onClick={handleIncrement}>
-          +
-        </button>
-      </div><br />
-      <button type="submit">Update Partitions</button>
-      {submitted && (
-        <p>
-          {selectedTopic} has a new partition count of {partitionCount}.
-        </p>
-      )}
-    </form>
+        <label htmlFor="targetReplicas">Target Replicas:</label>
+        <input
+          type="number"
+          id="targetReplicas"
+          value={targetReplicas}
+          onChange={(e) => setTargetReplicas(e.target.value)}
+        />
+        <button type="submit">Reassign Partitions</button>
+        {alterLoading && <p>Loading...</p>}
+        {alterError && <p>Error: {alterError.message}</p>}
+        {alterData && <p>Partitions/Replicas Reassigned!</p>}
+      </form>
+    </div>
   );
-}
+};
 
-export default Partitions;
+export default ReassignPartitions;
