@@ -82,16 +82,19 @@ const CardComponent = ({ topic, refetch, partitions }) => {
             <Button 
               size="medium" 
               color="primary" 
+              variant='outlined'
               sx={btnStyle}
               onClick={handleDeleteTopic}>Delete Topic</Button>
             <Button 
               size="medium" 
               color="primary"
+              variant='outlined'
               sx={btnStyle} 
               onClick={handleDeleteMessages}>Delete All Messages</Button>
             <Button 
               size="medium" 
               color="primary"
+              variant='outlined'
               sx={btnStyle} 
               onClick={handleOpen}>Reassign Partitions</Button>
             <Modal 
