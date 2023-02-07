@@ -15,7 +15,7 @@ function Dashboard({ toggleTheme }){
     return(
         <>
             <Grid container spacing={2} sx={{ minHeight: '100%'}}>
-                <Grid item md={12} sx={{ minHeight: '120px', minWidth: '800px'}} style={{justifyContent: "space-between"}}>
+                <Grid item md={12} sx={{ minHeight: '120px'}}>
                     <Header />
                     {palette.mode === 'light' ? 
                         <Brightness3Icon onClick={toggleTheme}/> : 

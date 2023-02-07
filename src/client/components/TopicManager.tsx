@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { LIST_TOPICS, CREATE_TOPIC} from '../queries/graphQL';
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import Container from "@mui/material/Container";
 import Card from './Card';
 
+import { TextField, Button } from '@mui/material';
+import ReassignPartitions from './ReassignPartitions';
 
 function TopicManager() {
   const [newTopic, setNewTopic] = useState('');
@@ -78,6 +80,13 @@ function TopicManager() {
     return <div>Loading...</div>;
   };
 
+   const btnStyle = {
+    minWidth: 150, 
+    margin: "2px",
+    textAlign:"right",
+    textTransform: 'unset',
+    };
+
   return (
     <div>
         <Paper
@@ -90,28 +99,50 @@ function TopicManager() {
             elevation={8}>
             <form onSubmit={onSubmit}>
                 <label htmlFor="name">New Topic Name:</label>&nbsp;&nbsp;
-                <input type="text" name="name" onChange={handleChangeTopic} value={newTopic}/>&nbsp;&nbsp;
+                <input type="text" 
+                name="name" 
+                onChange={handleChangeTopic} 
+                value={newTopic}/>&nbsp;&nbsp;
                 <button type="submit">Create Topic</button>
                 {loadingCreateTopic && <p>Loading...</p>}
                 {errorCreateTopic && <p>Error: {errorCreateTopic.message}</p>}
                 {creatingTopic && <p>Topic Created! Refreshing...</p>}
             </form>
         </Paper><br></br>
-      <Container maxWidth="lg" sx={{ mt: 2, mb: 4 }}>
-        <Grid container spacing={3}>
+        <Grid container spacing={0} sx={{ minHeight: '100%'}}>
           <Grid>
-             {topicData.map((topic) => (
-                 <Card 
-                   key={topic.name} 
-                   topic={topic}
-                   refetch={refetchHandler} 
-                   partitions={topic.partitions}></Card>
-             ))}
+              {topicData.map((topic) => (
+                  <Card 
+                    key={topic.name} 
+                    topic={topic}
+                    refetch={refetchHandler} 
+                    partitions={topic.partitions}></Card>
+              ))}
           </Grid>
         </Grid>
-      </Container>
-      <br />
-      <br />
+        <br />
+        <br />
+          {/* {dataCreateTopic && <p>Topic Created! Refreshing...</p>}
+            </form>
+            {/* <TextField id="topic form" label="New Topic Name" variant="standard" onSubmit={onSubmit}/>
+              <Button variant="contained" 
+              sx={btnStyle}>
+                Create Topic</Button>
+                {loadingCreateTopic && <p>Loading...</p>}
+                {errorCreateTopic && <p>Error: {errorCreateTopic.message}</p>}
+                {dataCreateTopic && <p>Topic Created! Refreshing...</p>} }
+            
+          </Paper><br></br>
+
+          <Grid container spacing={0} sx={{ minHeight: '100%'}}>
+               {dataListTopics?.topics?.filter(topic => topic.name !== '__consumer_offsets').map((topic) => (
+              <Grid>
+                  <Card 
+                    key={topic.name} 
+                    topic={topic}
+                    refetch={refetchTopics} 
+                    partitions={topic.partitions}></Card></Grid>))}
+          </Grid> */}
     </div>
   );
 }
