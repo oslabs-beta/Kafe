@@ -28,6 +28,7 @@ function Brokers(){
         loaded.current = false;
     }, []);
 
+    console.log(brokerInfo)
     const isLoading = <div>Loading...</div>
     return(
         <>
@@ -96,11 +97,7 @@ function Brokers(){
                                 <Typography component="p" variant="h6" sx={{p: 2}}>{`Broker ${broker.id}`}</Typography>
                                 <Box sx={{p: 2}}>
                                     <Typography component="p" variant="body1">
-                                        Follower Average Time (ms):&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span className={broker.fetchFollowerTotalTimeMs.value < 500 ? 'good-metric' : 
-                                                        broker.fetchFollowerTotalTimeMs.value < 1000 ? 'ok-metric' : 'bad-metric'}>
-                                            {broker.fetchFollowerTotalTimeMs.value || 0}
-                                        </span>
+                                        {`Follower Average Time (ms): ${broker.fetchFollowerTotalTimeMs ? broker.fetchFollowerTotalTimeMs.value : 0}`}
                                     </Typography>
                                     <Typography color="text.secondary" sx={{ flex: 1 }}>
                                     {'Average time in ms it takes replicate partitions to receive new data'}
@@ -108,11 +105,7 @@ function Brokers(){
                                 </Box>
                                 <Box sx={{p: 2}}>
                                     <Typography component="p" variant="body1">
-                                        Consumer Average Time (ms):&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span className={broker.fetchConsumerTotalTimeMs.value < 500 ? 'good-metric' : 
-                                                        broker.fetchConsumerTotalTimeMs.value < 2000 ? 'ok-metric' : 'bad-metric'}>
-                                            {broker.fetchConsumerTotalTimeMs.value || 0}
-                                        </span>
+                                        {`Consumer Average Time (ms): ${broker.fetchConsumerTotalTimeMs ? broker.fetchConsumerTotalTimeMs.value : 0}`}
                                     </Typography>
                                     <Typography color="text.secondary" sx={{ flex: 1 }}>
                                         {'Average time in ms it takes consumers to receive new data'}
@@ -120,11 +113,7 @@ function Brokers(){
                                 </Box>
                                 <Box sx={{p: 2}}>
                                     <Typography component="p" variant="body1">
-                                        Consumer Average Time (ms):&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span className={broker.produceTotalTimeMs.value < 500 ? 'good-metric' : 
-                                                        broker.produceTotalTimeMs.value < 1000 ? 'ok-metric' : 'bad-metric'}>
-                                            {broker.produceTotalTimeMs.value || 0}
-                                        </span>
+                                        {`Producer Average Time (ms): ${broker.produceTotalTimeMs ? broker.produceTotalTimeMs.value : 0}`}
                                     </Typography>
                                     <Typography color="text.secondary" sx={{ flex: 1 }}>
                                         {'Average time in ms it takes producers to send new data to the broker'}
