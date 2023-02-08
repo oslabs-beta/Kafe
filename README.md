@@ -111,7 +111,7 @@ npm run build
 ### Cluster Manager
 - Kafe comes with an intuitive and easy-to-use GUI tool to manage your cluster. It should render cards for all active topics and will allow you to create new topics, delete existing topics, reassign replicas of each topic partition and clear all messages for topic.
 
-![](/feature_image/cluster_manager.png)
+![](cluster_manager.png)
 
 ### Dead Letter Queue
 - KafkaJS lacks native support for processing failed messages, so we created a lightweight npm package Kafe-DLQ to handle any failed messages within a Kafka cluster and forward them to a custom 'DeadLetterQueue' topic. Our application then creates a consumer that subscribes to 'DeadLetterQueue', which will then display a dynamic table with information on all messages that have failed since starting the cluster. You can read more about Kafe-DLQ [here](#https://github.com/kafe-DLQ/kafe-DLQ). If you want to utilize Kafe's DLQ features, be sure to do the following:
