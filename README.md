@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://https://github.com/oslabs-beta/kafe/">
-    <img src="./src/client/assets/Logo2.png" alt="Logo" height="150px" width="150px"/> 
+    <img src="./src/client/assets/Logo2.png" alt="Logo" height="100px" width="150px"/> 
   </a>
   <h1>Kafe</h1>
   <p>An open-source Kafka visualizer with Dead Letter Queue support for failed messages. Built for JavaScript developers!<p>
