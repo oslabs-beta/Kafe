@@ -3,7 +3,7 @@
     <img src="./src/client/assets/Logo2.png" alt="Logo" height="100px" width="200px"/> 
   </a>
   <br>
-  <p>An open-source Kafka visualizer with Dead Letter Queue support for failed messages. Built for JavaScript developers!<p>
+  <div>An open-source Kafka visualizer with Dead Letter Queue support for failed messages. Built for JavaScript developers!<div>
   <a href="https://https://github.com/oslabs-beta/kafe/"><img src="https://img.shields.io/badge/license-MIT-blue"/></a>
   <a href="https://github.com/oslabs-beta/kafe/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/oslabs-beta/kafe"></a>
   <a href="https://github.com/oslabs-beta/kafe/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/oslabs-beta/kafe"></a>
