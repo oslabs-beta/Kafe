@@ -107,7 +107,6 @@ npm run build
 
 ![](./assets/cluster_realtime_metrics.png)
 
-
 ### Cluster Manager
 - Kafe comes with an intuitive and easy-to-use GUI tool to manage your cluster. It should render cards for all active topics and will allow you to create new topics, delete existing topics, reassign replicas of each topic partition and clear all messages for topic.
 
