@@ -104,11 +104,12 @@ npm run build
   1. Overall CPU and Memory usage of your cluster
   1. Time it takes to produce messages
   1. Time it takes for consumers to receive messages from topics they are subscribed to
-  ![](https://github.com/oslabs-beta/Kafe/blob/main/feature_image/cluster_hierarchy_tree.png)
+  <!-- ![](https://github.com/oslabs-beta/Kafe/blob/main/feature_image/cluster_hierarchy_tree.png) -->
+  <img src ="https://github.com/oslabs-beta/Kafe/blob/main/feature_image/cluster_hierarchy_tree.png?raw=true">
 
 ### Cluster Manager
 - Kafe comes with an intuitive and easy-to-use GUI tool to manage your cluster. It should render cards for all active topics and will allow you to create new topics, delete existing topics, reassign replicas of each topic partition and clear all messages for topic.
-![](cluster_manager.png)
+![](clusterManager.png)
 
 ### Dead Letter Queue
 - KafkaJS lacks native support for processing failed messages, so we created a lightweight npm package Kafe-DLQ to handle any failed messages within a Kafka cluster and forward them to a custom 'DeadLetterQueue' topic. Our application then creates a consumer that subscribes to 'DeadLetterQueue', which will then display a dynamic table with information on all messages that have failed since starting the cluster. You can read more about Kafe-DLQ [here](#https://github.com/kafe-DLQ/kafe-DLQ). If you want to utilize Kafe's DLQ features, be sure to do the following:
