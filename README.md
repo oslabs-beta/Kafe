@@ -105,10 +105,11 @@ npm run build
   1. Time it takes to produce messages
   1. Time it takes for consumers to receive messages from topics they are subscribed to
   <!-- ![](https://github.com/oslabs-beta/Kafe/blob/main/feature_image/cluster_hierarchy_tree.png) -->
-  <img src ="https://github.com/oslabs-beta/Kafe/blob/main/feature_image/cluster_hierarchy_tree.png?raw=true">
+<img src ="https://github.com/oslabs-beta/Kafe/blob/main/feature_image/cluster_hierarchy_tree.png?raw=true">
 
 ### Cluster Manager
 - Kafe comes with an intuitive and easy-to-use GUI tool to manage your cluster. It should render cards for all active topics and will allow you to create new topics, delete existing topics, reassign replicas of each topic partition and clear all messages for topic.
+
 ![](clusterManager.png)
 
 ### Dead Letter Queue
