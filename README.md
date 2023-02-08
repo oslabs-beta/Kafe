@@ -20,9 +20,9 @@
    - [Requirements](#requirements)
    - [Installation](#installation)
    - [When you're ready to use Kafe](#when-youre-ready-to-use-kafe)
-1. [Contributors](#contributors)
+1. [Prometheus Server and Pre-configured Cluster](#prometheus-server-and-pre-configured-cluster)
 1. [Roadmap](#roadmap)
-1. [Prometheus Server and Demo Cluster](#prometheus-server-and-demo-cluster)
+1. [Contributors](#contributors)
 1. [License](#license)
 
 ## About the Project
@@ -54,14 +54,14 @@ Do the following to get set up with Kafe:
 
 - Have node installed. Kafe is built to work on Node 14+.
 - If you want to use our pre-configured Kafka cluster, have Docker Desktop and Docker Compose installed and follow the [demo instructions](#prometheus-server-and-pre-configured-cluster).
-- Download [JMX exporter] (https://github.com/prometheus/jmx_exporter) and add it to your Kafka cluster configurations. You can find the configuration files and a copy of the JMX exporter jar file in the `configs/jmx_exp` folder in this repo. Use the earlier version (jmx_prometheus_javaagent-0.16.1)
+- Download [JMX exporter](https://github.com/prometheus/jmx_exporter) and add it to your Kafka cluster configurations. You can find the configuration files and a copy of the JMX exporter jar file in the `configs/jmx_exp` folder in this repo. Use the earlier version (jmx_prometheus_javaagent-0.16.1)
 
   1. If you're starting your Kafka cluster from the CLI you can set up JMX exporter following these commands:
   
   ```
   export KAFKA_OPTS='-javaagent:{PATH_TO_JMX_EXPORTER}/jmx-exporter.jar={PORT}:{PATH_TO_JMX_EXPORTER_KAFKA.yml}/kafka.yml'
   ```
-  1. Launch and start your brokers as you normally would.
+  2. Launch and start your brokers as you normally would.
 
 - Be sure to have a Prometheus metrics server running with the proper targets exposed on your brokers. You can find an example of the Prometheus settings we use for our demo cluster in `configs/prometheus/prometheus.yml`
 
@@ -88,14 +88,19 @@ npm install
 npm run build
 ```
 
-## Contributors
 
-- Oliver Zhang| [GitHub](https://github.com/zezang) | [Linkedin](https://www.linkedin.com/in/oliver-zhang91/)
-- Yirou Chen | [GitHub](https://github.com/WarmDarkMatter) | [Linkedin](https://www.linkedin.com/in/yirouchen/)
-- Jacob Cole| [GitHub](https://github.com/jacobcole34) | [Linkedin](https://www.linkedin.com/in/jacobcole34/)
-- Caro Gomez | [GitHub](https://github.com/Caro-Gomez) | [Linkedin](https://www.linkedin.com/in/carolina-llano-g%C3%B3mez/)
-- Kpange Kaitibi | [GitHub](https://github.com/KpangeKaitibi) | [Linkedin](https://www.linkedin.com/in/kpange-kaitibi-522b31102/)
+## Prometheus Server and Pre-configured Cluster
+There is an example docker-compose file for spinning up a Prometheus server along with a Kafka cluser: `docker-kafka-prom.yml`.
 
+- If you just need want to spin up a Prometheus server + Kafka Cluster.:
+  1. We already have a Prometheus config set up, so don't worry about it!
+  1. Be sure to change the `KAFKA_BROKERS` environment variable to the ports that you plan on running your cluster on, separated by commas. In our .env.template file it is spinning up three brokers at localhost:9091, localhost:9092 and localhost:9093
+  1. Run the following command:
+
+  ```
+  docker-compose -f docker-compose-kafka-prom.yml up -d
+
+  ```
 ## Roadmap
 
 Kafe was just launched in Feb, 2023, and we want to see it grow and evolve through user feedback and continuous iteration. Here are some features we're working on bringing to Kafe in the near future:
@@ -110,18 +115,13 @@ If you don't see a feature that you're looking for listed above, find any bugs, 
 
 Also if you create a custom implementation of Kafe we'd love to see how you're using it!
 
+## Contributors
 
-## Prometheus Server and Pre-configured Cluster
-There is an example docker-compose file for spinning up a Prometheus server along with a Kafka cluser: `docker-kafka-prom.yml`.
-
-- If you just need want to spin up a Prometheus server + Kafka Cluster.:
-  1. We already have a Prometheus config set up, so don't worry about it!
-  1. Be sure to change the `KAFKA_BROKERS` environment variable to the ports that you plan on running your cluster on, separated by commas. In our .env.template file it is spinning up three brokers at localhost:9091, localhost:9092 and localhost:9093
-  1. Run the following command:
-
-  ```
-  docker-compose -f docker-compose-kafka-prom.yml up -d
-  ```
+- Oliver Zhang| [GitHub](https://github.com/zezang) | [Linkedin](https://www.linkedin.com/in/oliver-zhang91/)
+- Yirou Chen | [GitHub](https://github.com/WarmDarkMatter) | [Linkedin](https://www.linkedin.com/in/yirouchen/)
+- Jacob Cole| [GitHub](https://github.com/jacobcole34) | [Linkedin](https://www.linkedin.com/in/jacobcole34/)
+- Caro Gomez | [GitHub](https://github.com/Caro-Gomez) | [Linkedin](https://www.linkedin.com/in/carolina-llano-g%C3%B3mez/)
+- Kpange Kaitibi | [GitHub](https://github.com/KpangeKaitibi) | [Linkedin](https://www.linkedin.com/in/kpange-kaitibi-522b31102/)
 
 ## License
 
