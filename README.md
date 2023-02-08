@@ -97,7 +97,7 @@ npm run build
 ### Cluster Tree
 - When you first load Kafe, you can navigate to "home" to see a tree representing your Kafka cluster. It will show the distribution of all your partitions and which brokers they belong to. Each node can be expanded or collapsed for viewing convenience.
 
-![](/feature_image/cluster_hierarchy_tree.png)
+![](./feature_image/cluster_hierarchy_tree.png)
 
 ### Realtime Metrics
 - Kafe provides realtime charts to track important metrics that reflect the healh of your Kafka cluster. Metrics that Kafe tracks include but are not limited to:
@@ -105,7 +105,7 @@ npm run build
   1. Time it takes to produce messages
   1. Time it takes for consumers to receive messages from topics they are subscribed to
   <!-- ![](https://github.com/oslabs-beta/Kafe/blob/main/feature_image/cluster_hierarchy_tree.png) -->
-<img src="./src/client/assets/cluster_hierarchy_tree.png" alt="Logo" height="100px" width="200px"/>
+
 
 ### Cluster Manager
 - Kafe comes with an intuitive and easy-to-use GUI tool to manage your cluster. It should render cards for all active topics and will allow you to create new topics, delete existing topics, reassign replicas of each topic partition and clear all messages for topic.
