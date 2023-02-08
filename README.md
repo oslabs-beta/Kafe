@@ -19,7 +19,7 @@
 1. [Getting Started](#getting-started)
    - [Requirements](#requirements)
    - [Installation](#installation)
-   - [When you're ready to use Kafe](#when-youre-ready-to-use-franzview)
+   - [When you're ready to use Kafe](#when-youre-ready-to-use-kafe)
 1. [Contributors](#contributors)
 1. [Roadmap](#roadmap)
 1. [Prometheus Server and Demo Cluster](#prometheus-server-and-demo-cluster)
@@ -30,9 +30,9 @@
 Kafe is an open-source application to help independent developers to monitor and to manage their Apache Kafka clusters, while offering debugging and failed messages support. With Kafe you can monitor key metrics to your cluster, brokers, and topic performance and take actions accordingly. Through the UI you are able to:
 
 1. Monitor key performance metrics in cluster and brokers with real time charts, and insights of your cluster with info cards.
-2. Diagnose and debug your topics with Dead Letter Queue failed messages table and analytic charts.
-2. Create and delete topics within a cluster.
-3. Reassign partition replicas to support with load balancing and solve for underreplication issues.
+1. Diagnose and debug your topics with Dead Letter Queue failed messages table and analytic charts.
+1. Create and delete topics within a cluster.
+1. Reassign partition replicas to support with load balancing and solve for underreplication issues.
 
 ### Built With
 
@@ -57,10 +57,11 @@ Do the following to get set up with Kafe:
 - Download [JMX exporter] (https://github.com/prometheus/jmx_exporter) and add it to your Kafka cluster configurations. You can find the configuration files and a copy of the JMX exporter jar file in the `configs/jmx_exp` folder in this repo. Use the earlier version (jmx_prometheus_javaagent-0.16.1)
 
   1. If you're starting your Kafka cluster from the CLI you can set up JMX exporter following these commands:
+  
   ```
   export KAFKA_OPTS='-javaagent:{PATH_TO_JMX_EXPORTER}/jmx-exporter.jar={PORT}:{PATH_TO_JMX_EXPORTER_KAFKA.yml}/kafka.yml'
   ```
-  2. Launch and start your brokers as you normally would.
+  1. Launch and start your brokers as you normally would.
 
 - Be sure to have a Prometheus metrics server running with the proper targets exposed on your brokers. You can find an example of the Prometheus settings we use for our demo cluster in `configs/prometheus/prometheus.yml`
 
@@ -97,15 +98,31 @@ npm run build
 
 ## Roadmap
 
-Kafe is in early stages, but we wanted to get it in the hands of developers as soon as possible to be able to start incorporating user feedback immediately. Here are features we're working on bringing to FranzView in the near future:
+Kafe was just launched in Feb, 2023, and we want to see it grow and evolve through user feedback and continuous iteration. Here are some features we're working on bringing to Kafe in the near future:
 
 - Additional filtering options for topics and to filter data by time
-- The option to auto-deploy a Prometheus server if one isn't passed in
+- More flexibility for cluster manipulation such as changing replication factor for a topic, and the option to auto-reprocess failed messages in a topic
 - Additional authentication support for Kafka Clusters
-- Log exploration to support with troubleshooting
 - Consumer metrics to monitor consumer performance and make improvements
-- Frontend querying tools so you can query data that is important to your team
+- Additional frontend testing such as being able to send messages to a topic and testing the response time of the consumer
 
 If you don't see a feature that you're looking for listed above, find any bugs, or have any other suggestions, please feel free to [open an issue](https://github.com/oslabs-beta/kafe/issues) and our team will work with you to get it implemented!
 
 Also if you create a custom implementation of Kafe we'd love to see how you're using it!
+
+
+## Prometheus Server and Pre-configured Cluster
+There is an example docker-compose file for spinning up a Prometheus server along with a Kafka cluser: `docker-kafka-prom.yml`.
+
+- If you just need want to spin up a Prometheus server + Kafka Cluster.:
+  1. We already have a Prometheus config set up, so don't worry about it!
+  1. Be sure to change the `KAFKA_BROKERS` environment variable to the ports that you plan on running your cluster on, separated by commas. In our .env.template file it is spinning up three brokers at localhost:9091, localhost:9092 and localhost:9093
+  1. Run the following command:
+
+  ```
+  docker-compose -f docker-compose-kafka-prom.yml up -d
+  ```
+
+## License
+
+This product is licensed under the MIT License without restriction.
