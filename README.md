@@ -97,7 +97,8 @@ npm run build
 ### Cluster Tree
 - When you first load Kafe, you can navigate to "home" to see a tree representing your Kafka cluster. It will show the distrubtion of all your partitions and which brokers they belong to. Each node can be expanded or collapsed for viewing convenience.
 
-![](./feature_image/cluster_hierarchy_tree.png)
+<div> <img src="./feature_image/cluster_hierarchy_tree.png" height="500px" width="1000px"/> </div>
+
 
 ### Realtime Metrics
 - Kafe provides realtime charts to track important metrics that reflect the healh of your Kafka cluster. Metrics that Kafe tracks include but are not limited to:
@@ -140,19 +141,18 @@ npm run build
     ```
 
   4. You are ready to start producing messages to your Kafka cluster just like normal, except now any messages that fail will be forwarded to the 'DeadLetterQueue' topic, which Kafe-DLQ will create automatically! Kafe already has a consumer subscribed to this topic, but in a standalone application you would need to spin up the consumer yourself.
-
-     ```javascript
-    testProducer.connect()
-        .then(() => testProducer.send({
-          topic: 'good',
-          messages: [{key: '1', value: '1'}, {key: '2', value: '2'}, {key: '3', value: '3'}]
-        }))
-        .then(() => testProducer.send({
-          topic: 'bad',
-          messages: [{key: '1', value: '-666'}, {key: '2', value: '-666'}, {key: '3', value: '3'}]
-        }))
-        .catch((err) => console.log(err));
-     ``` 
+    ```javascript
+        testProducer.connect()
+            .then(() => testProducer.send({
+              topic: 'good',
+              messages: [{key: '1', value: '1'}, {key: '2', value: '2'}, {key: '3', value: '3'}]
+            }))
+            .then(() => testProducer.send({
+              topic: 'bad',
+              messages: [{key: '1', value: '-666'}, {key: '2', value: '-666'}, {key: '3', value: '3'}]
+            }))
+            .catch((err) => console.log(err));
+    ``` 
 
 ![](./feature_image/dlq_message_table.png)
 ![](./feature_image/dlq_analytic_charts.png)
