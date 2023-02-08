@@ -97,7 +97,7 @@ npm run build
 ### Cluster Tree
 - When you first load Kafe, you can navigate to "home" to see a tree representing your Kafka cluster. It will show the distribution of all your partitions and which brokers they belong to. Each node can be expanded or collapsed for viewing convenience.
 
-![](feature_image/cluster_hierarchy_tree.png)
+![](/feature_image/cluster_hierarchy_tree.png)
 
 
 ### Realtime Metrics
@@ -106,12 +106,12 @@ npm run build
   1. Time it takes to produce messages
   1. Time it takes for consumers to receive messages from topics they are subscribed to
   
-![](https://github.com/oslabs-beta/Kafe/blob/main/feature_image/cluster_hierarchy_tree.png?raw=true)
+![](https://github.com/oslabs-beta/Kafe/blob/main/feature_image/cluster_hierarchy_tree.png)
 
 ### Cluster Manager
 - Kafe comes with an intuitive and easy-to-use GUI tool to manage your cluster. It should render cards for all active topics and will allow you to create new topics, delete existing topics, reassign replicas of each topic partition and clear all messages for topic.
 
-![](./feature_image/cluster_manager.png)
+![](/feature_image/cluster_manager.png)
 
 ### Dead Letter Queue
 - KafkaJS lacks native support for processing failed messages, so we created a lightweight npm package Kafe-DLQ to handle any failed messages within a Kafka cluster and forward them to a custom 'DeadLetterQueue' topic. Our application then creates a consumer that subscribes to 'DeadLetterQueue', which will then display a dynamic table with information on all messages that have failed since starting the cluster. You can read more about Kafe-DLQ [here](#https://github.com/kafe-DLQ/kafe-DLQ). If you want to utilize Kafe's DLQ features, be sure to do the following:
