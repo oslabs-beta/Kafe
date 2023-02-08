@@ -105,7 +105,7 @@ npm run build
   1. Time it takes to produce messages
   1. Time it takes for consumers to receive messages from topics they are subscribed to
 
-  ![](./assets/cluster_realtime_metrics.png)
+![](./assets/cluster_realtime_metrics.png)
 
 
 ### Cluster Manager
