@@ -104,7 +104,8 @@ npm run build
   1. Overall CPU and Memory usage of your cluster
   1. Time it takes to produce messages
   1. Time it takes for consumers to receive messages from topics they are subscribed to
-  <!-- ![](https://github.com/oslabs-beta/Kafe/blob/main/feature_image/cluster_hierarchy_tree.png) -->
+
+  ![](./assets/cluster_realtime_metrics.png)
 
 
 ### Cluster Manager
