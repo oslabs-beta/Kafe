@@ -97,7 +97,7 @@ npm run build
 ### Cluster Tree
 - When you first load Kafe, you can navigate to "home" to see a tree representing your Kafka cluster. It will show the distrubtion of all your partitions and which brokers they belong to. Each node can be expanded or collapsed for viewing convenience.
 
-<div> <img src="./feature_image/cluster_hierarchy_tree.png" height="500px" width="1000px"/> </div>
+<div> <img src="./feature_image/cluster_hierarchy_tree.png" height="200px" width="400px"/> </div>
 
 
 ### Realtime Metrics
@@ -120,6 +120,7 @@ npm run build
     ```npm install kafe-dlq```
   
   2. Declare your Kafka cluster configuration. The method is identical to how you would do it with kafkajs:
+  
     ```javascript
         const { KafeDLQClient } = require('kafe-dlq');
         const { Kafka } = require('kafkajs');
@@ -130,6 +131,7 @@ npm run build
         });
     ```
   3. Create a custom callback to handle specific failure edge cases, initialize a Kafe-DLQ client and instantiate a producer. You can read more about the implementation at the Kafe-DLQ README.
+
     ```javascript 
         const callback = ((message ) => {
             return parseInt(message) > 0;
@@ -141,6 +143,7 @@ npm run build
     ```
 
   4. You are ready to start producing messages to your Kafka cluster just like normal, except now any messages that fail will be forwarded to the 'DeadLetterQueue' topic, which Kafe-DLQ will create automatically! Kafe already has a consumer subscribed to this topic, but in a standalone application you would need to spin up the consumer yourself.
+
     ```javascript
         testProducer.connect()
             .then(() => testProducer.send({
