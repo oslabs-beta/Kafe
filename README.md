@@ -1,6 +1,6 @@
 <div align="center">
-  <a href="https://https://github.com/oslabs-beta/kafe/">
-    <img src="./src/client/assets/Logo2.png" alt="Logo" height="100px" width="200px"/> 
+   <a href="https://https://github.com/oslabs-beta/kafe/">
+    <img src="./src/client/assets/Logo2.png" alt="Logo" height="100px" width="200px"/>
   </a><br><br>
 
   <p>An open-source Kafka visualizer with Dead Letter Queue support for failed messages. Built for JavaScript developers!<p>
@@ -19,7 +19,11 @@
 1. [Getting Started](#getting-started)
    - [Requirements](#requirements)
    - [Installation](#installation)
-   - [When you're ready to use Kafe](#when-youre-ready-to-use-kafe)
+1. [Features](#features)
+   - [Cluster Tree](#cluster-tree)
+   - [Realtime Metrics](#realtime-metrics)
+   - [Cluster Manager](#cluster-manager)
+   - [Dead Letter Queue Support](#dead-letter-queue-support)
 1. [Prometheus Server and Pre-configured Cluster](#prometheus-server-and-pre-configured-cluster)
 1. [Roadmap](#roadmap)
 1. [Contributors](#contributors)
@@ -88,18 +92,81 @@ npm install
 npm run build
 ```
 
+## Features
+
+### Cluster Tree
+- When you first load Kafe, you can navigate to "home" to see a tree representing your Kafka cluster. It will show the distrubtion of all your partitions and which brokers they belong to. Each node can be expanded or collapsed for viewing convenience.
+
+![](./feature_image/cluster_hierarchy_tree.png)
+
+### Realtime Metrics
+- Kafe provides realtime charts to track important metrics that reflect the healh of your Kafka cluster. Metrics that Kafe tracks include but are not limited to:
+  1. Overall CPU and Memory usage of your cluster
+  1. Time it takes to produce messages
+  1. Time it takes for consumers to receive messages from topics they are subscribed to
+  
+![](./feature_image/cluster_health_charts.png)
+
+### Cluster Manager
+- Kafe comes with an intuitive and easy-to-use GUI tool to manage your cluster. It should render cards for all active topics and will allow you to create new topics, delete existing topics, reassign replicas of each topic partition and clear all messages for topic.
+
+![](./feature_image/cluster_manager.png)
+
+### Dead Letter Queue
+- KafkaJS lacks native support for processing failed messages, so we created a lightweight npm package Kafe-DLQ to handle any failed messages within a Kafka cluster and forward them to a custom 'DeadLetterQueue' topic. Our application then creates a consumer that subscribes to 'DeadLetterQueue', which will then display a dynamic table with information on all messages that have failed since starting the cluster. You can read more about Kafe-DLQ [here](#https://github.com/kafe-DLQ/kafe-DLQ). If you want to utilize Kafe's DLQ features, be sure to do the following:
+  1. In your Kafka producer application run:
+
+    ```npm install kafe-dlq```
+  
+  2. Declare your Kafka cluster configuration. The method is identical to how you would do it with kafkajs:
+    ```javascript
+        const { KafeDLQClient } = require('kafe-dlq');
+        const { Kafka } = require('kafkajs');
+        
+        const kafka = new Kafka({
+            clientId: 'dlq-companion',
+            brokers: process.env.KAFKA_BROKERS.split(','),
+        });
+    ```
+  3. Create a custom callback to handle specific failure edge cases, initialize a Kafe-DLQ client and instantiate a producer. You can read more about the implementation at the Kafe-DLQ README.
+    ```javascript 
+        const callback = ((message ) => {
+            return parseInt(message) > 0;
+        });
+        
+        //instantiate a DLQ client by passing in KafkaJS client and the callback function
+        const client = new KafeDLQClient(kafka, callback);
+        const testProducer = client.producer();
+    ```
+
+  4. You are ready to start producing messages to your Kafka cluster just like normal, except now any messages that fail will be forwarded to the 'DeadLetterQueue' topic, which Kafe-DLQ will create automatically! Kafe already has a consumer subscribed to this topic, but in a standalone application you would need to spin up the consumer yourself.
+
+     ```javascript
+    testProducer.connect()
+        .then(() => testProducer.send({
+          topic: 'good',
+          messages: [{key: '1', value: '1'}, {key: '2', value: '2'}, {key: '3', value: '3'}]
+        }))
+        .then(() => testProducer.send({
+          topic: 'bad',
+          messages: [{key: '1', value: '-666'}, {key: '2', value: '-666'}, {key: '3', value: '3'}]
+        }))
+        .catch((err) => console.log(err));
+     ``` 
+
+![](./feature_image/dlq_message_table.png)
+![](./feature_image/dlq_analytic_charts.png)
 
 ## Prometheus Server and Pre-configured Cluster
 There is an example docker-compose file for spinning up a Prometheus server along with a Kafka cluser: `docker-kafka-prom.yml`.
 
-- If you just need want to spin up a Prometheus server + Kafka Cluster.:
+- If you just need want to spin up a Prometheus server + Kafka Cluster:
   1. We already have a Prometheus config set up, so don't worry about it!
   1. Be sure to change the `KAFKA_BROKERS` environment variable to the ports that you plan on running your cluster on, separated by commas. In our .env.template file it is spinning up three brokers at localhost:9091, localhost:9092 and localhost:9093
   1. Run the following command:
 
   ```
   docker-compose -f docker-compose-kafka-prom.yml up -d
-
   ```
 ## Roadmap
 
