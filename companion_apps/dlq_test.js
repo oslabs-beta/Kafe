@@ -6,6 +6,7 @@ const kafka = new Kafka({
     brokers: process.env.KAFKA_BROKERS.split(','),
 });
 
+//define your callback function logic to validate messages
 const callbackTest = ((message ) => {
   return parseInt(message) > 0;
 });
@@ -22,45 +23,6 @@ testProducer.connect()
     topic: 'goodmonkey',
     messages: [{key: '1', value: '-666'}, {key: '2', value: '-666'}, {key: '3', value: '3'}]
   }))
-  // .then(() => testProducer.send({
-  //   topic: 'reallybad',
-  //   messages: [{key: '1', value: '-7'}, {key: '2', value: '-13'}, {key: '3', value: '3'}]
-  // }))
   .catch((err) => console.log(err));
 
-// const testConsumer = client.consumer({groupId: 'dlq-testt'});
-// testConsumer.connect()
-//   .then(() => {
-//     console.log('KAFE CONSUMER CONNECTED')
-//     testConsumer.subscribe({topics: ['DeadLetterQueue'], fromBeginning: true})
-//   })
-//   .then(() => {
-//     console.log('KAFE CONSUMER EACH BLOCK');
-//     testConsumer.run({
-//       eachMessage: ({topic, partition, message}) => {
-//           console.log('From Kafe consumer: ')
-//           console.log(JSON.parse(message.value.toString()));
-//       }
-//     });
-//   })
-//   .catch((err) => console.log(err));
 
-// const consumer = kafka.consumer({groupId: 'dlq-test'});
-
-// consumer.connect()
-//   .then(() => {
-//     console.log('CONSUMER CONNECTED');
-//     consumer.subscribe({topics: ['DeadLetterQueue'], fromBeginning: true})
-//   })
-//   .then(() => {
-//     console.log('CONSUMER EACH MESSAGE');
-//     consumer.run({
-//       eachMessage: ({topic, partition, message}) => {
-//         console.log('From original consumer: ');
-//         console.log(message.value.toString());
-//       }
-//     })
-//   })
-//   .catch((err) => {
-//     console.log('Error occurred: ', err);
-//   })
