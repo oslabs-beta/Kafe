@@ -45,9 +45,6 @@ const ApolloServerStart = async() => {
             }
         })
     );
-    // app.get('/*', (req: express.Request, res: express.Response) => {
-    //     res.status(200).sendFile(path.resolve(__dirname, '../client/index.html'));
-    // });
 
     app.use('*', (req: express.Request, res: express.Response) => {
         res.status(404).send('Sorry, nothing found at this route...');
@@ -63,8 +60,3 @@ const ApolloServerStart = async() => {
 }
 
 export default ApolloServerStart();
-
-
-
-
-//

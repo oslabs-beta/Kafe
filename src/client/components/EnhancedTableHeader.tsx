@@ -28,7 +28,6 @@ const EnhancedTableHeader = ({ headers, setSelected, numRows, order, setOrder, r
         setChecked(!checked);
     };
 
-    // console.log('Table Header component: ', order);
     return (
         <TableHead>
             <TableRow>

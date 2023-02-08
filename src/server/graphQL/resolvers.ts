@@ -2,7 +2,6 @@ import * as adminActions from '../kafkaAdmin/adminActions';
 import * as dotenv from 'dotenv';
 import { Kafka, logLevel } from 'kafkajs';
 import { getGraphQLRateLimiter} from 'graphql-rate-limit';
-import { KafeDLQClient } from 'kafe-dlq';
 
 dotenv.config();
 
@@ -35,7 +34,6 @@ const resolvers = {
         underreplicatedPartitionsCount: async(parent, args, { dataSources }): Promise <Number> => {
             try{
                 const underReplicatedPartitions = await dataSources.prometheusAPI.instanceQuery(UNDER_REPLICATED_PARTITIONS_COUNT);
-                // console.log('Underreplicated partitions resolver result: ', underReplicatedPartitions);
                 return underReplicatedPartitions.length ? Number(underReplicatedPartitions[0].value) : 0;
             }catch(err) {
                 console.log('Error occured during cluster resolver underreplicatedPartitionsCount:', err);
@@ -45,7 +43,6 @@ const resolvers = {
         offlinePartitionsCount: async(parent, args, { dataSources }): Promise <Number> => {
             try{
                 const offlinePartitions = await dataSources.prometheusAPI.instanceQuery(OFFLINE_PARTITIONS);
-                // console.log('Offline partitions resolver result: ', offlinePartitions);
                 return offlinePartitions.length ? Number(offlinePartitions[0].value) : 0;
             } catch(err){
                 console.log('Error occured during cluster resolver offlinePartitionsCount:', err);
@@ -55,8 +52,8 @@ const resolvers = {
         activeControllersCount: async(parent, args, { dataSources }): Promise<Number> => {
             try {
                 const activeControllers = await dataSources.prometheusAPI.instanceQuery(ACTIVE_CONTROLLER_COUNT);
-                // console.log('Active controllers count resolver result: ', activeControllers);
                 const activeControllersCount = activeControllers.length ? Number(activeControllers[0].value) : 0;
+
                 return activeControllersCount;
             } catch(err) {
                 console.log('Error occured during activeControllersCount resolver: ', err)
@@ -66,8 +63,8 @@ const resolvers = {
         underMinISRCount: async(parent, args, { dataSources }): Promise<Number> => {
             try {
                 const underMinISRObject = await dataSources.prometheusAPI.instanceQuery(UNDER_MIN_ISR_COUNT);
-                // console.log('UnderMinISRCount resolver result: ', underMinISRObject);
                 const underMinISRCount = underMinISRObject.length ? Number(underMinISRObject[0].value) : 0;
+
                 return underMinISRCount;
             } catch(err) {
                 console.log('Error occured during underMinISRCount resolver: ', err);
@@ -244,7 +241,6 @@ const resolvers = {
                     broker['step'] = step;
                 });
             };
-            // console.log('Cluster query: ', cluster);
             return cluster;
         },
 
@@ -253,13 +249,12 @@ const resolvers = {
                 const clusterInfo = await adminActions.getClusterInfo();
                 let { brokers } = clusterInfo;
 
-                console.log('Brokers query: ', start, end, step)
                 if (start) {
                     brokers.map(broker => {
                         broker['start'] = isNaN(parseInt(start)) ? start : new Date(parseInt(start)).toString();
                         broker['end'] = end;
                         broker['step'] = step;
-                    })
+                    });
                 };
 
                 if (ids) brokers = brokers.filter(broker => ids.includes(broker.id));
@@ -273,10 +268,8 @@ const resolvers = {
             try {
                 const clusterInfo = await adminActions.getClusterInfo();
                 const broker = await clusterInfo.brokers.filter(broker => broker.id === id)[0];
-                // console.log('Broker query: ', broker);
 
                 if (!broker) throw new Error('No broker with that found');
-
                 if (start && broker) {
                     broker['start'] = start;
                     broker['end'] = end;
@@ -380,7 +373,6 @@ const resolvers = {
 
                     consumer.run({
                         eachMessage: async({ topic, partition, message}) => {
-                            console.log('Each messsage callback');
                             DLQMessages.push({
                                 timestamp: new Date(parseInt(message.timestamp)).toLocaleString('en-US', {
                                     timeStyle: "long",
@@ -416,7 +408,6 @@ const resolvers = {
             }
         ) => {
             try {
-                console.log('Topic mutation request received: ', name);
                 const newTopic = await adminActions.createTopic(
                     name,
                     numPartitions,
@@ -450,10 +441,7 @@ const resolvers = {
 
         reassignPartitions: async(parent , { topics }) => {
             try {
-                console.log('reassignPartitions resolver: ', topics)
                 const reassignPartitions = await adminActions.reassignPartitions(topics);
-
-                console.log('reassignPartitions result: ', reassignPartitions);
                 return reassignPartitions;
             } catch (err){
                 console.log('Reassign Partitions Error:', err)
