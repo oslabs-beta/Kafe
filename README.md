@@ -9,7 +9,7 @@
   <a href="https://github.com/oslabs-beta/kafe/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/oslabs-beta/kafe"></a>
   <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/oslabs-beta/kafe">
   
-  <a href="https://google.com"><strong>Google.com</strong></a>
+  <a href="http://kafeclient.com"><strong>kafeclient.com</strong></a>
 </div>
 
 ## Table of Contents
@@ -186,7 +186,7 @@ Also if you create a custom implementation of Kafe we'd love to see how you're u
 
 ## Contributors
 
-- Oliver Zhang| [GitHub](https://github.com/zezang) | [Linkedin](https://www.linkedin.com/in/oliver-zhang91/)
+- Oliver Zhang | [GitHub](https://github.com/zezang) | [Linkedin](https://www.linkedin.com/in/oliver-zhang91/)
 - Yirou Chen | [GitHub](https://github.com/WarmDarkMatter) | [Linkedin](https://www.linkedin.com/in/yirouchen/)
 - Jacob Cole| [GitHub](https://github.com/jacobcole34) | [Linkedin](https://www.linkedin.com/in/jacobcole34/)
 - Caro Gomez | [GitHub](https://github.com/Caro-Gomez) | [Linkedin](https://www.linkedin.com/in/carolina-llano-g%C3%B3mez/)
