@@ -100,7 +100,7 @@ npm run build
 ![](./assets/cluster_hierarchy_tree.png)
 
 ### Realtime Metrics
-- Kafe provides realtime charts to track important metrics that reflect the healh of your Kafka cluster. Metrics that Kafe tracks include but are not limited to:
+- Kafe provides realtime charts to track important metrics that reflect the health of your Kafka cluster. Metrics that Kafe tracks include but are not limited to:
   1. Overall CPU and Memory usage of your cluster
   1. Time it takes to produce messages
   1. Time it takes for consumers to receive messages from topics they are subscribed to
